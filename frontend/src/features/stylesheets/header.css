@@ -1,0 +1,17 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#logo {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+}
+
+#logo #title {
+  font-size: 15px;
+  font-style: bold;
+}
