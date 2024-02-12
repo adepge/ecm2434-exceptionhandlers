@@ -1,7 +1,7 @@
 import React from "react";
 import icon from "../assets/header/icon.svg";
 import usericon from "../assets/header/user-icon.svg";
-import "./stylesheets/header/header.css";
+import "./stylesheets/header.css";
 
 function Header() {
   return (
