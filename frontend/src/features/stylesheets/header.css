@@ -2,6 +2,7 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 10px;
 }
 
 #logo {
@@ -13,5 +14,13 @@ header {
 
 #logo #title {
   font-size: 15px;
+  font-weight: 700;
   font-style: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#icon {
+  margin-right: 10px;
 }

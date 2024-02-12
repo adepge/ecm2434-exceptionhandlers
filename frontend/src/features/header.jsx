@@ -7,7 +7,7 @@ function Header() {
     <header>
       <div id="logo">
         <img src={icon} id="icon" alt="icon" />
-        <div id="title">Napolean finder</div>
+        <div id="title">Napoleon finder</div>
       </div>
     </header>
   );
