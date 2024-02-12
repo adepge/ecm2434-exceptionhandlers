@@ -17,19 +17,19 @@ export default function Footer() {
       </div>
       <div id="map" className="button">
         <div className="backdrop">
-          <img src={feedicon} id="map-icon" alt="map-icon" />
+          <img src={feedicon} id="feed-icon" alt="feed-icon" />
         </div>
         <div className="footer-text">feed</div>
       </div>
       <div id="map" className="button">
         <div className="backdrop">
-          <img src={topicon} id="map-icon" alt="map-icon" />
+          <img src={topicon} id="top-icon" alt="top-icon" />
         </div>
         <div className="footer-text">top</div>
       </div>
       <div id="map" className="button">
         <div className="backdrop">
-          <img src={captureicon} id="map-icon" alt="map-icon" />
+          <img src={captureicon} id="capture-icon" alt="capture-icon" />
         </div>
         <div className="footer-text">capture</div>
       </div>
