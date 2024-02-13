@@ -79,6 +79,8 @@ function FeedPage() {
           </div>
         </div>
       </div>
+
+      <div id="footer-spacing" style={{ height: "70px" }} />
     </div>
   );
 }
