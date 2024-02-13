@@ -4,7 +4,7 @@ import "./stylesheets/postView.css";
 import Interactives from "../features/interactives";
 import InteractivesTop from "../features/interactivesTop";
 
-function PostView({ image, isActive, onClick, onLeave }) {
+function PostView({ image, isActive, onClick, onLeave, aspectRatio }) {
   return (
     <div>
       <div className="original">
@@ -13,6 +13,8 @@ function PostView({ image, isActive, onClick, onLeave }) {
           alt="image"
           onClick={onClick}
           style={{ width: "100%" }}
+          aspectRatio={aspectRatio}
+          objectFit="cover"
         />
       </div>
       <div
