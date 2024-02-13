@@ -1,31 +1,47 @@
 #feed {
   padding: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 43px; /*padding for the footer */
 }
 
-#feed #top {
+#feed #top-wrapper {
   width: 100%;
-  padding-top: 81%;
   position: relative;
   overflow: hidden;
   border: none;
   border-radius: 10px;
+  margin-bottom: 25px;
+  padding-top: 86%;
 }
 
-#feed #top img {
+#feed #top {
   position: absolute;
-  top: -19%;
+  top: -18%;
+  left: 0;
   width: 100%;
-  transition: all 0.5s ease-in-out;
 }
 
-#feed #top img.active {
-  position: fixed;
-  width: 98%;
-  left: 1%;
-  top: 20%;
+#daily-feed {
+  color: black;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.interactives {
-  height: 35px;
-  width: 100%;
+#daily-feed #title {
+  width: fit-content;
+  line-height: 10px;
+}
+
+.image-grid {
+  columns: 2;
+  row-gap: 10px;
+  column-gap: 10px;
+}
+
+.image-grid .daily-feed-post {
+  width: 100%; /* Make images fill their cell */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Adjust this as needed */
 }

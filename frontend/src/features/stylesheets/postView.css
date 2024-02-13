@@ -1,0 +1,32 @@
+.display.active {
+  position: fixed;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  min-width: 100vw;
+  height: 80%;
+  background-color: rgba(25, 25, 25, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: visible;
+  overflow-y: scroll;
+  padding-bottom: 50px;
+}
+
+.post-wrapper {
+  width: 98%;
+  max-width: 500px;
+  height: 100%;
+  overflow-y: visible;
+}
+
+.post-wrapper img {
+  overflow-y: visible;
+}
+.display {
+  display: none;
+  position: absolute;
+  max-width: 500px;
+}
