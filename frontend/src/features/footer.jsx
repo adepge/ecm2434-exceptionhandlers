@@ -53,6 +53,7 @@ export default function Footer() {
         </Link>
       </div>
       <div className="button">
+        <Link to="/capture">
         <div
           className="backdrop"
           style={{
@@ -62,6 +63,7 @@ export default function Footer() {
           <img src={captureicon} id="capture-icon" alt="capture-icon" />
         </div>
         <div className="footer-text">capture</div>
+      </Link>
       </div>
     </footer>
   );
