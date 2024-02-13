@@ -25,7 +25,10 @@
 }
 
 .interactives .element img {
+  width: auto;
   margin-right: 5px;
+  overflow: visible;
+  overflow-clip-margin: 0px;
 }
 
 .interactives .share.element img {
