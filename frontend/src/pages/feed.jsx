@@ -10,7 +10,15 @@ import PostView from "../features/PostView";
 function FeedPage() {
   const [activePost, setActive] = useState(0);
 
-  const postMap = { 1: image1, 2: image2, 3: image3, 4: image4 };
+  const postMap = {
+    1: image1,
+    2: image2,
+    3: image3,
+    4: image4,
+    5: image1,
+    6: image2,
+    7: image3,
+  };
 
   const leftPosts = {};
   const rightPosts = {};
@@ -31,43 +39,44 @@ function FeedPage() {
 
   return (
     <div id="feed">
-      <div id="top-wrapper">
-        <div id="top">
-          <div className="image-wrapper">
-            <PostView
-              image={image1}
-              isActive={activePost == -1}
-              onClick={() => changeActive(-1)}
-              onLeave={() => changeActive(0)}
-            />
-          </div>
-        </div>
+      <div id="top">
+        <PostView
+          image={image4}
+          isActive={activePost == -1}
+          onClick={() => changeActive(-1)}
+          onLeave={() => changeActive(0)}
+          aspectRatio={"5:4"}
+        />
       </div>
       <div id="daily-feed">
         <div id="title">
           Daily Feed<hr></hr>
         </div>
-        <div className="image-grid">
-          {Object.entries(leftPosts).map(([index, image]) => (
-            <PostView
-              className="daily-feed-post"
-              key={index}
-              image={image}
-              isActive={activePost == index}
-              onClick={() => changeActive(index)}
-              onLeave={() => changeActive(0)}
-            />
-          ))}
-          {Object.entries(rightPosts).map(([index, image]) => (
-            <PostView
-              className="daily-feed-post"
-              key={index}
-              image={image}
-              isActive={activePost == index}
-              onClick={() => changeActive(index)}
-              onLeave={() => changeActive(0)}
-            />
-          ))}
+        <div id="grid-wrapper">
+          <div className="image-grid left">
+            {Object.entries(leftPosts).map(([index, image]) => (
+              <PostView
+                className="daily-feed-post"
+                key={index}
+                image={image}
+                isActive={activePost == index}
+                onClick={() => changeActive(index)}
+                onLeave={() => changeActive(0)}
+              />
+            ))}
+          </div>
+          <div className="image-grid right">
+            {Object.entries(rightPosts).map(([index, image]) => (
+              <PostView
+                className="daily-feed-post"
+                key={index}
+                image={image}
+                isActive={activePost == index}
+                onClick={() => changeActive(index)}
+                onLeave={() => changeActive(0)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
