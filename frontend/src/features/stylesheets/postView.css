@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   visibility: visible;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-bottom: 50px;
 }
 

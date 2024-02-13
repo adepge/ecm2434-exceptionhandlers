@@ -20,10 +20,11 @@ function PostView({ image, isActive, onClick, onLeave }) {
         onClick={onLeave}
       >
         <div className="post-wrapper">
+          <div style={{ height: "50px" }} />
           <InteractivesTop />
           <img src={image} alt="image" style={{ width: "100%" }} />
           <Interactives />
-          <div className="footer-margin" style={{ height: "50px" }} />
+          <div style={{ height: "70px" }} />
         </div>
       </div>
     </div>
