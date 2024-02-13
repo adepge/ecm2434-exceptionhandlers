@@ -1,0 +1,31 @@
+#feed {
+  padding: 20px;
+}
+
+#feed #top {
+  width: 100%;
+  padding-top: 81%;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 10px;
+}
+
+#feed #top img {
+  position: absolute;
+  top: -19%;
+  width: 100%;
+  transition: all 0.5s ease-in-out;
+}
+
+#feed #top img.active {
+  position: fixed;
+  width: 98%;
+  left: 1%;
+  top: 20%;
+}
+
+.interactives {
+  height: 35px;
+  width: 100%;
+}
