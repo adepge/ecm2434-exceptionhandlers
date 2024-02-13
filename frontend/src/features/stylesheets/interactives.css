@@ -1,0 +1,38 @@
+.interactives {
+  height: 35px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: black;
+  overflow: visible;
+}
+
+.interactives .element {
+  background-color: #00dca5;
+  border: none;
+  border-radius: 36px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.interactives .like {
+  justify-content: center;
+}
+
+.interactives .element img {
+  margin-right: 5px;
+}
+
+.interactives .share.element img {
+  margin-right: 0px;
+}
+
+.interactives .location {
+  width: 100%;
+  margin: 0px 10px;
+}
