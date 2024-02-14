@@ -32,7 +32,7 @@ function Interactives({ likes, location, userIcon, liked, likeFunction }) {
         }}
       >
         <img
-          src={vliked ? Heart : HollowHeart}
+          src={vliked ? HollowHeart : Heart}
           height={"14px"}
           width={"14px"}
         />
