@@ -1,25 +1,22 @@
-import React, { useState } from "react";
 import "./stylesheets/postView.css";
 
 import Interactives from "../features/interactives";
 import InteractivesTop from "../features/interactivesTop";
 
-function PostView({ image, isActive, onClick, onLeave, aspectRatio }) {
+function PostView({
+  image,
+  isActive,
+  leaveFunction,
+  likes,
+  location,
+  userIcon,
+  liked,
+}) {
   return (
     <div>
-      <div className="original">
-        <img
-          src={image}
-          alt="image"
-          onClick={onClick}
-          style={{ width: "100%" }}
-          aspectRatio={aspectRatio}
-          objectFit="cover"
-        />
-      </div>
       <div
         className={isActive ? "display active" : "display"}
-        onClick={onLeave}
+        onClick={leaveFunction}
       >
         <div className="post-wrapper">
           <div className="post">

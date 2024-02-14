@@ -22,6 +22,7 @@ function FeedPage() {
 
   const leftPosts = {};
   const rightPosts = {};
+  const columns = [leftPosts, rightPosts];
 
   //add the post to the left or right side depending if it's odd or even
   Object.entries(postMap).forEach(([index, image]) => {
@@ -32,20 +33,29 @@ function FeedPage() {
     }
   });
 
-  //function to change the active post
-  const changeActive = (index) => {
-    setActive(index);
-  };
-
   return (
     <div id="feed">
+      <PostView
+        isActive={activePost != 0}
+        image={postMap[activePost]}
+        leaveFunction={() => {
+          setActive(0);
+        }}
+      />
       <div id="top">
-        <PostView
-          image={image4}
-          isActive={activePost == -1}
-          onClick={() => changeActive(-1)}
-          onLeave={() => changeActive(0)}
-          aspectRatio={"5:4"}
+        <img
+          src={image2}
+          alt="image"
+          style={{
+            width: "100%",
+            aspectRatio: "5/4",
+            objectFit: "cover",
+            border: "none",
+            borderRadius: "10px",
+          }}
+          onClick={() => {
+            setActive(4);
+          }}
         />
       </div>
       <div id="daily-feed">
@@ -53,30 +63,24 @@ function FeedPage() {
           Daily Feed<hr></hr>
         </div>
         <div id="grid-wrapper">
-          <div className="image-grid left">
-            {Object.entries(leftPosts).map(([index, image]) => (
-              <PostView
-                className="daily-feed-post"
-                key={index}
-                image={image}
-                isActive={activePost == index}
-                onClick={() => changeActive(index)}
-                onLeave={() => changeActive(0)}
-              />
-            ))}
-          </div>
-          <div className="image-grid right">
-            {Object.entries(rightPosts).map(([index, image]) => (
-              <PostView
-                className="daily-feed-post"
-                key={index}
-                image={image}
-                isActive={activePost == index}
-                onClick={() => changeActive(index)}
-                onLeave={() => changeActive(0)}
-              />
-            ))}
-          </div>
+          {/* map each columns */}
+          {columns.map((column, index) => (
+            <div key={index} className={"image-grid " + index}>
+              {/* map each posts in the column */}
+              {Object.entries(column).map(([index, image]) => (
+                <div className="original">
+                  <img
+                    src={image}
+                    alt="image"
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      setActive(index);
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
