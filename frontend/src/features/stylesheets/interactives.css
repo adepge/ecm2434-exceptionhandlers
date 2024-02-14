@@ -9,6 +9,7 @@
   font-weight: 700;
   color: black;
   overflow: visible;
+  pointer-events: none;
 }
 
 .interactives .element {
@@ -21,7 +22,7 @@
   user-select: none;
 }
 
-.interactives .like {    
+.interactives .like {
   justify-content: space-around;
   display: flex;
   cursor: pointer;
@@ -50,22 +51,27 @@
   height: 15px;
 }
 
-.icon-inner.active{
-  animation:like 0.5s 1;
-  fill:red;
-  stroke:none;
+.icon-inner.active {
+  animation: like 0.5s 1;
+  fill: red;
+  stroke: none;
 }
 
-.icon-inner{
-  fill:transparent;
-  stroke:black;
-  stroke-width:30;
-  transition:all 0.5s;
+.icon-inner {
+  fill: transparent;
+  stroke: black;
+  stroke-width: 30;
+  transition: all 0.5s;
 }
-
 
 @keyframes like {
-  0%   { transform: scale(1); }
-  90%   { transform: scale(1.2); }
-  100% { transform: scale(1.1); }
+  0% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
