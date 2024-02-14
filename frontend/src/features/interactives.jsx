@@ -3,11 +3,17 @@ import HollowHeart from "../assets/heart-hollow.svg";
 import Location from "../assets/location.svg";
 import Share from "../assets/foward.svg";
 import Heart from "../assets/heart.svg";
-import { useState } from "react";
-function Interactives({ likes, location, userIcon, liked, likeFunction }) {
+import { useEffect, useState } from "react";
+function Interactives({ likes, location, userIcon, liked, likeFunction, isActive }) {
   // volatile state for the like button
   const [vliked, vlikeFunction] = useState(liked);
   const [vlikes, vsetLikes] = useState(likes);
+
+  // refresh likes every time the prop changes
+  useEffect(() => {
+    vlikeFunction(liked);
+    vsetLikes(likes);
+  }, [isActive]);
 
   // toggle the like button
   function toggleLike(event) {

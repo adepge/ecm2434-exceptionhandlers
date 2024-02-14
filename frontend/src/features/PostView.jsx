@@ -23,7 +23,7 @@ function PostView({
             <div style={{ height: "60px" }} />
             <InteractivesTop />
             <img src={image} alt="image" style={{ width: "100%" }} />
-            <Interactives liked={liked} location={location} likes={likes} />
+            <Interactives liked={liked} location={location} likes={likes} isActive={isActive} />
             <div style={{ height: "60px" }} />
           </div>
         </div>

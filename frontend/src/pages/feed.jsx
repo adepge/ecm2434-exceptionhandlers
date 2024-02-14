@@ -42,7 +42,7 @@ function FeedPage() {
           setActive(0);
         }}
         likes={100}
-        location={"London"}
+        location={"Forum"}
         liked={false}
         userIcon={image1}
       />
