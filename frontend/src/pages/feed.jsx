@@ -34,7 +34,7 @@ function FeedPage() {
   });
 
   return (
-    <div id="feed">
+    <>
       <PostView
         isActive={activePost != 0}
         image={postMap[activePost]}
@@ -42,50 +42,50 @@ function FeedPage() {
           setActive(0);
         }}
       />
-      <div id="top">
-        <img
-          src={image2}
-          alt="image"
-          style={{
-            width: "100%",
-            aspectRatio: "5/4",
-            objectFit: "cover",
-            border: "none",
-            borderRadius: "10px",
-          }}
-          onClick={() => {
-            setActive(4);
-          }}
-        />
-      </div>
-      <div id="daily-feed">
-        <div id="title">
-          Daily Feed<hr></hr>
+      <div id="feed">
+        <div id="top">
+          <img
+            src={image2}
+            alt="image"
+            style={{
+              width: "100%",
+              aspectRatio: "5/4",
+              objectFit: "cover",
+              border: "none",
+              borderRadius: "10px",
+            }}
+            onClick={() => {
+              setActive(4);
+            }}
+          />
         </div>
-        <div id="grid-wrapper">
-          {/* map each columns */}
-          {columns.map((column, index) => (
-            <div key={index} className={"image-grid " + index}>
-              {/* map each posts in the column */}
-              {Object.entries(column).map(([index, image]) => (
-                <div className="original">
-                  <img
-                    src={image}
-                    alt="image"
-                    style={{ width: "100%" }}
-                    onClick={() => {
-                      setActive(index);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          ))}
+        <div id="daily-feed">
+          <div id="title">
+            Daily Feed<hr></hr>
+          </div>
+          <div id="grid-wrapper">
+            {/* map each columns */}
+            {columns.map((column, index) => (
+              <div key={index} className={"image-grid " + index}>
+                {/* map each posts in the column */}
+                {Object.entries(column).map(([index, image]) => (
+                  <div className="original">
+                    <img
+                      src={image}
+                      alt="image"
+                      style={{ width: "100%" }}
+                      onClick={() => {
+                        setActive(index);
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-
-      <div id="footer-spacing" style={{ height: "60px" }} />
-    </div>
+    </>
   );
 }
 
