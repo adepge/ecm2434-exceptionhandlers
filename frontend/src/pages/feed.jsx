@@ -43,7 +43,7 @@ function FeedPage() {
         }}
         likes={100}
         location={"London"}
-        liked={true}
+        liked={false}
         userIcon={image1}
       />
       <div id="feed">

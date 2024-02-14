@@ -13,10 +13,12 @@ function Interactives({ likes, location, userIcon, liked, likeFunction }) {
   function toggleLike(event) {
     // prevent clicking the background when the like button is clicked from triggering the background click event
     event.stopPropagation();
+
+    // update the like count and the like button
     if (vliked) {
-      vsetLikes(vlikes + 1);
-    } else {
       vsetLikes(vlikes - 1);
+    } else {
+      vsetLikes(vlikes + 1);
     }
     vlikeFunction(!vliked);
   }
@@ -30,7 +32,7 @@ function Interactives({ likes, location, userIcon, liked, likeFunction }) {
         }}
       >
         <img
-          src={vliked ? HollowHeart : Heart}
+          src={vliked ? Heart : HollowHeart}
           height={"14px"}
           width={"14px"}
         />
