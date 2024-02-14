@@ -1,9 +1,14 @@
 header {
+  background-color: black;
+  position: fixed;
+  width: 100%;
+}
+
+#header-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 10px 15px;
-  background-color: black;
 }
 
 #logo {
