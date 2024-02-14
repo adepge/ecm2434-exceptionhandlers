@@ -82,7 +82,7 @@
 }
 
 /* apply a gradient to the image */
-.post::after {
+.image::after {
   content: "";
   position: absolute;
   top: 0;
@@ -91,8 +91,8 @@
   bottom: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0) 90%,
-    rgba(0, 0, 0, 0.8) 100%
+    rgba(86, 86, 86, 0) 85%,
+    rgba(0, 0, 0, 0.6) 100%
   );
   z-index: 1;
   border-radius: inherit;
