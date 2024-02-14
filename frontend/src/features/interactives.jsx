@@ -2,16 +2,43 @@ import "./stylesheets/interactives.css";
 import HollowHeart from "../assets/heart-hollow.svg";
 import Location from "../assets/location.svg";
 import Share from "../assets/foward.svg";
-function Interactives() {
+import Heart from "../assets/heart.svg";
+import { useState } from "react";
+function Interactives({ likes, location, userIcon, liked, likeFunction }) {
+  // volatile state for the like button
+  const [vliked, vlikeFunction] = useState(liked);
+  const [vlikes, vsetLikes] = useState(likes);
+
+  // toggle the like button
+  function toggleLike(event) {
+    // prevent clicking the background when the like button is clicked from triggering the background click event
+    event.stopPropagation();
+    if (vliked) {
+      vsetLikes(vlikes + 1);
+    } else {
+      vsetLikes(vlikes - 1);
+    }
+    vlikeFunction(!vliked);
+  }
+
   return (
     <div className="interactives">
-      <div className="like element">
-        <img src={HollowHeart} />
-        23
+      <div
+        className="like element"
+        onClick={(event) => {
+          toggleLike(event);
+        }}
+      >
+        <img
+          src={vliked ? HollowHeart : Heart}
+          height={"14px"}
+          width={"14px"}
+        />
+        {vlikes}
       </div>
       <div className="location element">
         <img src={Location} />
-        Forum
+        {location}
       </div>
       <div className="share element">
         <img src={Share} />

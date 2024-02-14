@@ -41,6 +41,10 @@ function FeedPage() {
         leaveFunction={() => {
           setActive(0);
         }}
+        likes={100}
+        location={"London"}
+        liked={true}
+        userIcon={image1}
       />
       <div id="feed">
         <div id="top">

@@ -22,6 +22,8 @@
 
 .interactives .like {
   justify-content: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .interactives .element img {
