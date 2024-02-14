@@ -20,21 +20,5 @@ body {
 }
 /* Width of the scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
-}
-
-/* Track of the scrollbar */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle of the scrollbar */
-::-webkit-scrollbar-thumb {
-  background: lightgray;
-  border: none;
-  border-radius: 12px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+  width: 0px;
 }

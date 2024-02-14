@@ -22,11 +22,13 @@ function PostView({ image, isActive, onClick, onLeave, aspectRatio }) {
         onClick={onLeave}
       >
         <div className="post-wrapper">
-          <div style={{ height: "50px" }} />
-          <InteractivesTop />
-          <img src={image} alt="image" style={{ width: "100%" }} />
-          <Interactives />
-          <div style={{ height: "70px" }} />
+          <div className="post">
+            <div style={{ height: "60px" }} />
+            <InteractivesTop />
+            <img src={image} alt="image" style={{ width: "100%" }} />
+            <Interactives />
+            <div style={{ height: "60px" }} />
+          </div>
         </div>
       </div>
     </div>
