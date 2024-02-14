@@ -24,7 +24,6 @@ function PostView({
             <InteractivesTop />
             <div className="image">
               <div className="date-time">2 days ago</div>
-              <div className="shadow" />
               <img src={image} alt="image" style={{ width: "100%" }} />
             </div>
             <Interactives
