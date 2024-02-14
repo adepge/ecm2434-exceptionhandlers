@@ -48,20 +48,18 @@ function FeedPage() {
       />
       <div id="feed">
         <div id="top">
-          <img
-            src={image2}
-            alt="image"
-            style={{
-              width: "100%",
-              aspectRatio: "5/4",
-              objectFit: "cover",
-              border: "none",
-              borderRadius: "10px",
-            }}
-            onClick={() => {
-              setActive(4);
-            }}
-          />
+          <div id="image-wrapper">
+            <div id="last-seen-text">Napoleon was last spotted: </div>
+            <img
+              src={image2}
+              alt="image"
+              onClick={() => {
+                setActive(4);
+              }}
+            />
+
+            <div id="last-seen-location">career zone forum </div>
+          </div>
         </div>
         <div id="daily-feed">
           <div id="title">

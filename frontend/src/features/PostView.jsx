@@ -22,8 +22,17 @@ function PostView({
           <div className="post">
             <div style={{ height: "60px" }} />
             <InteractivesTop />
-            <img src={image} alt="image" style={{ width: "100%" }} />
-            <Interactives liked={liked} location={location} likes={likes} isActive={isActive} />
+            <div className="image">
+              <div className="date-time">2 days ago</div>
+              <div className="shadow" />
+              <img src={image} alt="image" style={{ width: "100%" }} />
+            </div>
+            <Interactives
+              liked={liked}
+              location={location}
+              likes={likes}
+              isActive={isActive}
+            />
             <div style={{ height: "60px" }} />
           </div>
         </div>
