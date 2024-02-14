@@ -78,11 +78,12 @@
 
   /* make the cornor round */
   border: none;
-  border-radius: 30%;
+  border-radius: 5%;
 }
 
 /* apply a gradient to the image */
-.post .shadow {
+.post::after {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -125,9 +126,6 @@
   bottom: 14px;
   left: 14px;
   z-index: 2;
-}
-
-/* remove the margin */
-.post .date-time p {
-  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
 }
