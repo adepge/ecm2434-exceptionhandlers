@@ -20,7 +20,6 @@ function PostView({
       >
         <div className="post-wrapper">
           <div className="post">
-            <div style={{ height: "60px" }} />
             <InteractivesTop />
             <div className="image">
               <div className="date-time">2 days ago</div>
@@ -32,7 +31,6 @@ function PostView({
               likes={likes}
               isActive={isActive}
             />
-            <div style={{ height: "60px" }} />
           </div>
         </div>
       </div>

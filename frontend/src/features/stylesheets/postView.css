@@ -60,6 +60,7 @@
   /* avoid the post from being too big */
   max-width: 500px;
 
+  max-height: 100vh;
   /* position the post in the center */
   position: absolute;
   transform: translateY(-50%);
@@ -78,7 +79,7 @@
 
   /* make the cornor round */
   border: none;
-  border-radius: 5%;
+  border-radius: 12px;
 }
 
 /* apply a gradient to the image */
