@@ -18,12 +18,15 @@
   padding: 10px 20px;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 
 .interactives .like {
-  justify-content: center;
+  justify-content: space-around;
+  display: flex;
   cursor: pointer;
   user-select: none;
+  width: 75px;
 }
 
 .interactives .element img {
@@ -40,4 +43,34 @@
 .interactives .location {
   width: 100%;
   margin: 0px 10px;
+}
+
+.icon-inner {
+  width: 15px;
+  height: 15px;
+}
+
+.icon-inner.active {
+  animation: like 0.5s 1;
+  fill: red;
+  stroke: none;
+}
+
+.icon-inner {
+  fill: transparent;
+  stroke: black;
+  stroke-width: 30;
+  transition: all 0.5s;
+}
+
+@keyframes like {
+  0% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
