@@ -1,33 +1,71 @@
-#register-wrapper {
-  min-width: 100vw;
-  min-height: 100vh;
+/* center the content */
+#display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+
 }
 
-#register {
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* adding padding */
+#register-wrapper {
+  width: calc(100% - 40px);
 }
+
+/* the form */
+#register {   
+  position: absolute;
+  width: inherit;
+
+  /* center the content from top to bottom */
+    max-height: 100vh;
+    transform: translateY(-50%);
+    top: 50%;
+}
+
+/* the spacer for header and footer */
+#spacer {
+  margin: 70px 0;
+  margin-bottom: 120px;
+  overflow: scroll;
+  
+  max-width: 500px;
+  min-width: 200px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+/* The title of the page */
 #register #title {
   font-size: 50px;
+  font-weight: 700;
   color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: 700;
 }
 
+/* the forms and button  */
 #register #form {
+  /* center the content from top to bottom */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  /* margin from the title */
   margin-top: 40px;
 }
 
+/* each input field */
 #form input {
+  /* make the input field take up the whole width */
   width: 100%;
+
+  /* styles */
   font-size: 16px;
   border: 3px solid #00dca5;
   border-radius: 12px;
@@ -35,26 +73,29 @@
   font-weight: 700;
   color: black;
   margin-bottom: 30px;
+
+  /* make the form start from the left */
   box-sizing: border-box;
+  
+  /* Remove the red border when selected */
+  outline: none;
 }
 
 #form button {
   width: 100%;
+
+  /* styles */
   font-size: 16px;
+  font-weight: 700;
   border: none;
   border-radius: 12px;
   padding: 10px;
-  font-weight: 700;
   color: black;
   background-color: #00dca5;
-  margin-bottom: 30px;
+  margin-bottom: 70px;
   font-family: "Outfit";
 }
 
 #form .text {
   color: black;
-}
-
-#register-wrapper #spacing {
-  padding: 50px 0;
 }
