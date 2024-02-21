@@ -4,9 +4,15 @@ from django.contrib.auth.models import User #Importing django provided User mode
 # Each FK is set to on_delete = models.CASCADE to uphold DB integrity and consisentiy
 
 class Geolocation(models.Model):
-    geolocID = models.IntegerField(primary_key = True)
-    location = models.CharField(max_length = 255)
-    position = models.FloatField()
+    geolocID = models.IntegerField(primary_key=True)
+    location = models.CharField(max_length=255)
+    latitude = models.FloatField(max_length=255)
+    longitude = models.FloatField(max_length=255)
+    latitude = models.FloatField(default=0.0)
+    longitude = models.FloatField(default=0.0)
+    def __str__(self):
+        return f"{self.location} (Lat: {self.latitude}, Lng: {self.longitude})"
+    
 
 class Posts(models.Model):
     postId   = models.IntegerField()

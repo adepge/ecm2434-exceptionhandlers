@@ -6,7 +6,7 @@ class PostsAdmin(admin.ModelAdmin):
     search_fields = ['fileName', 'username__username']
 
 class GeolocationAdmin(admin.ModelAdmin):
-    list_display = ('geolocID', 'location', 'position')
+    list_display = ('geolocID', 'location', 'latitude', 'longitude')
     # Additional customizations
 
 class StickersAdmin(admin.ModelAdmin):
