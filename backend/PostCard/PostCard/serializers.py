@@ -25,4 +25,4 @@ class StickersUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']  # You can adjust the fields as necessary
+        fields = '__all__'  
