@@ -6,6 +6,8 @@ import Footer from "./features/footer";
 import MapPage from "./pages/map";
 import FeedPage from "./pages/feed";
 import Capture from "./pages/capture";
+import RegisterPage from "./pages/register";
+import LoginPage from "./pages/login";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -17,7 +19,8 @@ function App() {
         <Route path="/" element={<MapPage />} />
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/capture" element={<Capture />} />
-        {/* Define other routes here */}
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
       <Footer />
     </>

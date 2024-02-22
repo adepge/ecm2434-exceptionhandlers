@@ -19,3 +19,5 @@ admin.site.register(Geolocation, GeolocationAdmin)
 admin.site.register(Posts, PostsAdmin)
 admin.site.register(Stickers, StickersAdmin)
 admin.site.register(StickersUser, StickersUserAdmin)
+
+

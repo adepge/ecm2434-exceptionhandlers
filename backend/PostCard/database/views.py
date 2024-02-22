@@ -34,3 +34,4 @@ class StickersUserList(generics.ListAPIView):
 class StickersUserDetail(generics.RetrieveAPIView):
     queryset = StickersUser.objects.all()
     serializer_class = StickersUserSerializer
+

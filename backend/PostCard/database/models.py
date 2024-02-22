@@ -14,6 +14,7 @@ class Geolocation(models.Model):
         return f"{self.location} (Lat: {self.latitude}, Lng: {self.longitude})"
     
 
+
 class Posts(models.Model):
     postId   = models.IntegerField()
     fileName = models.CharField(max_length = 255)

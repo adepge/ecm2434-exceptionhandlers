@@ -23,5 +23,3 @@ urlpatterns = [
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
 ]
 
-
-
