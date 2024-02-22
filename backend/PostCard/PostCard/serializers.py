@@ -2,6 +2,7 @@ from rest_framework import serializers
 from database.models import Geolocation, Posts, Stickers, StickersUser
 from django.contrib.auth.models import User
 
+# Add all the serializers here for the models
 class GeolocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Geolocation
