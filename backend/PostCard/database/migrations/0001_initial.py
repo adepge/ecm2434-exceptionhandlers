@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Geolocation',
             fields=[
-                ('geolocID', models.IntegerField(primary_key=True, serialize=False)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('location', models.CharField(max_length=255)),
                 ('position', models.FloatField()),
             ],
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stickers',
             fields=[
-                ('stickersID', models.IntegerField(primary_key=True, serialize=False)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('stickersName', models.CharField(max_length=50)),
                 ('stickersDescription', models.CharField(max_length=100)),
                 ('fileName', models.CharField(max_length=100)),
@@ -35,7 +35,6 @@ class Migration(migrations.Migration):
             name='Posts',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('postId', models.IntegerField()),
                 ('fileName', models.CharField(max_length=255)),
                 ('caption', models.CharField(max_length=255)),
                 ('datetime', models.DateTimeField(auto_now_add=True)),
