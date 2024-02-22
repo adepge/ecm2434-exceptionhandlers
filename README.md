@@ -1,5 +1,5 @@
 ## Post-i-tivity 
-<img src= "https://cdn.discordapp.com/attachments/1203725883135885402/1210042110984851516/SmartSelect_20240222_015424_Samsung_Notes.jpg?ex=65e91e88&is=65d6a988&hm=e95f279565d36de4297d783e4605c32a0b85121320567b327850b7fc81e7dd94&" width="40px" height="40px"></img>
+<img src= "https://cdn.discordapp.com/attachments/1203725883135885402/1210042110984851516/SmartSelect_20240222_015424_Samsung_Notes.jpg?ex=65e91e88&is=65d6a988&hm=e95f279565d36de4297d783e4605c32a0b85121320567b327850b7fc81e7dd94&" width="80px" height="80px"></img>
 A progressive web app to upload images and posts that users can make as they explore Exeter University's campus and promote sustainability through improving mental health, exercise, community engagement, social welfare and awareness of the environment. 
 
 ### Quicklinks
