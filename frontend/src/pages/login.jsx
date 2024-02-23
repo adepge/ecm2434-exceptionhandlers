@@ -1,4 +1,5 @@
 import "./stylesheets/login.css";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   return (
@@ -11,9 +12,13 @@ function LoginPage() {
               <input className="text" type="text" placeholder="Username" />
               <input className="text" type="password" placeholder="Password" />
               <button>login</button>
-                <div id="message">Not a member? <a href="/signup">Sign Up</a></div>
+              <div id="message">
+                Not a member?{" "}
+                <Link to={"/register"}>
+                  <a>Sign Up</a>
+                </Link>
+              </div>
             </div>
-
           </div>
         </div>
       </div>

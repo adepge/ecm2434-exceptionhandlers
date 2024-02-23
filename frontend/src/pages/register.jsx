@@ -16,9 +16,13 @@ function RegisterPage() {
                 type="password"
                 placeholder="Confirm Password"
               />
+              <label class="checkbox">
+                <input type="checkbox" />
+                <span class="checkmark"></span>I agree to Postpal’s Terms &
+                Conditions and Privacy Policy
+              </label>
               <button>Register</button>
             </div>
-
           </div>
         </div>
       </div>
