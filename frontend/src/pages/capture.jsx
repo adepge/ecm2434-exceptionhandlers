@@ -115,7 +115,7 @@ function Capture() {
                     </div>
                   )}
 
-                  {/* the form */}
+                  {/* the form 70px margin for the footer*/}
                   <form onSubmit={handleSubmit}>
                     {/* the caption */}
                     <div id="form">
