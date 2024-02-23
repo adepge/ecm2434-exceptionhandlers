@@ -2,7 +2,6 @@ import React from "react";
 import icon from "../assets/header/icon.svg";
 import usericon from "../assets/header/user-icon.svg";
 import "./stylesheets/header.css";
-import { Link } from "react-router-dom";
 
 function Header() {
   return (
