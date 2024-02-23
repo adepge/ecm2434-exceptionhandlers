@@ -1,15 +1,12 @@
 import "./stylesheets/register.css";
 import { useState } from "react";
-import axios from 'axios';
-
-
+import axios from "axios";
 
 function RegisterPage() {
-
   const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    password: '',
+    username: "",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -23,7 +20,10 @@ function RegisterPage() {
     console.log(userData);
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register/', userData);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/register/",
+        userData
+      );
       console.log(response.data);
       // Handle success (e.g., show message, redirect)
     } catch (error) {
@@ -40,41 +40,42 @@ function RegisterPage() {
             <div id="title">Register</div>
             <div id="form" onSubmit={handleSubmit}>
               <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="username"
-                value={userData.username}
-                onChange={handleChange}
-                placeholder="Username"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleChange}
-                placeholder="Email"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                required
-              />
-              <input
-                className="text"
-                type="password"
-                placeholder="Confirm Password"
-              />
-              <label class="checkbox">
-                <input type="checkbox" />
-                <span class="checkmark"></span>I agree to Postpal’s Terms &
-                Conditions and Privacy Policy
-              </label>
-              <button>Register</button>
+                <input
+                  type="text"
+                  name="username"
+                  value={userData.username}
+                  onChange={handleChange}
+                  placeholder="Username"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  value={userData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                />
+                <input
+                  className="text"
+                  type="password"
+                  placeholder="Confirm Password"
+                />
+                <label class="checkbox">
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>I agree to Postpal’s Terms &
+                  Conditions and Privacy Policy
+                </label>
+                <button>Register</button>
+              </form>
             </div>
           </div>
         </div>
