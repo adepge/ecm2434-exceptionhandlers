@@ -59,7 +59,7 @@
 }
 
 /* each input field */
-#form input.text {
+#form input {
   /* make the input field take up the whole width */
   width: 100%;
 
