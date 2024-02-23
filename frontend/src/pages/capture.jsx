@@ -66,6 +66,9 @@ function Capture() {
                 <p>Tap to take a picture</p>
               </div>
             )}
+            <div id="form">
+              <input className="text" type="text" placeholder="Username" />
+            </div>
 
             <div id="previewButtons">
               <div className="share element">
