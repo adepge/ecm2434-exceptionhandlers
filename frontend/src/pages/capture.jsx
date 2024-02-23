@@ -25,11 +25,16 @@ function Capture() {
     geolocID: 1,
   });
 
-  const [geoloc, setGeoloc] = useState({
-    location: "forum",
-    latitude: "1.1",
-    longitude: "1.1",
-  });
+  const [geoloc, setGeoloc] = useState(
+    
+      {
+          
+          "location": "1",
+          "latitude": 0.0,
+          "longitude": 0.0
+      }
+  
+  );
 
   // const handleChange = (e) => {
   //   setUserData({
