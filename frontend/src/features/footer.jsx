@@ -27,19 +27,6 @@ export default function Footer() {
         </Link>
       </div>
       <div className="button">
-        <Link to="/feed">
-          <div
-            className="backdrop"
-            style={{
-              background: location.pathname === "/feed" ? "#00DCA5" : "none",
-            }}
-          >
-            <img src={feedicon} id="feed-icon" alt="feed-icon" />
-          </div>
-          <div className="footer-text">feed</div>
-        </Link>
-      </div>
-      <div className="button">
         <Link to="/top">
           <div
             className="backdrop"
@@ -52,18 +39,32 @@ export default function Footer() {
           <div className="footer-text">top</div>
         </Link>
       </div>
+
+      <div className="button">
+        <Link to="/feed">
+          <div
+            className="backdrop"
+            style={{
+              background: location.pathname === "/feed" ? "#00DCA5" : "none",
+            }}
+          >
+            <img src={feedicon} id="feed-icon" alt="feed-icon" />
+          </div>
+          <div className="footer-text">Collection</div>
+        </Link>
+      </div>
       <div className="button">
         <Link to="/capture">
-        <div
-          className="backdrop"
-          style={{
-            background: location.pathname === "/capture" ? "#00DCA5" : "none",
-          }}
-        >
-          <img src={captureicon} id="capture-icon" alt="capture-icon" />
-        </div>
-        <div className="footer-text">capture</div>
-      </Link>
+          <div
+            className="backdrop"
+            style={{
+              background: location.pathname === "/capture" ? "#00DCA5" : "none",
+            }}
+          >
+            <img src={captureicon} id="capture-icon" alt="capture-icon" />
+          </div>
+          <div className="footer-text">capture</div>
+        </Link>
       </div>
     </footer>
   );

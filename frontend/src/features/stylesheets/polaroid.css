@@ -7,7 +7,7 @@
   width: 100%;
 }
 
-.caption {
+.polaroid .caption {
   overflow-wrap: break-word;
   font-family: "Nanum Pen Script", cursive;
   font-weight: 400;

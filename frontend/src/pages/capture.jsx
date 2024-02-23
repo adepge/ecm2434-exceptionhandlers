@@ -17,41 +17,37 @@ function Capture() {
 
   const [previewImg, setPreviewImg] = useState("");
 
-  const [userData, setUserData] = useState({
-    //
+  const [postData, setPostData] = useState({
     fileName: "file.jpg",
-    username: "name",
-    caption: "hello",
-    geolocID: 1,
+    username: "nathan",
+    caption: "",
+    geolocID: 0,
   });
 
-  const [geoloc, setGeoloc] = useState(
-    
-      {
-          
-          "location": "1",
-          "latitude": 0.0,
-          "longitude": 0.0
-      }
-  
-  );
+  const [geolocData, setGeolocData] = useState({
+    location: "1",
+    latitude: 0.0,
+    longitude: 0.0,
+  });
 
-  // const handleChange = (e) => {
-  //   setUserData({
-  //     ...userData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
+  const handleChange = (e) => {
+    setPostData({
+      ...postData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
-    console.log(geoloc);
+    console.log(geolocData);
     // e.preventDefault();
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/geolocations/",
-        geoloc
+        geolocData
       );
-      console.log(response.data);
+      const geolocID = response.data.id;
+      setPostData({ ...postData, geolocID: geolocID });
+      console.log(postData);
       // Handle success (e.g., show message, redirect)
     } catch (error) {
       console.error(error);
@@ -109,29 +105,41 @@ function Capture() {
                 <p>Tap to take a picture</p>
               </div>
             )}
-            <div id="form">
-              <input className="text" type="text" placeholder="Username" />
-            </div>
 
-            <div id="previewButtons">
-              <div className="share element">
-                <img
-                  src={Reset}
-                  width={"15px"}
-                  height={"15px"}
-                  onClick={() => {
-                    capture();
-                  }}
+            <form onSubmit={handleSubmit}>
+              <div id="form">
+                <input
+                  name="caption"
+                  type="caption"
+                  placeholder="post"
+                  onChange={handleChange}
                 />
               </div>
-              <div className="location element">
-                <img src={Location} />
-                Forum
+
+              <div id="previewButtons">
+                <div className="share element">
+                  <img
+                    src={Reset}
+                    width={"15px"}
+                    height={"15px"}
+                    onClick={() => {
+                      capture();
+                    }}
+                  />
+                </div>
+                <div className="location element">
+                  <img src={Location} />
+                  Forum
+                </div>
+                <button
+                  className="share element"
+                  type="submit"
+                  style={{ height: "100%" }}
+                >
+                  <img src={Send} />
+                </button>
               </div>
-              <div className="share element" onClick={() => handleSubmit()}>
-                <img src={Send} />
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

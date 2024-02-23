@@ -74,7 +74,7 @@ function RegisterPage() {
                   <span class="checkmark"></span>I agree to Postpal’s Terms &
                   Conditions and Privacy Policy
                 </label>
-                <button>Register</button>
+                <button type="submit">Register</button>
               </form>
             </div>
           </div>

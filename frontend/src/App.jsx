@@ -8,6 +8,7 @@ import FeedPage from "./pages/feed";
 import Capture from "./pages/capture";
 import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
+import ServerError from "./pages/serverError";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -21,6 +22,7 @@ function App() {
         <Route path="/capture" element={<Capture />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={<ServerError />} />
       </Routes>
       <Footer />
     </>
