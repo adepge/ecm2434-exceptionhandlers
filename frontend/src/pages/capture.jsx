@@ -4,6 +4,7 @@ import "./stylesheets/capture.css";
 import Send from "../assets/send.svg";
 import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
+import axios from "axios";
 
 function Capture() {
   // Simple mobile detection
@@ -15,6 +16,43 @@ function Capture() {
   // }
 
   const [previewImg, setPreviewImg] = useState("");
+
+  const [userData, setUserData] = useState({
+    //
+    fileName: "file.jpg",
+    username: "name",
+    caption: "hello",
+    geolocID: 1,
+  });
+
+  const [geoloc, setGeoloc] = useState({
+    location: "forum",
+    latitude: "1.1",
+    longitude: "1.1",
+  });
+
+  // const handleChange = (e) => {
+  //   setUserData({
+  //     ...userData,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+
+  const handleSubmit = async (e) => {
+    console.log(geoloc);
+    // e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/geolocations/",
+        geoloc
+      );
+      console.log(response.data);
+      // Handle success (e.g., show message, redirect)
+    } catch (error) {
+      console.error(error);
+      // Handle error (e.g., show error message)
+    }
+  };
 
   const inputRef = useRef(null);
 
@@ -85,7 +123,7 @@ function Capture() {
                 <img src={Location} />
                 Forum
               </div>
-              <div className="share element">
+              <div className="share element" onClick={() => handleSubmit()}>
                 <img src={Send} />
               </div>
             </div>
