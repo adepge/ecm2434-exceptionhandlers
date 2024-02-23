@@ -6,6 +6,7 @@ function LoginPage() {
     <div id="display">
       <div id="login-wrapper">
         <div id="login">
+          {/* a spacer for the hader and footer  */}
           <div id="spacer">
             <div id="title">Login</div>
             <div id="form">

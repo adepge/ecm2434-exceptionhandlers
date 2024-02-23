@@ -13,7 +13,9 @@ export default function Footer() {
 
   return (
     <footer>
+      {/* map icon */}
       <div className="button">
+        {/* send user to the map page on click */}
         <Link to="/">
           <div
             className="backdrop"
@@ -26,8 +28,12 @@ export default function Footer() {
           <div className="footer-text">map</div>
         </Link>
       </div>
+
+      {/* top icon */}
       <div className="button">
+        {/* send user to the top page on click */}
         <Link to="/top">
+          {/* if the user is on the top page, add backdrop to the icon */}
           <div
             className="backdrop"
             style={{
@@ -40,7 +46,9 @@ export default function Footer() {
         </Link>
       </div>
 
+      {/* feed icon */}
       <div className="button">
+        {/* send user to the feed page on click */}
         <Link to="/feed">
           <div
             className="backdrop"
@@ -53,7 +61,10 @@ export default function Footer() {
           <div className="footer-text">Collection</div>
         </Link>
       </div>
+
+      {/* capture icon */}
       <div className="button">
+        {/* send user to the capture page on click */}
         <Link to="/capture">
           <div
             className="backdrop"

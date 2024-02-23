@@ -1,31 +1,51 @@
 footer {
-  background-color: white;
+  /* make it be in the bottom all the time */
   position: fixed;
   bottom: 0;
   width: 100%;
+
+  /* white background */
+  background-color: white;
+
+  /* evenly distribute the icons */
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  color: black;
   padding: 10px 0px;
-  font-weight: 700;
+
+  /* text style */
   font-size: 10px;
+  font-weight: 700;
+  color: black;
   text-decoration: none;
 }
 
 footer a {
+  /* remove the highlight */
   text-decoration: none;
+
+  /* same color as before */
   color: inherit;
+
+  /* prevent user fron selecting the text */
   user-select: none;
 }
 
+/* the backdrop */
 .backdrop {
+  /* align items in the center */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* round conoer */
   border: none;
   border-radius: 30px;
+
+  /* space between that and the text */
   margin-bottom: 2.5px;
+
+  /* animation */
   transition: background 0.2s ease-in-out;
 }
 

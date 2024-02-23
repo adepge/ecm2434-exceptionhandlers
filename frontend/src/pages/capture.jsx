@@ -15,8 +15,10 @@ function Capture() {
   //     alert('Camera capture is optimized for mobile devices.');
   // }
 
+  // the preview image
   const [previewImg, setPreviewImg] = useState("");
 
+  // the post data
   const [postData, setPostData] = useState({
     fileName: "file.jpg",
     username: "nathan",
@@ -24,12 +26,14 @@ function Capture() {
     geolocID: 0,
   });
 
+  // the geolocation data
   const [geolocData, setGeolocData] = useState({
     location: "1",
     latitude: 0.0,
     longitude: 0.0,
   });
 
+  // when the form is changed, set the state in post data
   const handleChange = (e) => {
     setPostData({
       ...postData,
@@ -37,6 +41,7 @@ function Capture() {
     });
   };
 
+  // on submit
   const handleSubmit = async (e) => {
     console.log(geolocData);
     // e.preventDefault();
@@ -69,6 +74,7 @@ function Capture() {
     inputRef.current.click();
   };
 
+  // handle the capture
   const handleCapture = (e) => {
     setPreviewImg(URL.createObjectURL(e.target.files[0]));
   };
@@ -76,6 +82,7 @@ function Capture() {
   return (
     <>
       <div id="capturePage" class="page active">
+        {/* the invisible file input element */}
         <input
           type="file"
           accept="image/*"
@@ -85,61 +92,74 @@ function Capture() {
           onChange={handleCapture}
           style={{ display: "none" }}
         />
-      </div>
-      <div id="preview-wrapper">
-        <div id="preview">
-          <div id="contents">
-            {previewImg ? (
-              <img
-                src={previewImg}
-                alt="Preview Image"
-                style={{ maxWidth: "100%", height: "auto" }}
-              />
-            ) : (
-              <div
-                id="previewPlaceholder"
-                onClick={() => {
-                  capture();
-                }}
-              >
-                <p>Tap to take a picture</p>
-              </div>
-            )}
+        <div id="display">
+          <div id="preview-wrapper">
+            <div id="preview">
+              <div id="spacer">
+                <div id="contents">
+                  {/* the preview image */}
+                  {previewImg ? (
+                    <img
+                      src={previewImg}
+                      alt="Preview Image"
+                      style={{ maxWidth: "100%", height: "auto" }}
+                    />
+                  ) : (
+                    <div
+                      id="previewPlaceholder"
+                      onClick={() => {
+                        capture();
+                      }}
+                    >
+                      <p>Tap to take a picture</p>
+                    </div>
+                  )}
 
-            <form onSubmit={handleSubmit}>
-              <div id="form">
-                <input
-                  name="caption"
-                  type="caption"
-                  placeholder="post"
-                  onChange={handleChange}
-                />
-              </div>
+                  {/* the form */}
+                  <form onSubmit={handleSubmit}>
+                    {/* the caption */}
+                    <div id="form">
+                      <input
+                        name="caption"
+                        type="caption"
+                        placeholder="post"
+                        onChange={handleChange}
+                      />
+                    </div>
 
-              <div id="previewButtons">
-                <div className="share element">
-                  <img
-                    src={Reset}
-                    width={"15px"}
-                    height={"15px"}
-                    onClick={() => {
-                      capture();
-                    }}
-                  />
+                    {/* the buttons on the bottom */}
+                    <div id="previewButtons">
+                      {/* the retake button */}
+                      <div className="retake element">
+                        <img
+                          src={Reset}
+                          width={"15px"}
+                          height={"15px"}
+                          onClick={() => {
+                            capture();
+                          }}
+                        />
+                      </div>
+
+                      {/* the location button */}
+                      <div className="location element">
+                        <img src={Location} />
+                        Forum
+                      </div>
+
+                      {/* the submit button */}
+                      <button
+                        className="share element"
+                        type="submit"
+                        style={{ height: "100%" }}
+                      >
+                        <img src={Send} />
+                      </button>
+                    </div>
+                  </form>
                 </div>
-                <div className="location element">
-                  <img src={Location} />
-                  Forum
-                </div>
-                <button
-                  className="share element"
-                  type="submit"
-                  style={{ height: "100%" }}
-                >
-                  <img src={Send} />
-                </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
+/* the polaroid container */
 .polaroid {
   background: white;
   margin-bottom: 10px;
@@ -7,6 +8,12 @@
   width: 100%;
 }
 
+/* added padding */
+.polaroid .padding {
+  padding: 5% 3%;
+}
+
+/* the text */
 .polaroid .caption {
   overflow-wrap: break-word;
   font-family: "Nanum Pen Script", cursive;
@@ -14,8 +21,4 @@
   font-style: normal;
   color: black;
   line-height: 1.2;
-}
-
-.polaroid .padding {
-  padding: 5% 3%;
 }

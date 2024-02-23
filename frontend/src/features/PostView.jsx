@@ -1,3 +1,4 @@
+/* a absolute view for the post */
 import "./stylesheets/postView.css";
 
 import Interactives from "../features/interactives";

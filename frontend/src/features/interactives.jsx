@@ -1,10 +1,10 @@
+/* the interactives component is a child component of the card component. It contains the location and share icons. */
 import "./stylesheets/interactives.css";
-import HollowHeart from "../assets/heart-hollow.svg";
+
 import Location from "../assets/location.svg";
 import Share from "../assets/foward.svg";
-import Heart from "../assets/heart.svg";
-import { useEffect, useState } from "react";
-function Interactives({ location, userIcon, isActive }) {
+
+function Interactives({ location, userIcon }) {
   return (
     <div className="interactives">
       <div className="location element">

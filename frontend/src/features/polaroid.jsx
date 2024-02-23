@@ -1,3 +1,5 @@
+/* a polaroid component that takes in a src and a function to be called when clicked. It also takes in a rotation value to rotate the polaroid. */
+
 import "./stylesheets/polaroid.css";
 
 function Polaroid({ src, func, rotation }) {

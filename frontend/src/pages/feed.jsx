@@ -51,16 +51,23 @@ function FeedPage() {
   useEffect(() => {
     // Function to load an image and update its height in the state
     function getImageHeight(url) {
+      // wait for the image to load
       return new Promise((resolve, reject) => {
+        // create a new image
         const img = new Image();
+
+        // when the image loads, resolve with the height
         img.onload = () => {
           resolve(img.height);
         };
+
+        // if there is an error, reject with the error
         img.onerror = reject;
         img.src = url;
       });
     }
 
+    // Distribute the images into two columns based on which column is shorter
     const processImages = async (postMap) => {
       let heightDifference = 0;
       const rightPosts = {};
@@ -69,6 +76,7 @@ function FeedPage() {
       for (const [index, image] of Object.entries(postMap)) {
         // Wait for the image height
         const imageHeight = await getImageHeight(image);
+        // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[index] = image;
           heightDifference += imageHeight + 10; //10 for the margin
@@ -85,6 +93,7 @@ function FeedPage() {
 
   return (
     <>
+      {/* the absolute position post view */}
       <PostView
         isActive={activePost != 0}
         image={postMap[activePost]}
@@ -94,8 +103,9 @@ function FeedPage() {
         location={"Forum"}
         userIcon={image1}
       />
+
+      {/* the feed */}
       <div id="feed">
-        <div className="background"></div>
         <div id="daily-feed">
           <div id="grid-wrapper">
             {/* map each columns */}

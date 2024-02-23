@@ -70,28 +70,6 @@
   width: inherit;
 }
 
-#image-wrapper #last-seen-text {
-  position: absolute;
-  top: 20px;
-  left: 15px;
-  font-weight: 600;
-  font-size: 20px;
-  z-index: 2;
-}
-
-#image-wrapper #last-seen-location {
-  position: absolute;
-  bottom: 20px;
-  left: 15px;
-  font-weight: 600;
-  font-size: 20px;
-  z-index: 2;
-}
-
-.post img {
-  border-radius: inherit;
-}
-
 /* the date and time text */
 .post .date-time {
   position: absolute;
