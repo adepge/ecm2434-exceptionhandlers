@@ -11,7 +11,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
+# Actual directory user files go to
+MEDIA_ROOT = os.path.join(os.path.dirname('database'), 'mediafiles')
+
+# URL used to access the media
+MEDIA_URL = '/media/'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -68,7 +74,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5175",
+    "http://localhost:5175", "http://localhost:5175", "http://localhost:5175",
 ]
 
 ROOT_URLCONF = 'PostCard.urls'
