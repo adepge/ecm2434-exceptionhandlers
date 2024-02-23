@@ -1,8 +1,19 @@
-function Polaroid() {
+import "./stylesheets/polaroid.css";
+
+function Polaroid({ src, func, rotation }) {
   return (
-    <div className="polaroid">
-      <img src={props.image} alt="polaroid" />
-      <div className="caption">{props.caption}</div>
+    <div
+      className="polaroid"
+      style={{ transform: `rotate(${rotation}deg)` }}
+      onClick={func}
+    >
+      <div className="padding">
+        <img src={src} alt="polaroid" style={{ width: "100%" }} />
+        <div className="caption">
+          hellossdafasj;lk
+          as;djfa;jsfdajf;sdasdjfkasjfdjl;ajsdfajsfdlkajsdflkjdsalkfjlkj
+        </div>
+      </div>
     </div>
   );
 }

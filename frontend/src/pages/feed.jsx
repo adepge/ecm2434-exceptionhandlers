@@ -2,6 +2,8 @@ import React from "react";
 import "./stylesheets/feed.css";
 import { useState, useEffect } from "react";
 import PostView from "../features/PostView";
+import Polaroid from "../features/polaroid";
+
 const image1 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
 const image2 =
@@ -67,12 +69,12 @@ function FeedPage() {
       for (const [index, image] of Object.entries(postMap)) {
         // Wait for the image height
         const imageHeight = await getImageHeight(image);
-        if (heightDifference <= 0) {
+        if (heightDifference < 0) {
           rightPosts[index] = image;
-          heightDifference += imageHeight;
+          heightDifference += imageHeight + 10; //10 for the margin
         } else {
           leftPosts[index] = image;
-          heightDifference -= imageHeight;
+          heightDifference -= imageHeight + 10; //10 for the margin
         }
         setColumns([leftPosts, rightPosts]);
       }
@@ -89,30 +91,12 @@ function FeedPage() {
         leaveFunction={() => {
           setActive(0);
         }}
-        likes={100}
         location={"Forum"}
-        liked={false}
         userIcon={image1}
       />
       <div id="feed">
-        <div id="top">
-          <div id="image-wrapper">
-            <div id="last-seen-text">Napoleon was last spotted: </div>
-            <img
-              src={image2}
-              alt="image"
-              onClick={() => {
-                setActive(2);
-              }}
-            />
-
-            <div id="last-seen-location">career zone forum </div>
-          </div>
-        </div>
+        <div className="background"></div>
         <div id="daily-feed">
-          <div id="title">
-            Daily Feed<hr></hr>
-          </div>
           <div id="grid-wrapper">
             {/* map each columns */}
             {columns.map((column, index) => (
@@ -120,13 +104,12 @@ function FeedPage() {
                 {/* map each posts in the column */}
                 {Object.entries(column).map(([index, image]) => (
                   <div className={index} key={index}>
-                    <img
+                    <Polaroid
                       src={image}
-                      alt="image"
-                      style={{ width: "100%" }}
-                      onClick={() => {
+                      func={() => {
                         setActive(index);
                       }}
+                      rotation={-2 + Math.random() * (2 + 2)}
                     />
                   </div>
                 ))}

@@ -3,15 +3,9 @@ import "./stylesheets/postView.css";
 import Interactives from "../features/interactives";
 import InteractivesTop from "../features/interactivesTop";
 
-function PostView({
-  image,
-  isActive,
-  leaveFunction,
-  likes,
-  location,
-  userIcon,
-  liked,
-}) {
+import Polaroid from "./polaroid";
+
+function PostView({ image, isActive, leaveFunction, location, userIcon }) {
   return (
     <div>
       <div
@@ -22,15 +16,9 @@ function PostView({
           <div className="post">
             <InteractivesTop />
             <div className="image">
-              <div className="date-time">2 days ago</div>
-              <img src={image} alt="image" style={{ width: "100%" }} />
+              <Polaroid src={image} />
             </div>
-            <Interactives
-              liked={liked}
-              location={location}
-              likes={likes}
-              isActive={isActive}
-            />
+            <Interactives location={location} isActive={isActive} />
           </div>
         </div>
       </div>

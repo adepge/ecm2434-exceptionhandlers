@@ -14,30 +14,6 @@
   height: auto;
 }
 
-#image-wrapper {
-  border: none;
-  border-radius: 12px;
-}
-
-#image-wrapper::after {
-  content: "";
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.6) 0%,
-    rgba(86, 86, 86, 0) 25%,
-    rgba(86, 86, 86, 0) 75%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
-  border-radius: inherit;
-  pointer-events: none;
-}
-
 #top img {
   width: 100%;
   aspect-ratio: 5/4;
@@ -61,7 +37,6 @@
 
 #daily-feed img {
   border: none;
-  border-radius: 12px;
 }
 
 #daily-feed #title {
@@ -85,4 +60,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+#feed {
+  background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg");
+  background-size: 100% auto;
+  background-repeat: repeat;
 }

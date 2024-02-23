@@ -70,35 +70,6 @@
   width: inherit;
 }
 
-/* the image wrapper for adding text */
-.post .image {
-  position: relative;
-
-  /* make the wrapper fit the image */
-  display: flex;
-
-  /* make the cornor round */
-  border: none;
-  border-radius: 12px;
-}
-
-/* apply a gradient to the image */
-.image::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(86, 86, 86, 0) 85%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
-  z-index: 1;
-  border-radius: inherit;
-}
-
 #image-wrapper #last-seen-text {
   position: absolute;
   top: 20px;
