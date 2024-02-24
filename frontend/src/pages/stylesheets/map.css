@@ -15,7 +15,7 @@ div.gm-style-iw.gm-style-iw-c {
 
 div.poi-info-window.gm-style,
 .poi-info-window div, .poi-info-window a {
-    background: rgb(0, 220, 165);
+    background: white;
     font-family: Outfit, sans-serif;
     color: black;
     padding: 1px;
@@ -24,7 +24,7 @@ div.poi-info-window.gm-style,
 div.gm-style-iw-d {
     margin-right: -10px;
     margin-bottom: -8px;
-    background: rgb(0, 220, 165);
+    background: white;
 }
 
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track, 
@@ -32,7 +32,7 @@ div.gm-style-iw-d {
 .gm-style .gm-style-iw-c,
 .gm-style .gm-style-iw-t::after,
 .gm-style .gm-style-iw-tc::after { 
-  background: rgb(0, 220, 165);
+  background: white;
 }
 
 .mood-prompt {
@@ -105,6 +105,79 @@ div.gm-style-iw-d {
     filter: blur(2px);
 }
 
+.bottom-prompt {
+    position: absolute;
+    bottom: 88px;
+    width: 100vw;
+}
+
+.drawer-container {
+    animation: slideOutTop 0.7s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    width: 100vw;
+    background-color: white;
+    height: 45vh;
+    z-index: 1;
+}
+
+.drawer-exit-top{
+    animation: slideInTop 0.7s ease-in;
+}
+
+.drawer-container .polaroid{
+    scale: 0.7;
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.drawer-container button {
+    font-family: Outfit, sans-serif;
+    font-weight: 700;
+    color: black;
+    margin: 16px 0;
+    height: 28px;
+    width: 126px;
+    border-radius: 50px;
+    border: 0px;
+    background-color: var(--primary);
+}
+
+.drawer-container #handle {
+    height: 5px;
+    width: 43px;
+    margin-bottom: 10px;
+}
+
+#texture {
+    background: url(../../assets/map/texture-small.jpeg);
+    background-size: cover;
+    height: 40vh;
+    width: 90vw;
+    border-radius: 10px;
+    overflow: auto;
+    position: relative;
+}
+
+/* #texture::-webkit-scrollbar {
+    width: 3px;
+    height: 10px;
+}
+
+#texture::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#texture::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+#texture::-webkit-scrollbar-thumb:hover {
+    background: #999;
+} */
+
 /* Animation css classes */
 @keyframes fadeIn {
     from {
@@ -114,5 +187,23 @@ div.gm-style-iw-d {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes slideInTop {
+    from {
+       transform: translateY(-100%)
+    }
+    to {
+        transform: translateY(0%)
+    }
+}
+
+@keyframes slideOutTop {
+    from {
+       transform: translateY(0%)
+    }
+    to {
+        transform:  translateY(-100%)
     }
 }
