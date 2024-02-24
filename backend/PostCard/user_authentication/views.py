@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
-from .forms import UserRegisteration
-from django.contrib import messages
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserRegisterSerializer
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import *
 
-@api_view(['POST']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
+@api_view(['POST'])
+@permission_classes([AllowAny])
+# We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
 def UserRegisterAuthentication(request):
     
     serializer = UserRegisterSerializer(data=request.data)
