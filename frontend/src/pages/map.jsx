@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {differenceInDays, format} from 'date-fns';
 import './stylesheets/map.css';
 import napoleon from '../assets/map/napoleon.svg'
+import MoodPrompt from '../features/MoodPrompt';
 
 // Placeholder imports
 import image1 from '../assets/feed/image1.png'
@@ -33,35 +34,38 @@ function MapPage() {
   const position = {lat: 50.735424, lng: -3.534504};
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <div className="mapContainer">
-      <Map
-      defaultCenter={position}
-      defaultZoom={17}
-      gestureHandling={'greedy'}
-      disableDefaultUI={true}
-      mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
-      >
-        {locations.map((location) => {
-          const opacityDiff = differenceInDays(new Date(), new Date(location.date)) * 0.142857
-          const color = `rgb(0, 220, 165, ${1 - opacityDiff})`
-          return (
-          <>
-            <AdvancedMarker key={location.id} position={location.position} onClick={() => handleOpen(location.id)}>
-              <Pin
-                background={color}
-                borderColor={color}
-                glyphColor={color}
-                scale={1.4}
-              ><img src={napoleon} style={{opacity: 1 - opacityDiff}}></img></Pin>
-            </AdvancedMarker>
-            {location.open && (<InfoWindow className="custom-marker" position={location.position}><img src={location.image}></img></InfoWindow>)}
-          </>
-          )
-        })}
-      </Map>
-      </div>
-    </APIProvider>
+    <>
+      {/* <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        <div className="mapContainer">
+        <Map
+        defaultCenter={position}
+        defaultZoom={17}
+        gestureHandling={'greedy'}
+        disableDefaultUI={true}
+        mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+        >
+          {locations.map((location) => {
+            const opacityDiff = differenceInDays(new Date(), new Date(location.date)) * 0.142857
+            const color = `rgb(0, 220, 165, ${1 - opacityDiff})`
+            return (
+            <>
+              <AdvancedMarker key={location.id} position={location.position} onClick={() => handleOpen(location.id)}>
+                <Pin
+                  background={color}
+                  borderColor={color}
+                  glyphColor={color}
+                  scale={1.4}
+                ></Pin>
+              </AdvancedMarker>
+              {location.open && (<InfoWindow className="custom-marker" position={location.position}></InfoWindow>)}
+            </>
+            )
+          })}
+        </Map>
+        </div>
+      </APIProvider> */}
+      <MoodPrompt />
+    </>
   );
 }
 

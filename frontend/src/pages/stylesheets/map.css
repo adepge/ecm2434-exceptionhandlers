@@ -34,3 +34,21 @@ div.gm-style-iw-d {
 .gm-style .gm-style-iw-tc::after { 
   background: rgb(0, 220, 165);
 }
+
+.mood-prompt {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mood-prompt-card {
+    max-width: 282px;
+    width: 75vw;
+    display: flex;
+}
+
+.background {
+    filter: blur(5px);
+}
