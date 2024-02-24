@@ -1,0 +1,29 @@
+/* FILEPATH: /c:/Users/lyca4/Documents/gse-react/New folder/frontend/src/pages/stylesheets/pageNoFound.css */
+
+/* Add your CSS styles here */
+body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+p {
+  color: #666;
+  font-size: 16px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}

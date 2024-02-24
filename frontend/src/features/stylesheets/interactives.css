@@ -1,76 +1,53 @@
 .interactives {
+  /* the container */
   height: 35px;
   width: 100%;
+
+  /* space between elements */
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  /* padding on top*/
   margin-top: 10px;
+
+  overflow: visible;
+
+  /* font styles */
   font-size: 12px;
   font-weight: 700;
   color: black;
-  overflow: visible;
 }
 
+/* each element */
 .interactives .element {
   background-color: #00dca5;
   border: none;
   border-radius: 36px;
+
   padding: 10px 20px;
+
   display: flex;
   align-items: center;
+
   user-select: none;
 }
 
-.interactives .like {
-  justify-content: space-around;
-  display: flex;
-  cursor: pointer;
-  user-select: none;
-  width: 75px;
-}
-
-.interactives .element img {
+/* the location icon */
+.interactives .element.location img {
   width: auto;
   margin-right: 5px;
   overflow: visible;
   overflow-clip-margin: 0px;
 }
 
+/* the share icon */
 .interactives .share.element img {
   margin-right: 0px;
 }
 
+/* the location button */
 .interactives .location {
   width: 100%;
-  margin: 0px 10px;
-}
-
-.icon-inner {
-  width: 15px;
-  height: 15px;
-}
-
-.icon-inner.active {
-  animation: like 0.5s 1;
-  fill: red;
-  stroke: none;
-}
-
-.icon-inner {
-  fill: transparent;
-  stroke: black;
-  stroke-width: 30;
-  transition: all 0.5s;
-}
-
-@keyframes like {
-  0% {
-    transform: scale(1);
-  }
-  90% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1.1);
-  }
+  margin-right: 10px;
 }

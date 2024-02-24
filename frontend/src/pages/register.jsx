@@ -63,15 +63,11 @@ function RegisterPage() {
       return;
     }
 
-    const { username, email, password } = userData;
-    const dataToSend = { username, email, password };
-    console.log(dataToSend);
-
     // submit the form data to the server
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/register/",
-        dataToSend
+        userData
       );
       console.log(response.data);
       // Handle success (e.g., show message, redirect)

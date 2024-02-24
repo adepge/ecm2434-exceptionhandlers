@@ -1,11 +1,15 @@
 header {
-  background-color: black;
+  /* absolute top */
   position: fixed;
+  top: 0;
   width: 100%;
   z-index: 10;
-  top: 0;
+
+  /* black background */
+  background-color: black;
 }
 
+/* add space between logo and user icon */
 #header-wrapper {
   display: flex;
   flex-direction: row;
@@ -13,6 +17,7 @@ header {
   padding: 10px 15px;
 }
 
+/* center the logo */
 #logo {
   display: flex;
   flex-direction: row;
@@ -20,6 +25,7 @@ header {
   justify-content: center;
 }
 
+/* the text */
 #logo #title {
   font-size: 15px;
   font-weight: 700;
@@ -28,6 +34,7 @@ header {
   justify-content: center;
 }
 
+/* the icon */
 #icon {
   margin-right: 10px;
 }

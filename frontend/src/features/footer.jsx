@@ -13,7 +13,9 @@ export default function Footer() {
 
   return (
     <footer>
+      {/* map icon */}
       <div className="button">
+        {/* send user to the map page on click */}
         <Link to="/">
           <div
             className="backdrop"
@@ -26,21 +28,12 @@ export default function Footer() {
           <div className="footer-text">map</div>
         </Link>
       </div>
+
+      {/* top icon */}
       <div className="button">
-        <Link to="/feed">
-          <div
-            className="backdrop"
-            style={{
-              background: location.pathname === "/feed" ? "#00DCA5" : "none",
-            }}
-          >
-            <img src={feedicon} id="feed-icon" alt="feed-icon" />
-          </div>
-          <div className="footer-text">feed</div>
-        </Link>
-      </div>
-      <div className="button">
+        {/* send user to the top page on click */}
         <Link to="/top">
+          {/* if the user is on the top page, add backdrop to the icon */}
           <div
             className="backdrop"
             style={{
@@ -52,18 +45,37 @@ export default function Footer() {
           <div className="footer-text">top</div>
         </Link>
       </div>
+
+      {/* feed icon */}
       <div className="button">
+        {/* send user to the feed page on click */}
+        <Link to="/feed">
+          <div
+            className="backdrop"
+            style={{
+              background: location.pathname === "/feed" ? "#00DCA5" : "none",
+            }}
+          >
+            <img src={feedicon} id="feed-icon" alt="feed-icon" />
+          </div>
+          <div className="footer-text">Collection</div>
+        </Link>
+      </div>
+
+      {/* capture icon */}
+      <div className="button">
+        {/* send user to the capture page on click */}
         <Link to="/capture">
-        <div
-          className="backdrop"
-          style={{
-            background: location.pathname === "/capture" ? "#00DCA5" : "none",
-          }}
-        >
-          <img src={captureicon} id="capture-icon" alt="capture-icon" />
-        </div>
-        <div className="footer-text">capture</div>
-      </Link>
+          <div
+            className="backdrop"
+            style={{
+              background: location.pathname === "/capture" ? "#00DCA5" : "none",
+            }}
+          >
+            <img src={captureicon} id="capture-icon" alt="capture-icon" />
+          </div>
+          <div className="footer-text">capture</div>
+        </Link>
       </div>
     </footer>
   );
