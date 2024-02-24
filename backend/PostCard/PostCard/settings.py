@@ -40,6 +40,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'posts',
     'database.apps.DatabaseConfig',
     'user_authentication',
     'rest_framework',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'PostCard',
+    
 ]
 
 REST_FRAMEWORK = {
