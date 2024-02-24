@@ -15,7 +15,7 @@ class Geolocation(models.Model):
     
 class Posts(models.Model):
     id   = models.AutoField(primary_key=True)
-    fileName = models.CharField(max_length = 255)
+    image = models.ImageField(upload_to='media')
     geolocID = models.ForeignKey(Geolocation, on_delete = models.CASCADE)
     username = models.ForeignKey(User,        on_delete = models.CASCADE)
     caption  = models.CharField(max_length = 255)
