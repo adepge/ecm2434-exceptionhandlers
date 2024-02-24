@@ -9,4 +9,5 @@ router = DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
     path('api/',include(posts.urls)), # Contains all the API Endpoints 
+    path('admin/', admin.site.urls)
 ]
