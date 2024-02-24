@@ -36,6 +36,9 @@ div.gm-style-iw-d {
 }
 
 .mood-prompt {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -43,12 +46,73 @@ div.gm-style-iw-d {
     align-items: center;
 }
 
-.mood-prompt-card {
+#mood-prompt-card {
+    animation: fadeIn 1s ease-in;
+    position: relative;
     max-width: 282px;
     width: 75vw;
+    height: 301px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    gap: 11px;
+    background-color: white;
 }
 
-.background {
-    filter: blur(5px);
+#mood-prompt-card img {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+}
+
+#mood-prompt-card p {
+    margin-top: 24px;
+    font-weight: 600;
+    color: black;
+}
+
+#mood-prompt-card button {
+    font-family: Outfit, sans-serif;
+    font-weight: 600;
+    height: 27px;
+    width: 159px;
+    border-radius: 50px;
+    border: 0px;
+    cursor: pointer;
+    transition: 1s ease-out;
+}
+
+#mood-prompt-card button:hover, #mood-prompt-card button:active {
+    transform: scale(0.95);
+    transition: 1s ease;
+    filter: brightness(85%);
+}
+
+#mood-prompt-card button:active {
+    transform: scale(0.95);
+    transition: 1s ease;
+}
+
+#mood-prompt-card .urgent-help {
+    color: gray;
+    font-size: 12px;
+    margin-top: 11px;
+    margin-bottom: 21px;
+}
+
+.background-blur {
+    filter: blur(2px);
+}
+
+/* Animation css classes */
+@keyframes fadeIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
