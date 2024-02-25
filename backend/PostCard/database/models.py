@@ -21,6 +21,11 @@ class Posts(models.Model):
     caption  = models.CharField(max_length = 255)
     datetime = models.DateTimeField(auto_now_add = True) #Creates a timestamp
 
+class PostsUser(models.Model):
+    id = models.AutoField(primary_key=True)
+    postid = models.ForeignKey(Posts, on_delete = models.CASCADE)
+    userid   = models.ForeignKey(User, on_delete = models.CASCADE)    
+
 class Stickers(models.Model):
     id   = models.AutoField(primary_key=True)
     stickersName = models.CharField(max_length = 50)
