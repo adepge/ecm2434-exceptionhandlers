@@ -2,6 +2,9 @@ import "./stylesheets/login.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function LoginPage() {
   const [userData, setUserData] = useState({
@@ -22,7 +25,7 @@ function LoginPage() {
     axios
       .post("http://127.0.0.1:8000/api/login/", userData)
       .then((res) => {
-        console.log(res);
+        cookies.set("token", res.data.token, { path: "/" });
       })
       .catch((err) => {
         if (err.response) {
