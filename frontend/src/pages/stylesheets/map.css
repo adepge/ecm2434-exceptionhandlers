@@ -175,7 +175,9 @@ div.gm-style-iw-d {
 }
 
 #polariod-container {
+  /* make it so that the width of the polaroid stays at 50% */
   width: 50%;
+  max-width: 500px;
 }
 /* #texture::-webkit-scrollbar {
     width: 3px;
