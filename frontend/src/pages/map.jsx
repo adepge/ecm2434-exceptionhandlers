@@ -68,7 +68,11 @@ function MapPage() {
   //     }
   //   }, [walking]);
 
-  const handleOpen = (id) => {
+  const handleOpen = (e,id) => {
+
+    // prevent the user from clicking into the outsite area and the map icon
+    e.domEvent.preventDefault()
+    
     setLocations(locations.map(location => {
       if (location.id === id) {
         setDrawerTopVisible(true);
@@ -115,7 +119,7 @@ function MapPage() {
             const color = `var(--${mood})`
             return (
             <>
-              <AdvancedMarker key={location.id} position={location.position} onClick={() => handleOpen(location.id)}>
+              <AdvancedMarker key={location.id} position={location.position} onClick={(e) => handleOpen(e,location.id)}>
                 <Pin
                   background={color}
                   borderColor={color}
