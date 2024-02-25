@@ -16,6 +16,7 @@ function DrawerDown({image, drawerVisible, setDrawerVisible}) {
   const handleClick = (event) => {
     // Check if the clicked element is outside the element
     if (elementRef.current && !elementRef.current.contains(event.target)) {
+      event.preventDefault();
       setClosing(true);
       setTimeout(() => {
         setDrawerVisible(false);
