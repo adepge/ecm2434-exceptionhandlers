@@ -45,7 +45,7 @@ function MapPage() {
 
   // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(false);
+  const [walking, setWalking] = useState(true);
   const [watchId, setWatchId] = useState(null);
   const [position, setPosition] = useState({ lat: 50.73585, lng: -3.533415 });
 
@@ -115,7 +115,7 @@ function MapPage() {
   // Layer constructor for path layer (from deck.gl documentation)
   const layer = new PathLayer({
     id: "path-layer",
-    data: path2,
+    data: path,
     getPath: (d) => d.path,
     getColor: [73, 146, 255],
     getWidth: 7,
@@ -130,27 +130,31 @@ function MapPage() {
       setMood(sessionStorage.mood);
     }
   }, []);
+  
+  useEffect(() => {
+    console.log(path)
+  },[path])
 
   // Get user's location
-  // useEffect(() => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
-  //     });
-  //   }
-  // },[])
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+      });
+    }
+  },[])
 
-  // useEffect(() => {
-  //   if (navigator.geolocation && walking) {
-  //     const watchId = navigator.geolocation.watchPosition((position) => {
-  //       setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
-  //       setPath((currentPath) => setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]));
-  //     setWatchId(watchId);
-  //     });
-  //     } else if (!walking) {
-  //       navigator.geolocation.clearWatch(watchId);
-  //     }
-  //   }, [walking]);
+  useEffect(() => {
+    if (navigator.geolocation && walking) {
+      const watchId = navigator.geolocation.watchPosition((position) => {
+        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+        setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
+      setWatchId(watchId);
+      });
+      } else if (!walking) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    }, [walking]);
 
   const handleOpen = (e, id) => {
     // prevent the user from clicking into the outsite area and the map icon
