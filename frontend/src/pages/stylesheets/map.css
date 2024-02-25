@@ -3,10 +3,13 @@
     width: 100vw;
 }
 
+/* Override Google Maps default styling (move the close button further in window) */
 button.gm-ui-hover-effect{
-    display: none !important;
+    top: -2px !important;
+    right: -2px !important;
 }
 
+/* gm-style css classes are used to style Google Maps information windows (when a user clicks on a marker) */
 div.gm-style-iw.gm-style-iw-c {
     padding: 7px;
     width: calc(max-content - 30px);
@@ -35,6 +38,7 @@ div.gm-style-iw-d {
   background: white;
 }
 
+/* Styling classes for mood prompt */
 .mood-prompt {
     position: absolute;
     top: 0;
@@ -111,6 +115,7 @@ div.gm-style-iw-d {
     width: 100vw;
 }
 
+/* Drawer styling */
 .drawer-container {
     animation: slideOutTop 0.7s ease-out;
     display: flex;
@@ -120,7 +125,7 @@ div.gm-style-iw-d {
     position: absolute;
     width: 100vw;
     background-color: white;
-    height: 45vh;
+    height: 55vh;
     z-index: 1;
 }
 
@@ -153,7 +158,7 @@ div.gm-style-iw-d {
 #texture {
     background: url(../../assets/map/texture-small.jpeg);
     background-size: cover;
-    height: 40vh;
+    height: 50vh;
     width: 90vw;
     border-radius: 10px;
     overflow: auto;

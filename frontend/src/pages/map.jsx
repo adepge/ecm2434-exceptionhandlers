@@ -16,7 +16,7 @@ const image2 =
 const image3 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497298116874311/1000016354.JPG?ex=65dfdc7e&is=65cd677e&hm=e497673ab0de533871fc5fb4bb6e702ce4fbaa856f99461dc3abf555c6f0d510&";
 
-
+// Overlay constructor component (from deck.gl documentation)
 export const DeckGlOverlay = ({layers}) => {
   const deck = useMemo(() => new GoogleMapsOverlay({interleaved: true}), []);
 
@@ -28,17 +28,19 @@ export const DeckGlOverlay = ({layers}) => {
 };
 
 function MapPage() {
-
+  
+  // State for mood prompt
   const [showMoodPrompt, setShowMoodPrompt] = useState(false);
   const [mood, setMood] = useState('unselected');
 
+  // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerImage, setDrawerImage] = useState(image1);
 
+  // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
   const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
- 
   const [position, setPosition] = useState({lat: 50.735850, lng: -3.533415});
   
   // Local state, to be replaced with fetched data
@@ -49,7 +51,7 @@ function MapPage() {
     {id: 4, position: {lat: 50.736341371401544, lng: -3.5391262256961586}, caption: "Caption 4", image: image3, date: '2024-02-13T07:25:41', open: false},
   ])
 
-  // Sample data for path layer
+  // Sample data for path layer (to be replaced as well)
   const path2 = [
     {
       path: [
@@ -76,7 +78,7 @@ function MapPage() {
     }
   ];
 
-
+  // Layer constructor for path layer (from deck.gl documentation)
   const layer = 
     new PathLayer({
       id: 'path-layer',
@@ -86,7 +88,6 @@ function MapPage() {
       getWidth: 7,
       widthMinPixels: 2
     });
-
 
   // Checks if mood has been set before, if not call mood prompt;
   useEffect(() => {
