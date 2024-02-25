@@ -1,36 +1,228 @@
 .mapContainer {
-    height: 94vh;
-    width: 100vw;
+  height: 94vh;
+  width: 100vw;
 }
 
-button.gm-ui-hover-effect{
-    display: none !important;
+/* Override Google Maps default styling (move the close button further in window) */
+button.gm-ui-hover-effect {
+  top: -2px !important;
+  right: -2px !important;
 }
 
+/* gm-style css classes are used to style Google Maps information windows (when a user clicks on a marker) */
 div.gm-style-iw.gm-style-iw-c {
-    padding: 7px;
-    width: calc(max-content - 30px);
-    border-radius: 12px;
+  padding: 7px;
+  width: calc(max-content - 30px);
+  border-radius: 12px;
 }
 
 div.poi-info-window.gm-style,
-.poi-info-window div, .poi-info-window a {
-    background: rgb(0, 220, 165);
-    font-family: Outfit, sans-serif;
-    color: black;
-    padding: 1px;
+.poi-info-window div,
+.poi-info-window a {
+  background: white;
+  font-family: Outfit, sans-serif;
+  color: black;
+  padding: 1px;
 }
 
 div.gm-style-iw-d {
-    margin-right: -10px;
-    margin-bottom: -8px;
-    background: rgb(0, 220, 165);
+  margin-right: -10px;
+  margin-bottom: -8px;
+  background: white;
 }
 
-.gm-style .gm-style-iw-d::-webkit-scrollbar-track, 
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track,
 .gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
 .gm-style .gm-style-iw-c,
 .gm-style .gm-style-iw-t::after,
-.gm-style .gm-style-iw-tc::after { 
-  background: rgb(0, 220, 165);
+.gm-style .gm-style-iw-tc::after {
+  background: white;
+}
+
+/* Styling classes for mood prompt */
+.mood-prompt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#mood-prompt-card {
+  animation: fadeIn 1s ease-in;
+  position: relative;
+  max-width: 282px;
+  width: 75vw;
+  height: 301px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  gap: 11px;
+  background-color: white;
+}
+
+#mood-prompt-card img {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+}
+
+#mood-prompt-card p {
+  margin-top: 24px;
+  font-weight: 600;
+  color: black;
+}
+
+#mood-prompt-card button {
+  font-family: Outfit, sans-serif;
+  font-weight: 600;
+  height: 27px;
+  width: 159px;
+  border-radius: 50px;
+  border: 0px;
+  cursor: pointer;
+  transition: 1s ease-out;
+}
+
+#mood-prompt-card button:hover,
+#mood-prompt-card button:active {
+  transform: scale(0.95);
+  transition: 1s ease;
+  filter: brightness(85%);
+}
+
+#mood-prompt-card button:active {
+  transform: scale(0.95);
+  transition: 1s ease;
+}
+
+#mood-prompt-card .urgent-help {
+  color: gray;
+  font-size: 12px;
+  margin-top: 11px;
+  margin-bottom: 21px;
+}
+
+.background-blur {
+  filter: blur(2px);
+}
+
+.bottom-prompt {
+  position: absolute;
+  bottom: 88px;
+  width: 100vw;
+}
+
+/* Drawer styling */
+.drawer-container {
+  animation: slideOutTop 0.7s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: absolute;
+  width: 100vw;
+  background-color: white;
+  height: 55vh;
+  z-index: 1;
+}
+
+.drawer-exit-top {
+  animation: slideInTop 0.7s ease-in;
+}
+
+.drawer-container .polaroid {
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.drawer-container button {
+  font-family: Outfit, sans-serif;
+  font-weight: 700;
+  color: black;
+  margin: 16px 0;
+  height: 28px;
+  width: 126px;
+  border-radius: 50px;
+  border: 0px;
+  background-color: var(--primary);
+}
+
+.drawer-container #handle {
+  height: 5px;
+  width: 43px;
+  margin-bottom: 10px;
+}
+
+#texture {
+  background: url(../../assets/map/texture-small.jpeg);
+  background-size: cover;
+  height: 40vh;
+  width: 90vw;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  overflow: auto;
+  position: relative;
+  /* account for the header */
+  margin-top: 50px;
+
+  /* center the polaroid */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#polariod-container {
+  /* make it so that the width of the polaroid stays at 50% */
+  width: 50%;
+  max-width: 500px;
+}
+/* #texture::-webkit-scrollbar {
+    width: 3px;
+    height: 10px;
+}
+
+#texture::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#texture::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+#texture::-webkit-scrollbar-thumb:hover {
+    background: #999;
+} */
+
+/* Animation css classes */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideOutTop {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
 }
