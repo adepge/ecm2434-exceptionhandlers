@@ -17,11 +17,11 @@ function Capture() {
 
   // the preview image
   const [previewImg, setPreviewImg] = useState("");
+  const [file, setFile] = useState(null);
 
   // the post data
   const [postData, setPostData] = useState({
-    fileName: "file.jpg",
-    username: "nathan",
+    username: 1,
     caption: "",
     geolocID: 0,
   });
@@ -43,20 +43,58 @@ function Capture() {
 
   // on submit
   const handleSubmit = async (e) => {
-    console.log(geolocData);
+    e.preventDefault();
+    // return;
     // e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/geolocations/",
+        "http://127.0.0.1:8000/api/geolocations/",
         geolocData
       );
       const geolocID = response.data.id;
-      setPostData({ ...postData, geolocID: geolocID });
-      console.log(postData);
-      // Handle success (e.g., show message, redirect)
+      const formData = new FormData();
+      // Ensure 'fileInput' is the correct ID for your file input field
+      const imageFile = document.getElementById("fileInput").files[0];
+      if (imageFile) {
+        formData.append("image", imageFile);
+      } else {
+        console.error("No image file selected");
+        return; // Exit the function if no file is selected
+      }
+
+      // Append other postData fields to formData
+      formData.append("username", postData.username);
+      formData.append("caption", postData.caption);
+      formData.append("geolocID", geolocID); // Append geolocID as a number
+
+      try {
+        // Update the API URL as per your configuration
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/posts/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("Post created:", response.data);
+      } catch (error) {
+        console.error("Error occurred:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          console.log("Response headers:", error.response.headers);
+        }
+      }
     } catch (error) {
-      console.error(error);
-      // Handle error (e.g., show error message)
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
     }
   };
 
@@ -77,6 +115,12 @@ function Capture() {
   // handle the capture
   const handleCapture = (e) => {
     setPreviewImg(URL.createObjectURL(e.target.files[0]));
+    console.log(previewImg);
+
+    if (file) {
+      setPreviewImg(URL.createObjectURL(file));
+      setFile(file); // store the file object
+    }
   };
 
   return (
@@ -150,7 +194,7 @@ function Capture() {
                       {/* the submit button */}
                       <button
                         className="share element"
-                        type="submit"
+                        // type="submit"
                         style={{ height: "100%" }}
                       >
                         <img src={Send} />

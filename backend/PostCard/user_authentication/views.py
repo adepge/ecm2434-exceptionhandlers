@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserRegisterSerializer , UserLoginSerializer
@@ -13,7 +13,6 @@ from django.contrib.auth import authenticate
 @permission_classes([AllowAny])
 
 def UserRegisterAuthentication(request):
-    
     serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save() # Account is made and save to the database, test by checking the admin page / querying to DB

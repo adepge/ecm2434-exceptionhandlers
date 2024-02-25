@@ -9,6 +9,7 @@ import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
 import PageNoFound from "./pages/pageNoFound";
 import ProfilePage from "./pages/profilepage";
+import test from "./pages/test";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<PageNoFound />} />
+        <Route path="/test" element={<test />} />
       </Routes>
       <Footer />
     </>
