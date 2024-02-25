@@ -5,7 +5,6 @@
   background: white;
   margin-bottom: 10px;
   font-size: 20px;
-  width: 100%;
 }
 
 /* added padding */
@@ -21,4 +20,9 @@
   font-style: normal;
   color: black;
   line-height: 1.2;
+}
+
+.polaroid img {
+  max-height: 100%;
+  width: auto;
 }

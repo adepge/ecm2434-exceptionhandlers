@@ -38,7 +38,9 @@ function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
       {drawerVisible && (
         <div className={drawerClass} ref={elementRef}>
           <div id="texture">
-            <Polaroid id="collect-polaroid" src={image} rotation={-5} />
+            <div id="polariod-container">
+              <Polaroid id="collect-polaroid" src={image} rotation={-5} />
+            </div>
           </div>
           <button>Add to collection</button>
           <img id="handle" src={handle}></img>
