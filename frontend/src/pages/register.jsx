@@ -51,6 +51,7 @@ function RegisterPage() {
         ...errors,
         confirmPassword: "Passwords do not match",
       });
+      setIsLoading(false);
       return;
     }
     // if the checkbox is not checked, display an error message
@@ -59,6 +60,7 @@ function RegisterPage() {
         ...errors,
         checkbox: "Please agree to the terms and conditions",
       });
+      setIsLoading(false);
       return;
     }
 
@@ -68,6 +70,7 @@ function RegisterPage() {
         ...errors,
         password: "Password must be at least 8 characters long",
       });
+      setIsLoading(false);
       return;
     }
 

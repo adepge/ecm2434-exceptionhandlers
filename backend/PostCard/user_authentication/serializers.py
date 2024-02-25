@@ -8,7 +8,7 @@ from rest_framework.response import Response
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username','password','email']
+        fields = ['id', 'username','password','email']
 
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
