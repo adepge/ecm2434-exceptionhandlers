@@ -16,7 +16,7 @@ def UserRegisterAuthentication(request):
     serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save() # Account is made and save to the database, test by checking the admin page / querying to DB
-        return Response(status=status.HTTP_201_CREATED)    # Successful user creation
+        return Response(serializer.errors,status=status.HTTP_201_CREATED)    # Successful user creation
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation
 

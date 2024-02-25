@@ -10,3 +10,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("A user with that username already exists.")
         return value
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','password']    
