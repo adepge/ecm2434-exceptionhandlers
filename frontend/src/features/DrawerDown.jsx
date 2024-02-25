@@ -4,7 +4,7 @@ import handle from "../assets/map/handle.svg";
 
 function DrawerDown({image, drawerVisible, setDrawerVisible}) {
   const elementRef = useRef(null);
-  const [closing, setClosing] = useState(false);
+  const [closing, setClosing] = useState(setDrawerVisible);
 
   useEffect(() => {
     document.addEventListener('click', handleClick);
@@ -15,8 +15,10 @@ function DrawerDown({image, drawerVisible, setDrawerVisible}) {
 
   const handleClick = (event) => {
     // Check if the clicked element is outside the element
+    
+    event.preventDefault();
+
     if (elementRef.current && !elementRef.current.contains(event.target)) {
-      event.preventDefault();
       setClosing(true);
       setTimeout(() => {
         setDrawerVisible(false);
