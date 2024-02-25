@@ -7,5 +7,5 @@ class UserRegisteration(UserCreationForm):
     email = forms.EmailField()
     class Meta:
         model = User
-        fields = ['username' , 'email' , 'password']
-    
+        fields = ['username' , 'email' , 'password'] 
+        

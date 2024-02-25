@@ -9,6 +9,7 @@ from django.conf import settings
 urlpatterns = [
     #USER AUTHENTICATION API ENDPOINT
     path('register/', UserRegisterAuthentication, name="register"),
+    path('login/',UserLoginAuthentication, name='log'),
     #-----
     #POSTS API ENDPOINT
     path('posts/', PostsList.as_view(), name='posts-list'),
