@@ -18,6 +18,7 @@ function LoginPage() {
 
   const hansleSubmit = (e) => {
     e.preventDefault();
+    console.log(userData);
     axios
       .post("http://127.0.0.1:8000/api/login/", userData)
       .then((res) => {

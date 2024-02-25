@@ -24,17 +24,12 @@ def UserRegisterAuthentication(request):
 @api_view(['POST']) # Secuirty purposes we dont want to append user details to header
 @permission_classes([AllowAny]) # idk , doesnt work without it smh
 def UserLoginAuthentication(request):
-    
-    serializer = UserLoginSerializer(data=request.data)
-    password = serializer.validated_data.get('password')
-    username = serializer.validated_data.get('username')
-
-    validity = authenticate(username=username,password=password)
-    if validity == type(object):
-        token_generated = Token(user=username)
-
-        return Response({"Message":f"user exists and he is checked to be valid, here is your token: {token_generated}"},status=status.HTTP_202_ACCEPTED)
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    if user:
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key}, status=status.HTTP_200_OK)
     else:
-        return Response({"Message":"You do not exist in the database, try making an account lil bro"},status=status.HTTP_404_NOT_FOUND)
-
-
+        return Response({"Message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+    # return Response({"Message": "hello"})

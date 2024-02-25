@@ -6,11 +6,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username','password','email']
 
-    def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("A user with that username already exists.")
-        return value
-
 
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
