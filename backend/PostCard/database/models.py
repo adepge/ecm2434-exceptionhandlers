@@ -21,6 +21,9 @@ class Posts(models.Model):
     caption  = models.CharField(max_length = 255)
     datetime = models.DateTimeField(auto_now_add = True) #Creates a timestamp
 
+# the post user has collected
+# {userid: 1, postids: [1,2,3,4,5]}
+# TODO
 class PostsUser(models.Model):
     id = models.AutoField(primary_key=True)
     postid = models.ForeignKey(Posts, on_delete = models.CASCADE)
