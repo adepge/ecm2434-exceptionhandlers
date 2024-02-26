@@ -87,7 +87,7 @@ def getUser(request):
 from django.utils import timezone
 from datetime import timedelta
 
-@api_view(['POST'])
+@api_view(['POST','GET'])
 @permission_classes([AllowAny])
 def getPostsLast24Hours(request):
     try:
