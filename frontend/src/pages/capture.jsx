@@ -112,9 +112,10 @@ function Capture() {
         console.log("Response status:", error.response.status);
         console.log("Response headers:", error.response.headers);
       }
+
+      alert("An error occurred while creating the post");
     }
 
-    alert("An error occurred while creating the post");
     isLoading(false);
   };
 
