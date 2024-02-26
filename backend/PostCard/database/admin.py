@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Geolocation, Posts, Stickers, StickersUser
 # Register models to admint page based on the models.py file, adding the list_display and search_fields to make it easier to search and view the data
 class PostsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'datetime')
+    list_display = ('id', 'userid', 'datetime')
     search_fields = ['username__username']
 
 class GeolocationAdmin(admin.ModelAdmin):

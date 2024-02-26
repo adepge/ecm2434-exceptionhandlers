@@ -5,6 +5,9 @@ import Send from "../assets/send.svg";
 import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
 import axios from "axios";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function Capture() {
   // Simple mobile detection
@@ -21,7 +24,7 @@ function Capture() {
 
   // the post data
   const [postData, setPostData] = useState({
-    username: 1,
+    username: cookies.get("token"),
     caption: "",
     geolocID: 0,
   });
@@ -75,6 +78,7 @@ function Capture() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              "Authorization": `Token ${postData.username}`, // Assuming postData.username is the token
             },
           }
         );

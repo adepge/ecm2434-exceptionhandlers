@@ -17,7 +17,7 @@ class Posts(models.Model):
     id   = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to='media')
     geolocID = models.ForeignKey(Geolocation, on_delete = models.CASCADE)
-    username = models.ForeignKey(User,        on_delete = models.CASCADE)
+    userid = models.ForeignKey(User, on_delete = models.CASCADE)
     caption  = models.CharField(max_length = 255)
     datetime = models.DateTimeField(auto_now_add = True) #Creates a timestamp
 
