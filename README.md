@@ -54,6 +54,6 @@ Technical documents are broken down into front end and back end etc.
 ## PRODUCT DOCUMENTS
 Our product documents are primarily in the form of a product UI. Below is a link to our latest version.
 
-public link: [https://ibm/cloud/12i7dvgj/exeter-orienteering]
+public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW)https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW]
 
 
