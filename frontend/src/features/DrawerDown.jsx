@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Polaroid from "./polaroid";
 import handle from "../assets/map/handle.svg";
+import "../styles/drawer-down.css";
 
 function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
   const elementRef = useRef(null);
@@ -35,17 +36,19 @@ function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
 
   return (
     <>
-      {drawerVisible && (
-        <div className={drawerClass} ref={elementRef}>
-          <div id="texture">
-            <div id="polariod-container">
-              <Polaroid id="collect-polaroid" src={image} rotation={-5} />
+      <div className="drawer-wrapper">
+        {drawerVisible && (
+          <div className={drawerClass} ref={elementRef}>
+            <div id="texture">
+              <div id="polariod-container">
+                <Polaroid id="collect-polaroid" src={image} rotation={-5} />
+              </div>
             </div>
+            <button>Add to collection</button>
+            <img id="handle" src={handle}></img>
           </div>
-          <button>Add to collection</button>
-          <img id="handle" src={handle}></img>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
