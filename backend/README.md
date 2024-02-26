@@ -33,6 +33,7 @@ $ printenv                          # List currently set environs on macos and l
 Set up your local database by running migrations:
 
 ```bash
+$ python manage.py makemigrations database
 $ python manage.py migrate
 ```
 
