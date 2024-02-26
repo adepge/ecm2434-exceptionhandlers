@@ -145,9 +145,9 @@ function MapPage() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(path)
-  }, [path])
+  // useEffect(() => {
+  //   console.log(path)
+  // }, [path])
 
   // Get user's location
   useEffect(() => {
