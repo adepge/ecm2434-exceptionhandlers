@@ -2,7 +2,7 @@
 
 import "./stylesheets/polaroid.css";
 
-function Polaroid({ src, func, rotation}) {
+function Polaroid({ src, func, rotation, caption}) {
   return (
     <div
       className="polaroid"

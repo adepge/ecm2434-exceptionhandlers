@@ -115,6 +115,20 @@ div.gm-style-iw-d {
   position: absolute;
   bottom: 88px;
   width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.bottom-prompt-wrapper {
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  background-color: var(--primary);
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 /* Drawer styling */
