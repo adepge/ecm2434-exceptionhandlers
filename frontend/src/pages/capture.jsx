@@ -28,6 +28,7 @@ function Capture() {
     caption: "",
     geolocID: 0,
   });
+  console.log(cookies.get("token"));
 
   // the geolocation data
   const [geolocData, setGeolocData] = useState({
@@ -66,14 +67,14 @@ function Capture() {
       }
 
       // Append other postData fields to formData
-      formData.append("username", postData.username);
+      // formData.append("userid", 1);
       formData.append("caption", postData.caption);
       formData.append("geolocID", geolocID); // Append geolocID as a number
 
       try {
         // Update the API URL as per your configuration
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/posts/",
+          "http://127.0.0.1:8000/api/createPost/",
           formData,
           {
             headers: {

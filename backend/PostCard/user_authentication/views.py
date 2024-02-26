@@ -37,6 +37,5 @@ def UserLoginAuthentication(request):
         token, _ = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     else:
-        return Response({"Message": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
-    # return Response({"Message": "hello"})
+        return Response({"username": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
      

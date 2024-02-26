@@ -13,6 +13,7 @@ urlpatterns = [
     #-----
     #POSTS API ENDPOINT
     path('posts/', PostsList.as_view(), name='posts-list'),
+    path('createPost/', createPost , name='create-post'),
     path('posts/<int:pk>/', PostsDetail.as_view(), name='posts-detail'),
     path('geolocations/', GeolocationList.as_view(), name='geolocation-list'),
     path('geolocations/<int:pk>/', GeolocationDetail.as_view(), name='geolocation-detail'),

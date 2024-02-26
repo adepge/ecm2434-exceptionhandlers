@@ -44,6 +44,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  margin-bottom: 30px;
+}
+
+/* text input field's spacing */
+#login #form .field {
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 /* the forms and button  */
@@ -54,8 +62,7 @@
   align-items: center;
   justify-content: center;
 
-  /* margin from the title */
-  margin-top: 40px;
+  width: 100%;
 }
 
 /* each input field */
@@ -70,8 +77,7 @@
   padding: 13px 21px;
   font-weight: 700;
   color: black;
-  background-color: whitesmoke;
-  margin-bottom: 30px;
+  background-color: #e7e7e7;
 
   /* make the form start from the left */
   box-sizing: border-box;
