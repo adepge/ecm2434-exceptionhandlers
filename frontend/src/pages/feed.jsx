@@ -85,10 +85,10 @@ function FeedPage() {
     <>
       {/* the absolute position post view */}
       <PostView
-        isActive={activePost != 0}
+        isActive={Object.keys(activePost).length !== 0}
         image={activePost["image"]}
         leaveFunction={() => {
-          setActive([]);
+          setActive({});
         }}
         caption={activePost["caption"]}
         location={"Forum"}

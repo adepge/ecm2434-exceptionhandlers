@@ -60,11 +60,11 @@ def createPost(request):
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     
     # Create a mutable copy of request.data
-    data = request.data.copy()
-    data['userid'] = userid  # Add 'userid' key
+    request.data['userid'] = userid  # Add 'userid' key
+    # data['userid'] = userid  # Add 'userid' key
 
     # Create a serializer instance with the mutable copy of request.data
-    serialized = PostsSerializer(data=data)
+    serialized = PostsSerializer(data=request.data)
 
     if serialized.is_valid():
         serialized.save()
