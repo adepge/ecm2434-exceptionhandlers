@@ -3,7 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import Cookies from "universal-cookie";
+
 import LoadingScreen from "../features/loadingScreen";
+
+const cookies = new Cookies();
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -90,7 +94,7 @@ function RegisterPage() {
         userData
       );
       console.log(response.data);
-      // redirect the user to the home page
+      cookies.set("token", response.data.token, { path: "/" });
       navigate("/");
     } catch (error) {
       if (error.response) {
@@ -114,6 +118,7 @@ function RegisterPage() {
         console.error("Error:", error.message);
       }
 
+      alert("An error occurred.")
       // remove the loading screen
       setIsLoading(false);
       return;

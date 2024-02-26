@@ -6,6 +6,9 @@ import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
+
+import LoadingScreen from "../features/loadingScreen";
 
 const cookies = new Cookies();
 
@@ -18,9 +21,16 @@ function Capture() {
   //     alert('Camera capture is optimized for mobile devices.');
   // }
 
+
+
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+
   // the preview image
   const [previewImg, setPreviewImg] = useState("");
   const [file, setFile] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // the post data
   const [postData, setPostData] = useState({
@@ -50,6 +60,7 @@ function Capture() {
     e.preventDefault();
     // return;
     // e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/geolocations/",
@@ -62,7 +73,8 @@ function Capture() {
       if (imageFile) {
         formData.append("image", imageFile);
       } else {
-        console.error("No image file selected");
+        alert("No image file selected");
+        isLoading(false);
         return; // Exit the function if no file is selected
       }
 
@@ -84,7 +96,7 @@ function Capture() {
           }
         );
 
-        console.log("Post created:", response.data);
+        navigate("/");
       } catch (error) {
         console.error("Error occurred:", error);
         if (error.response) {
@@ -100,10 +112,12 @@ function Capture() {
         console.log("Response status:", error.response.status);
         console.log("Response headers:", error.response.headers);
       }
-    }
-  };
 
-  const inputRef = useRef(null);
+      alert("An error occurred while creating the post");
+    }
+
+    isLoading(false);
+  };
 
   useEffect(() => {
     // Check if the input element exists and then click it programmatically
@@ -130,6 +144,8 @@ function Capture() {
 
   return (
     <>
+
+      <LoadingScreen active={isLoading} />
       <div id="capturePage" class="page active">
         {/* the invisible file input element */}
         <input
