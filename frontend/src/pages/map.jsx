@@ -14,6 +14,7 @@ import "./stylesheets/map.css";
 import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
+import Location from "../assets/location.svg";
 
 import axios from "axios";
 
@@ -59,7 +60,7 @@ function MapPage() {
 
   // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(true);
+  const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
   const [position, setPosition] = useState({ lat: 50.73585, lng: -3.533415 });
 
@@ -279,7 +280,11 @@ function MapPage() {
         </div>
       </APIProvider>
       {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-      <div className="bottom-prompt">Start Walking</div>
+      <div className="bottom-prompt">
+        <div className="bottom-prompt-wrapper">
+          <img src={Location} />Start Walking
+        </div>
+      </div>
     </>
   );
 }
