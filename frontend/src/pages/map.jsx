@@ -91,7 +91,31 @@ function MapPage() {
     },
     {
       id: 4,
+      position: { lat: 50.73788280412368, lng: -3.530794042942085 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 5,
       position: { lat: 50.736341371401544, lng: -3.5391262256961586 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 6,
+      position: { lat: 50.738038832528616, lng: -3.5306508139149866 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 7,
+      position: { lat: 50.73782485058377, lng: -3.530022719410907 },
       caption: "Caption 4",
       image: image3,
       date: "2024-02-13T07:25:41",
@@ -145,10 +169,6 @@ function MapPage() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log(path)
-  // }, [path])
-
   // Get user's location
   useEffect(() => {
     if (navigator.geolocation) {
@@ -169,6 +189,12 @@ function MapPage() {
       navigator.geolocation.clearWatch(watchId);
     }
   }, [walking]);
+
+  const filterPins = (lat, lng) => {
+    const closeLocations = locations.filter((location) => {
+      return(Math.abs(location.position.lat - lat) < 0.0005 && Math.abs(location.position.lng - lng) < 0.0005 )});
+    return closeLocations;
+  }
 
   const handleOpen = (e, id) => {
     // prevent the user from clicking into the outsite area and the map icon
@@ -230,7 +256,7 @@ function MapPage() {
                 }}
               ></div>
             </AdvancedMarker>
-            {locations.map((location) => {
+            {filterPins(position.lat, position.lng).map((location) => {
               const color = `var(--${mood})`;
               return (
                 <>
