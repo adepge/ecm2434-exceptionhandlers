@@ -11,7 +11,7 @@ A progressive web app to upload images and posts that users can make as they exp
 
 # Welcome to the Exeter Orienteering Project
 
-### Group Z
+### Exception Handler
 ___
 
 The group members are:
@@ -56,6 +56,4 @@ Our product documents are primarily in the form of a product UI. Below is a link
 
 public link: [https://ibm/cloud/12i7dvgj/exeter-orienteering]
 
-The UI and design documents for the client have also been archived under the link below:
 
-[./product-documents/UI/](./product-documents/UI/)
