@@ -6,7 +6,7 @@ import InteractivesTop from "../features/interactivesTop";
 
 import Polaroid from "./polaroid";
 
-function PostView({ image, isActive, leaveFunction, location, userIcon }) {
+function PostView({ caption, image, isActive, leaveFunction, location, userIcon }) {
   return (
     <div>
       <div
@@ -17,7 +17,7 @@ function PostView({ image, isActive, leaveFunction, location, userIcon }) {
           <div className="post">
             <InteractivesTop />
             <div className="image">
-              <Polaroid src={image} />
+              <Polaroid src={image} caption={caption} />
             </div>
             <Interactives location={location} isActive={isActive} />
           </div>

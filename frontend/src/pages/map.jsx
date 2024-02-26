@@ -15,6 +15,8 @@ import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
 
+import axios from "axios";
+
 // Placeholder imports
 const image1 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
@@ -33,6 +35,18 @@ export const DeckGlOverlay = ({ layers }) => {
 
   return null;
 };
+
+// get all the post from database 
+const getPosts = async () => {
+  try {
+    const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+getPosts().then((data) => console.log(data));
 
 function MapPage() {
   // State for mood prompt
@@ -130,31 +144,31 @@ function MapPage() {
       setMood(sessionStorage.mood);
     }
   }, []);
-  
+
   useEffect(() => {
     console.log(path)
-  },[path])
+  }, [path])
 
   // Get user's location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
       });
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     if (navigator.geolocation && walking) {
       const watchId = navigator.geolocation.watchPosition((position) => {
-        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
         setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-      setWatchId(watchId);
+        setWatchId(watchId);
       });
-      } else if (!walking) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-    }, [walking]);
+    } else if (!walking) {
+      navigator.geolocation.clearWatch(watchId);
+    }
+  }, [walking]);
 
   const handleOpen = (e, id) => {
     // prevent the user from clicking into the outsite area and the map icon

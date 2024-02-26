@@ -2,7 +2,7 @@
 
 import "./stylesheets/polaroid.css";
 
-function Polaroid({ src, func, rotation}) {
+function Polaroid({ src, func, rotation, caption }) {
   return (
     <div
       className="polaroid"
@@ -12,8 +12,7 @@ function Polaroid({ src, func, rotation}) {
       <div className="padding">
         <img src={src} alt="polaroid" style={{ width: "100%" }} />
         <div className="caption">
-          hellossdafasj;lk
-          as;djfa;jsfdajf;sdasdjfkasjfdjl;ajsdfajsfdlkajsdflkjdsalkfjlkj
+          {caption}
         </div>
       </div>
     </div>
