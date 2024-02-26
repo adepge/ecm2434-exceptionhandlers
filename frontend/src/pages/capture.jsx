@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingScreen from "../features/loadingScreen";
 
 const cookies = new Cookies();
+axios.defaults.withCredentials = true;
 
 function Capture() {
   // Simple mobile detection
