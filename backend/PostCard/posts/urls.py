@@ -25,6 +25,7 @@ urlpatterns = [
     path('stickerusers/', StickersUserList.as_view(), name='stickeruser-list'),
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
     #---
+    path('collectPost/', addCollection, name='postuser-list'),
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),

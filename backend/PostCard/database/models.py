@@ -25,9 +25,8 @@ class Posts(models.Model):
 # {userid: 1, postids: [1,2,3,4,5]}
 # TODO
 class PostsUser(models.Model):
-    id = models.AutoField(primary_key=True)
-    postid = models.ForeignKey(Posts, on_delete = models.CASCADE)
-    userid   = models.ForeignKey(User, on_delete = models.CASCADE)    
+    userID = models.OneToOneField(User, on_delete = models.CASCADE)
+    postID = models.ManyToManyField(Posts)
 
 class Stickers(models.Model):
     id   = models.AutoField(primary_key=True)
@@ -39,3 +38,4 @@ class StickersUser(models.Model):
     id = models.AutoField(primary_key=True)
     stickersID = models.ForeignKey(Stickers, on_delete = models.CASCADE)
     username   = models.ForeignKey(User, on_delete = models.CASCADE)
+

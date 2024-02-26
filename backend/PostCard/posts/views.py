@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from database.models import Geolocation, Posts, Stickers, StickersUser
-from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer
+from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser
+from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer, PostsUserSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
@@ -48,6 +48,11 @@ class StickersUserList(generics.ListCreateAPIView):
 class StickersUserDetail(generics.RetrieveAPIView):
     queryset = StickersUser.objects.all()
     serializer_class = StickersUserSerializer
+    permission_classes = [AllowAny]
+
+class PostUser(generics.ListCreateAPIView):
+    queryset = PostsUser.objects.all()
+    serializer_class = PostsUserSerializer
     permission_classes = [AllowAny]
 
 @api_view(['POST']) # Secuirty purposes we dont want to append user details to header
@@ -100,4 +105,31 @@ def getPostsLast24Hours(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def addCollection(request):
+    try:
+        user = request.user
+        if user.is_anonymous:
+            raise Exception("User not logged in")
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    post_id = request.data.get('postid')
+    if not post_id:
+        return Response({"message": "postid not provided"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Retrieve the Post instance using post_id
+        post = Posts.objects.get(id=post_id)
+    except Posts.DoesNotExist:
+        return Response({"message": "Post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Get or create a PostsUser instance for the user
+    posts_user, created = PostsUser.objects.get_or_create(userID=user)
+    
+    # Add the post to the user's collection
+    posts_user.postID.add(post)
+    
+    return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)

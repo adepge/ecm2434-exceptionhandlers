@@ -11,15 +11,13 @@ const cookies = new Cookies();
 
 function test() {
 
-  const [form, setForm] = useState({
-    "userid": 1,
-    "postid": []
-  })
-
   const token = cookies.get('token');
 
   console.log(token);
 
+  const [form, setForm] = useState({
+    "postid": 2
+  })
 
   const handleSubmit = async (e) => {
 
@@ -27,7 +25,7 @@ function test() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/postsusers/",
+        "http://127.0.0.1:8000/api/collectPost/",
         form,
         {
           headers: {
