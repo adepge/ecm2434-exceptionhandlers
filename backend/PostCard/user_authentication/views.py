@@ -7,7 +7,7 @@ from rest_framework.permissions import *
 
 from rest_framework.authtoken.models import Token 
 from django.contrib.auth import authenticate
-
+from django.contrib.auth.models import User
 
 @api_view(['POST']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
 @permission_classes([AllowAny])
@@ -15,8 +15,14 @@ from django.contrib.auth import authenticate
 def UserRegisterAuthentication(request):
     serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save() # Account is made and save to the database, test by checking the admin page / querying to DB
-        return Response(serializer.errors,status=status.HTTP_201_CREATED)    # Successful user creation
+        username = serializer.validated_data.get('username')
+        email = serializer.validated_data.get('email')
+        password = serializer.validated_data.get('password')
+        user_instance = User(username=username,email=email)
+        user_instance.set_password(password)
+        user_instance.save()
+        
+        return Response({"message":"User made"},status=status.HTTP_201_CREATED)    # Successful user creation
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation
 
@@ -31,5 +37,6 @@ def UserLoginAuthentication(request):
         token, _ = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     else:
-        return Response({"Message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"Message": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
     # return Response({"Message": "hello"})
+     
