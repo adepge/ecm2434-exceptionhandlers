@@ -84,4 +84,20 @@ def getUser(request):
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     return Response({"userid":userid,"username":username},status=status.HTTP_200_OK) # Successful user creation
     
+from django.utils import timezone
+from datetime import timedelta
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def getPostsLast24Hours(request):
+    try:
+        current_time = timezone.now()
+        time_24_hours_ago = current_time - timedelta(days=1)
+
+        recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time])
+        serializer = PostsSerializer(recent_posts, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
