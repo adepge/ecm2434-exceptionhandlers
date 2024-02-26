@@ -74,7 +74,7 @@ function Capture() {
         formData.append("image", imageFile);
       } else {
         alert("No image file selected");
-        isLoading(false);
+        setIsLoading(false);
         return; // Exit the function if no file is selected
       }
 
@@ -116,7 +116,7 @@ function Capture() {
       alert("An error occurred while creating the post");
     }
 
-    isLoading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
