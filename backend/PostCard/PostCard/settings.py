@@ -86,6 +86,8 @@ CORS_ALLOWED_ORIGINS = [
     # 'django.middleware.common.CommonMiddleware',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'PostCard.urls'
 
 TEMPLATES = [

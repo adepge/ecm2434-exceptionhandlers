@@ -18,14 +18,17 @@ urlpatterns = [
     path('geolocations/', GeolocationList.as_view(), name='geolocation-list'),
     path('geolocations/<int:pk>/', GeolocationDetail.as_view(), name='geolocation-detail'),
     #----
-
+    path('posts/recent/', getPostsLast24Hours, name='posts-recent'),
     # STICKER API ENDPOINT
     path('stickers/', StickersList.as_view(), name='sticker-list'),
     path('stickers/<int:pk>/', StickersDetail.as_view(), name='sticker-detail'),
     path('stickerusers/', StickersUserList.as_view(), name='stickeruser-list'),
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
     #---
+    path('collectPost/', addCollection, name='postuser-list'),
 
+    #USER API ENDPOINT
+    path('getUser/', getUser, name='user-list'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

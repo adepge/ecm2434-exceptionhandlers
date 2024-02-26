@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from database.models import Geolocation, Posts, Stickers, StickersUser
+from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser
 from django.contrib.auth.models import User
 
 # Add all the serializers here for the models
@@ -27,3 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'  
+
+class PostsUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostsUser
+        fields = '__all__'  # This will include all fields from the PostsUser model

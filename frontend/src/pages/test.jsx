@@ -1,78 +1,55 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import Cookies from "universal-cookie";
+import './stylesheets/test.css'
+import { useState } from "react";
+
+const cookies = new Cookies();
+
+// axios.defaults.withCredentials = true;
+
 function test() {
-  state = {
-    title: "",
-    content: "",
-    image: null,
-  };
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value,
-    });
-  };
+  const token = cookies.get('token');
 
-  handleImageChange = (e) => {
-    this.setState({
-      image: e.target.files[0],
-    });
-  };
+  console.log(token);
 
-  handleSubmit = (e) => {
+  const [form, setForm] = useState({
+    "postid": 2
+  })
+
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
-    console.log(this.state);
-    let form_data = new FormData();
-    form_data.append("image", this.state.image, this.state.image.name);
-    form_data.append("title", this.state.title);
-    form_data.append("content", this.state.content);
-    let url = "http://localhost:8000/api/posts/";
-    axios
-      .post(url, form_data, {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
-  };
+    try {
+      // Update the API URL as per your configuration
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/collectPost/",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Token ${token}`, // Assuming postData.username is the token
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
+    }
+  }
+
 
   return (
-    <div className="App">
-      <form onSubmit={this.handleSubmit}>
-        <p>
-          <input
-            type="text"
-            placeholder="Title"
-            id="title"
-            value={this.state.title}
-            onChange={this.handleChange}
-            required
-          />
-        </p>
-        <p>
-          <input
-            type="text"
-            placeholder="Content"
-            id="content"
-            value={this.state.content}
-            onChange={this.handleChange}
-            required
-          />
-        </p>
-        <p>
-          <input
-            type="file"
-            id="image"
-            accept="image/png, image/jpeg"
-            onChange={this.handleImageChange}
-            required
-          />
-        </p>
-        <input type="submit" />
+    <div className="test">
+      <form onSubmit={handleSubmit}>
+        <button type="submit">submit</button>
       </form>
     </div>
   );

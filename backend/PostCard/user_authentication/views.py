@@ -25,7 +25,7 @@ def UserRegisterAuthentication(request):
         token, _ = Token.objects.get_or_create(user=user_instance) # Avoids needing to login in after making page
 
         
-        return Response({f"message": token.key},status=status.HTTP_200_OK)    # Successful user creation
+        return Response({f"token": token.key},status=status.HTTP_200_OK)    # Successful user creation
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST)                   # Failed user creation
 
