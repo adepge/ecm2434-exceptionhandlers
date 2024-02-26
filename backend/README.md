@@ -7,19 +7,19 @@ Set up and activate a virtual environment:
 $ cd backend/venv/
 
 $ source .env/bin/activate          # Linux
-$ .env/Scripts/activate             # Windows
-```
-
-Install the required packages to your environment.:
-
-```bash
-$ pip install -r requirements.txt
+$ ./Scripts/activate             # Windows
 ```
 
 Navigate to the project directory, where `manage.py` is located.
 
 ```bash
 $ cd PostCard
+```
+
+Install the required packages to your environment.:
+
+```bash
+$ pip install -r requirements.txt
 ```
 
 Set environmental variable to true.
