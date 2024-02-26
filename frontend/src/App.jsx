@@ -9,6 +9,7 @@ import RegisterPage from "./pages/register";
 import LoginPage from "./pages/login";
 import PageNoFound from "./pages/pageNoFound";
 import ProfilePage from "./pages/profilepage";
+import Test from "./pages/test";
 
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -63,7 +64,7 @@ function App() {
         <Route path="/capture" element={<Capture />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<PageNoFound />} />
-        <Route path="/test" element={<test />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
       <Footer />
     </>
