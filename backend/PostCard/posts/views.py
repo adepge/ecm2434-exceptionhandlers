@@ -73,3 +73,15 @@ def createPost(request):
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation
         
 
+@api_view(['POST']) # Secuirty purposes we dont want to append user details to header
+@permission_classes([AllowAny]) # idk , doesnt work without it smh
+def getUser(request):
+    try:
+        userid = request.user.id
+        username = request.user.username
+    except:
+        # if user is not logged in, then raise an error
+        return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
+    return Response({"userid":userid,"username":username},status=status.HTTP_200_OK) # Successful user creation
+    
+

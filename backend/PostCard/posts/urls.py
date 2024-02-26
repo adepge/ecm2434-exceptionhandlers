@@ -26,6 +26,8 @@ urlpatterns = [
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
     #---
 
+    #USER API ENDPOINT
+    path('getUser/', getUser, name='user-list'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
