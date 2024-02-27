@@ -1,4 +1,5 @@
 /* the interactives component is a child component of the card component. It contains the location and share icons. */
+
 import "./stylesheets/interactives.css";
 
 import Location from "../assets/location.svg";

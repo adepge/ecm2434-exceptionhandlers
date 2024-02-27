@@ -246,15 +246,15 @@ function MapPage() {
       ; 
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
-  
+
       return distance < radius;
     });
     return seeAllPins ? pins: closePins;
   }
-  
+
   // Converts degrees to radians
   function deg2rad(deg) {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI / 180)
   }
 
   const handleOpen = (e, id) => {

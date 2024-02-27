@@ -133,7 +133,7 @@ function RegisterPage() {
         <div id="register-wrapper">
           <div id="register">
             <div id="spacer">
-              <div id="title">Register</div>
+              <div id="title">Registration</div>
               <div id="form">
                 <form onSubmit={handleSubmit}>
                   <div className="field">

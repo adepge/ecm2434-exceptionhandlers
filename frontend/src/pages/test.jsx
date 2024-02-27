@@ -4,10 +4,13 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import './stylesheets/test.css'
 import { useState } from "react";
+import CheckLogin from "../features/CheckLogin";
 
 const cookies = new Cookies();
 
 function test() {
+
+  // CheckLogin();
 
   const token = cookies.get('token');
 
@@ -23,7 +26,14 @@ function test() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/getRecentPosts/"
+        "http://127.0.0.1:8000/api/getUser/"
+        ,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Token ${cookies.get('token')}`, // Assuming postData.username is the token
+          },
+        }
       );
       console.log(response.data);
     } catch (error) {

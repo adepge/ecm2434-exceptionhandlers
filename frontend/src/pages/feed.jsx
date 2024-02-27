@@ -6,6 +6,7 @@ import Polaroid from "../features/polaroid";
 import { set } from "date-fns";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import CheckLogin from "../features/CheckLogin";
 
 
 
@@ -13,6 +14,10 @@ const cookies = new Cookies();
 
 
 function FeedPage() {
+
+  // check if the user is logged in
+  CheckLogin();
+
   const [activePost, setActive] = useState({});
   const [columns, setColumns] = useState([]);
 
@@ -83,11 +88,8 @@ function FeedPage() {
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        // Wait for the image height
-        console.log(postList[i]);
         const imageHeight = await getImageHeight(image);
 
-        console.log(imageHeight);
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
@@ -99,8 +101,6 @@ function FeedPage() {
         setColumns([leftPosts, rightPosts]);
       }
 
-
-      console.log(leftPosts, rightPosts);
     };
 
     processImages();
