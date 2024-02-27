@@ -59,13 +59,23 @@ def createPost(request):
         # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     
+    
+
+    filename = request.FILES['image'].name
+    filename_length = len(filename)
+
+    if filename_length > 100:
+        request.FILES['image'].name = filename[-30:]
+
     # Create a mutable copy of request.data
     data = request.data.copy()
+    print(data['image'])
+    print(data)
     data['userid'] = userid  # Add 'userid' key
 
     # Create a serializer instance with the mutable copy of request.data
     serialized = PostsSerializer(data=data)
-
+    
     if serialized.is_valid():
         serialized.save()
         return Response({"message":"User made"},status=status.HTTP_201_CREATED) # Successful user creation
