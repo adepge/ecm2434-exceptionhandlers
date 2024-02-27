@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from database.models import Geolocation, Posts, Stickers, StickersUser
-from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer
+from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser
+from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer, PostsUserSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
@@ -50,6 +50,11 @@ class StickersUserDetail(generics.RetrieveAPIView):
     serializer_class = StickersUserSerializer
     permission_classes = [AllowAny]
 
+class PostUser(generics.ListCreateAPIView):
+    queryset = PostsUser.objects.all()
+    serializer_class = PostsUserSerializer
+    permission_classes = [AllowAny]
+
 @api_view(['POST']) # Secuirty purposes we dont want to append user details to header
 @permission_classes([AllowAny]) # idk , doesnt work without it smh
 def createPost(request):
@@ -68,13 +73,13 @@ def createPost(request):
         request.FILES['image'].name = filename[-30:]
 
     # Create a mutable copy of request.data
-    data = request.data.copy()
+    request.data['userid'] = userid  # Add 'userid' key
     print(data['image'])
     print(data)
-    data['userid'] = userid  # Add 'userid' key
+    # data['userid'] = userid  # Add 'userid' key
 
     # Create a serializer instance with the mutable copy of request.data
-    serialized = PostsSerializer(data=data)
+    serialized = PostsSerializer(data=request.data)
     
     if serialized.is_valid():
         serialized.save()
@@ -83,3 +88,58 @@ def createPost(request):
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation
         
 
+@api_view(['POST']) # Secuirty purposes we dont want to append user details to header
+@permission_classes([AllowAny]) # idk , doesnt work without it smh
+def getUser(request):
+    try:
+        userid = request.user.id
+        username = request.user.username
+    except:
+        # if user is not logged in, then raise an error
+        return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
+    return Response({"userid":userid,"username":username},status=status.HTTP_200_OK) # Successful user creation
+    
+from django.utils import timezone
+from datetime import timedelta
+
+@api_view(['POST','GET'])
+@permission_classes([AllowAny])
+def getPostsLast24Hours(request):
+    try:
+        current_time = timezone.now()
+        time_24_hours_ago = current_time - timedelta(days=1)
+
+        recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time])
+        serializer = PostsSerializer(recent_posts, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def addCollection(request):
+    try:
+        user = request.user
+        if user.is_anonymous:
+            raise Exception("User not logged in")
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    post_id = request.data.get('postid')
+    if not post_id:
+        return Response({"message": "postid not provided"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        # Retrieve the Post instance using post_id
+        post = Posts.objects.get(id=post_id)
+    except Posts.DoesNotExist:
+        return Response({"message": "Post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Get or create a PostsUser instance for the user
+    posts_user, created = PostsUser.objects.get_or_create(userID=user)
+    
+    # Add the post to the user's collection
+    posts_user.postID.add(post)
+    
+    return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)

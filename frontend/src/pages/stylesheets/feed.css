@@ -66,24 +66,25 @@
   background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg");
   background-size: 100% auto;
   background-repeat: repeat;
+  min-height: 100vh;
 }
 
-#feed .polaroid{
+#feed .polaroid {
   animation: polaroidFadeIn 0.8s ease-out;
 }
 
 /* Animation css classes */
 @keyframes polaroidFadeIn {
   from {
-      margin-top: 70%;
-      opacity: 0.5;
-      scale: 0.7;
-      transform: rotateY(30deg)
+    margin-top: 70%;
+    opacity: 0.5;
+    scale: 0.7;
+    transform: rotateY(30deg);
   }
   to {
-      opacity: 1;
-      margin-top: 0%;
-      scale: 1;
-      transform: rotateY(0deg)
+    opacity: 1;
+    margin-top: 0%;
+    scale: 1;
+    transform: rotateY(0deg);
   }
 }

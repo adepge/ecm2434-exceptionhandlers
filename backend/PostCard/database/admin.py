@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Geolocation, Posts, Stickers, StickersUser
+from .models import Geolocation, Posts, Stickers, StickersUser, PostsUser
 # Register models to admint page based on the models.py file, adding the list_display and search_fields to make it easier to search and view the data
 class PostsAdmin(admin.ModelAdmin):
     list_display = ('id', 'userid', 'datetime')
@@ -13,11 +13,15 @@ class StickersAdmin(admin.ModelAdmin):
     
 class StickersUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username')
+
+class PostUserAdmin(admin.ModelAdmin):
+    display = ('userID')
     
 # Register to admin site
 admin.site.register(Geolocation, GeolocationAdmin)
 admin.site.register(Posts, PostsAdmin)
 admin.site.register(Stickers, StickersAdmin)
 admin.site.register(StickersUser, StickersUserAdmin)
+admin.site.register(PostsUser, PostUserAdmin)
 
 

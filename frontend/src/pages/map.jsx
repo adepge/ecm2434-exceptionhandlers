@@ -15,6 +15,8 @@ import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
 
+import axios from "axios";
+
 // Placeholder imports
 const image1 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
@@ -33,6 +35,18 @@ export const DeckGlOverlay = ({ layers }) => {
 
   return null;
 };
+
+// get all the post from database 
+const getPosts = async () => {
+  try {
+    const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+getPosts().then((data) => console.log(data));
 
 function MapPage() {
   // State for mood prompt
@@ -77,7 +91,31 @@ function MapPage() {
     },
     {
       id: 4,
+      position: { lat: 50.73788280412368, lng: -3.530794042942085 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 5,
       position: { lat: 50.736341371401544, lng: -3.5391262256961586 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 6,
+      position: { lat: 50.738038832528616, lng: -3.5306508139149866 },
+      caption: "Caption 4",
+      image: image3,
+      date: "2024-02-13T07:25:41",
+      open: false,
+    },
+    {
+      id: 7,
+      position: { lat: 50.73782485058377, lng: -3.530022719410907 },
       caption: "Caption 4",
       image: image3,
       date: "2024-02-13T07:25:41",
@@ -130,31 +168,33 @@ function MapPage() {
       setMood(sessionStorage.mood);
     }
   }, []);
-  
-  useEffect(() => {
-    console.log(path)
-  },[path])
 
   // Get user's location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
       });
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     if (navigator.geolocation && walking) {
       const watchId = navigator.geolocation.watchPosition((position) => {
-        setPosition({lat: position.coords.latitude, lng: position.coords.longitude})
+        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
         setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-      setWatchId(watchId);
+        setWatchId(watchId);
       });
-      } else if (!walking) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-    }, [walking]);
+    } else if (!walking) {
+      navigator.geolocation.clearWatch(watchId);
+    }
+  }, [walking]);
+
+  const filterPins = (lat, lng) => {
+    const closeLocations = locations.filter((location) => {
+      return(Math.abs(location.position.lat - lat) < 0.0005 && Math.abs(location.position.lng - lng) < 0.0005 )});
+    return closeLocations;
+  }
 
   const handleOpen = (e, id) => {
     // prevent the user from clicking into the outsite area and the map icon
@@ -216,7 +256,7 @@ function MapPage() {
                 }}
               ></div>
             </AdvancedMarker>
-            {locations.map((location) => {
+            {filterPins(position.lat, position.lng).map((location) => {
               const color = `var(--${mood})`;
               return (
                 <>
