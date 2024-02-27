@@ -1,0 +1,41 @@
+// Code to check if the user is logged in or not
+
+import axios from "axios";
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
+
+const cookies = new Cookies();
+
+async function CheckLogin() {
+
+    const navigate = useNavigate();
+
+    try {
+        const response = await axios.get(
+            "http://127.0.0.1:8000/api/getUser/"
+            ,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Token ${cookies.get('token')}`, // Assuming postData.username is the token
+                },
+            }
+        );
+    } catch (error) {
+        console.error("Error occurred:", error);
+        if (error.response) {
+            console.log("Response data:", error.response.data);
+            console.log("Response status:", error.response.status);
+            console.log("Response headers:", error.response.headers);
+            if (error.response.data.detail === "Invalid token.") {
+                cookies.remove('token');
+                console.log("not logged in")
+                navigate("/login");
+
+            }
+        }
+    }
+
+}
+
+export default CheckLogin;

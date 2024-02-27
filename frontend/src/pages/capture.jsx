@@ -10,10 +10,19 @@ import { useNavigate } from "react-router-dom";
 
 import LoadingScreen from "../features/loadingScreen";
 
+import CheckLogin from "../features/CheckLogin";
+
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
 
 function Capture() {
+
+  // check if the user is logged in
+  CheckLogin();
+
+  // the navigate function
+  const navigate = useNavigate();
+
   // Simple mobile detection
   // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   //     // Trigger file input on mobile devices
@@ -34,36 +43,32 @@ function Capture() {
     }
   }, [])
 
-  const navigate = useNavigate();
+  // the file input
   const inputRef = useRef(null);
 
   // the preview image
   const [previewImg, setPreviewImg] = useState("");
   const [file, setFile] = useState(null);
 
+  // if the page is loading
   const [isLoading, setIsLoading] = useState(false);
 
-  // the post data
+  // the post data to send
   const [postData, setPostData] = useState({
-    username: cookies.get("token"),
     caption: "",
     geolocID: 0,
   });
-  console.log(cookies.get("token"));
+
+  const [caption, setCaption] = useState("");
 
   // when the form is changed, set the state in post data
   const handleChange = (e) => {
-    setPostData({
-      ...postData,
-      [e.target.name]: e.target.value,
-    });
+    setCaption(e.target.value);
   };
 
   // on submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // return;
-    // e.preventDefault();
     setIsLoading(true);
     try {
       const response = await axios.post(
@@ -88,7 +93,7 @@ function Capture() {
 
       // Append other postData fields to formData
       // formData.append("userid", 1);
-      formData.append("caption", postData.caption);
+      formData.append("caption", caption);
       formData.append("geolocID", geolocID); // Append geolocID as a number
 
       try {
@@ -99,11 +104,12 @@ function Capture() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": `Token ${postData.username}`, // Assuming postData.username is the token
+              "Authorization": `Token ${cookies.get('token')}`, // Assuming postData.username is the token
             },
           }
         );
 
+        // Redirect to the home page after successful post creation
         navigate("/");
       } catch (error) {
         console.error("Error occurred:", error);
@@ -111,6 +117,8 @@ function Capture() {
           console.log("Response data:", error.response.data);
           console.log("Response status:", error.response.status);
           console.log("Response headers:", error.response.headers);
+
+          alert("An error occurred while creating the post");
         }
       }
     } catch (error) {
@@ -134,6 +142,7 @@ function Capture() {
     }
   }, []); // Empty dependency array means this runs once after the initial render
 
+  // triggered when the user clicks the capture button
   const capture = () => {
     // Trigger file input
     inputRef.current.click();

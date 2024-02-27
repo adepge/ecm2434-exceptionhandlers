@@ -87,7 +87,7 @@ def createPost(request):
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation  
 
-@api_view(['POST']) # Secuirty purposes we dont want to append user details to header
+@api_view(['POST' ,'Get']) # Secuirty purposes we dont want to append user details to header
 @permission_classes([AllowAny]) # idk , doesnt work without it smh
 def getUser(request):
     try:
@@ -131,10 +131,7 @@ def getPostsLast24Hours(request):
         
             # Return the data as JSON
         return Response(data, status=status.HTTP_200_OK)
-
-        # serializer = PostsSerializer(recent_posts, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     

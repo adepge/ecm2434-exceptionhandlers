@@ -16,6 +16,7 @@ import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
 
 import axios from "axios";
+import CheckLogin from "../features/CheckLogin";
 
 // Placeholder imports
 const image1 =
@@ -49,6 +50,10 @@ const getPosts = async () => {
 getPosts().then((data) => console.log(data));
 
 function MapPage() {
+
+  // check if the user is logged in
+  CheckLogin();
+
   // State for mood prompt
   const [showMoodPrompt, setShowMoodPrompt] = useState(false);
   const [mood, setMood] = useState("unselected");
@@ -192,7 +197,8 @@ function MapPage() {
 
   const filterPins = (lat, lng) => {
     const closeLocations = locations.filter((location) => {
-      return(Math.abs(location.position.lat - lat) < 0.0005 && Math.abs(location.position.lng - lng) < 0.0005 )});
+      return (Math.abs(location.position.lat - lat) < 0.0005 && Math.abs(location.position.lng - lng) < 0.0005)
+    });
     return closeLocations;
   }
 
