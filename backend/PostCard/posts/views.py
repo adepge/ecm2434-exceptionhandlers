@@ -64,19 +64,28 @@ def createPost(request):
         # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     
+    
+
+    filename = request.FILES['image'].name
+    filename_length = len(filename)
+
+    if filename_length > 100:
+        request.FILES['image'].name = filename[-30:]
+
     # Create a mutable copy of request.data
-    request.data['userid'] = userid  # Add 'userid' key
-    # data['userid'] = userid  # Add 'userid' key
+    data = request.data.copy()
+    print(data['image'])
+    print(data)
+    data['userid'] = userid  # Add 'userid' key
 
     # Create a serializer instance with the mutable copy of request.data
-    serialized = PostsSerializer(data=request.data)
-
+    serialized = PostsSerializer(data=data)
+    
     if serialized.is_valid():
         serialized.save()
         return Response({"message":"User made"},status=status.HTTP_201_CREATED) # Successful user creation
     else: 
-        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation
-        
+        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation  
 
 @api_view(['POST']) # Secuirty purposes we dont want to append user details to header
 @permission_classes([AllowAny]) # idk , doesnt work without it smh
