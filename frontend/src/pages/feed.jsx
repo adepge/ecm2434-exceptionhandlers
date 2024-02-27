@@ -5,13 +5,12 @@ import PostView from "../features/PostView";
 import Polaroid from "../features/polaroid";
 import { set } from "date-fns";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
-const image1 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
-const image2 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297961943050/1000015958.JPG?ex=65dfdc7e&is=65cd677e&hm=6413142376bf1efe664ef897cd70325b1f5f2d03e9d177ab4b9c541a5fb1de59&";
-const image3 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497298116874311/1000016354.JPG?ex=65dfdc7e&is=65cd677e&hm=e497673ab0de533871fc5fb4bb6e702ce4fbaa856f99461dc3abf555c6f0d510&";
+
+
+const cookies = new Cookies();
+
 
 function FeedPage() {
   const [activePost, setActive] = useState({});
@@ -19,11 +18,30 @@ function FeedPage() {
 
   // get all the post from database
   const getPosts = async () => {
+
+
+    const token = cookies.get('token');
+
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+      // Update the API URL as per your configuration
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/collectedPosts/",
+        {},
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Token ${token}`, // Assuming postData.username is the token
+          },
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error(error);
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
     }
   };
 
@@ -49,7 +67,7 @@ function FeedPage() {
 
     // Distribute the images into two columns based on which column is shorter
     // Also randomize the rotation of the images
-    const processImages = async () => {
+    const processImages = async (e) => {
 
       const postList = await getPosts();
 
@@ -58,13 +76,18 @@ function FeedPage() {
       const leftPosts = [];
 
       for (let i = 0; i < postList.length; i++) {
+
+        postList[i]["image"] = "http://127.0.0.1:8000/" + postList[i]["image"]
+        const image = postList[i]["image"];
+
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-
-        const image = postList[i]["image"];
         // Wait for the image height
+        console.log(postList[i]);
         const imageHeight = await getImageHeight(image);
+
+        console.log(imageHeight);
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
@@ -75,6 +98,9 @@ function FeedPage() {
         }
         setColumns([leftPosts, rightPosts]);
       }
+
+
+      console.log(leftPosts, rightPosts);
     };
 
     processImages();
@@ -92,7 +118,6 @@ function FeedPage() {
         }}
         caption={activePost["caption"]}
         location={"Forum"}
-        userIcon={image1}
       />
 
       {/* the feed */}
