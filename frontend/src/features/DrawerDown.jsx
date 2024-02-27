@@ -5,7 +5,7 @@ import "../styles/drawer-down.css";
 
 function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
   const elementRef = useRef(null);
-  const [closing, setClosing] = useState(setDrawerVisible);
+  const [closing, setClosing] = useState(drawerVisible);
 
   useEffect(() => {
     if (drawerVisible) {

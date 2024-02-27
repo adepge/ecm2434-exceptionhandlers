@@ -14,8 +14,16 @@ import "./stylesheets/map.css";
 import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
+import Location from "../assets/location.svg";
 
 import axios from "axios";
+import InitMap from "../features/InitMap";
+import Geolocation from "../features/Geolocation";
+
+
+// Debugging options
+const seeAllPins = true;
+const spoofLocation = false;
 
 // Placeholder imports
 const image1 =
@@ -49,6 +57,9 @@ const getPosts = async () => {
 getPosts().then((data) => console.log(data));
 
 function MapPage() {
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(20);
+
   // State for mood prompt
   const [showMoodPrompt, setShowMoodPrompt] = useState(false);
   const [mood, setMood] = useState("unselected");
@@ -59,9 +70,10 @@ function MapPage() {
 
   // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(true);
+  const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
-  const [position, setPosition] = useState({ lat: 50.73585, lng: -3.533415 });
+  const [position, setPosition] = useState({ lat: undefined, lng: undefined });
+  const [locationTag, setLocationTag] = useState("Finding location...");
 
   // Local state, to be replaced with fetched data
   const [locations, setLocations] = useState([
@@ -160,23 +172,35 @@ function MapPage() {
     widthMinPixels: 2,
   });
 
+  useEffect(() => {
+    if (progress >= 100) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2550);
+    }
+  }, [progress]);
+
   // Checks if mood has been set before, if not call mood prompt;
   useEffect(() => {
-    if (sessionStorage.mood === undefined) {
-      setShowMoodPrompt(true);
-    } else {
-      setMood(sessionStorage.mood);
-    }
+    setProgress(20);
+    new Promise((resolve, reject) => {
+      if (sessionStorage.mood === undefined) {
+        setShowMoodPrompt(true);
+      } else {
+        setMood(sessionStorage.mood);
+      }
+      setProgress(oldProgress => oldProgress + 30);
+      resolve();
+    })
+    .then(() => {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((position) => {
+          setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
+        });
+      }
+      setProgress(oldProgress => oldProgress + 50);
+    });
   }, []);
-
-  // Get user's location
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
-      });
-    }
-  }, [])
 
   useEffect(() => {
     if (navigator.geolocation && walking) {
@@ -190,10 +214,35 @@ function MapPage() {
     }
   }, [walking]);
 
+  useEffect(() => {
+    if (position.lat && position.lng) {
+      Geolocation(position.lat, position.lng, setLocationTag)
+    }
+  }, [position]);
+
+  // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
+    const radius = 0.0005; // Radius of tolerance (about 35m from the position)
+  
     const closeLocations = locations.filter((location) => {
-      return(Math.abs(location.position.lat - lat) < 0.0005 && Math.abs(location.position.lng - lng) < 0.0005 )});
-    return closeLocations;
+      const dLat = deg2rad(location.position.lat - lat);
+      const dLng = deg2rad(location.position.lng - lng);
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(location.position.lat)) * 
+        Math.sin(dLng/2) * Math.sin(dLng/2)
+      ; 
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      const distance = c * 6371.1; // Distance of the Earth's radius (km)
+  
+      return distance < radius;
+    });
+    return seeAllPins ? locations: closeLocations;
+  }
+  
+  // Converts degrees to radians
+  function deg2rad(deg) {
+    return deg * (Math.PI/180)
   }
 
   const handleOpen = (e, id) => {
@@ -221,12 +270,13 @@ function MapPage() {
 
   return (
     <>
+      {loading && <InitMap progress={progress} />}
       <DrawerDown
         image={drawerImage}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
       />
-      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <div
           className={
             showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
@@ -241,7 +291,7 @@ function MapPage() {
             mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
           >
             <DeckGlOverlay layers={layer} />
-            <AdvancedMarker position={position}>
+            <AdvancedMarker key="current-position" position={position}>
               <div
                 style={{
                   width: 16,
@@ -277,9 +327,13 @@ function MapPage() {
             })}
           </Map>
         </div>
-      </APIProvider>
+      </APIProvider>}
       {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-      <div className="bottom-prompt">Start Walking</div>
+      <div className="bottom-prompt">
+        <div className="bottom-prompt-wrapper">
+          <img src={Location} />{locationTag}
+        </div>
+      </div>
     </>
   );
 }
