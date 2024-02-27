@@ -17,6 +17,7 @@ urlpatterns = [
     path('posts/<int:pk>/', PostsDetail.as_view(), name='posts-detail'),
     path('geolocations/', GeolocationList.as_view(), name='geolocation-list'),
     path('geolocations/<int:pk>/', GeolocationDetail.as_view(), name='geolocation-detail'),
+    path('getRecentPosts/', getPostsLast24Hours, name='get-recent-posts'),
     #----
     path('posts/recent/', getPostsLast24Hours, name='posts-recent'),
     # STICKER API ENDPOINT
@@ -25,6 +26,8 @@ urlpatterns = [
     path('stickerusers/', StickersUserList.as_view(), name='stickeruser-list'),
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
     #---
+
+    #POSTUSER API ENDPOINT
     path('collectPost/', addCollection, name='postuser-list'),
     path('collectedPosts/', getCollections, name='collected-posts'),
 

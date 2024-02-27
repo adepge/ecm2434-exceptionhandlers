@@ -108,12 +108,37 @@ def getPostsLast24Hours(request):
         current_time = timezone.now()
         time_24_hours_ago = current_time - timedelta(days=1)
 
-        recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time])
-        serializer = PostsSerializer(recent_posts, many=True)
+        recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time]).select_related('geolocID')
+        
+        print(recent_posts)
+        data = []
+        # Prepare the data to return
+        for post in recent_posts:
+            data.append({
+            'id': post.id,
+            'image': post.image.url,
+            'caption': post.caption,
+            'datetime': post.datetime,
+            'open': False,
+            'position': {
+                'location': post.geolocID.location,
+                'lat': post.geolocID.latitude,
+                'lng': post.geolocID.longitude,
+                }
+            }
+            )
+
+        
+            # Return the data as JSON
+        return Response(data, status=status.HTTP_200_OK)
+
+        # serializer = PostsSerializer(recent_posts, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
     
 @api_view(['POST'])
 @permission_classes([AllowAny])

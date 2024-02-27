@@ -22,15 +22,8 @@ function test() {
     e.preventDefault();
     try {
       // Update the API URL as per your configuration
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/collectedPosts/",
-        {},
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Token ${token}`, // Assuming postData.username is the token
-          },
-        }
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/getRecentPosts/"
       );
       console.log(response.data);
     } catch (error) {
