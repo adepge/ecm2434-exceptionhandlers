@@ -22,7 +22,17 @@ function Capture() {
   //     alert('Camera capture is optimized for mobile devices.');
   // }
 
+  // the user's position
+  const [position, setPosition] = useState({ lat: 0, lng: 0 });
 
+  // Get user's location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
+      });
+    }
+  }, [])
 
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -41,13 +51,6 @@ function Capture() {
   });
   console.log(cookies.get("token"));
 
-  // the geolocation data
-  const [geolocData, setGeolocData] = useState({
-    location: "1",
-    latitude: 0.0,
-    longitude: 0.0,
-  });
-
   // when the form is changed, set the state in post data
   const handleChange = (e) => {
     setPostData({
@@ -65,7 +68,11 @@ function Capture() {
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/geolocations/",
-        geolocData
+        {
+          latitude: position.lat,
+          longitude: position.lng,
+          location: "University of exeter"
+        }
       );
       const geolocID = response.data.id;
       const formData = new FormData();
