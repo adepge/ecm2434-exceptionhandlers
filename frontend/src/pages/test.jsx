@@ -7,8 +7,6 @@ import { useState } from "react";
 
 const cookies = new Cookies();
 
-// axios.defaults.withCredentials = true;
-
 function test() {
 
   const token = cookies.get('token');
@@ -25,8 +23,8 @@ function test() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/collectPost/",
-        form,
+        "http://127.0.0.1:8000/api/collectedPosts/",
+        {},
         {
           headers: {
             "Content-Type": "multipart/form-data",

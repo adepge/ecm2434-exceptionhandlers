@@ -26,6 +26,7 @@ urlpatterns = [
     path('stickerusers/<int:pk>/', StickersUserDetail.as_view(), name='stickeruser-detail'),
     #---
     path('collectPost/', addCollection, name='postuser-list'),
+    path('collectedPosts/', getCollections, name='collected-posts'),
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
@@ -34,5 +35,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

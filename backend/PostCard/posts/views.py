@@ -111,8 +111,6 @@ def getPostsLast24Hours(request):
 def addCollection(request):
     try:
         user = request.user
-        if user.is_anonymous:
-            raise Exception("User not logged in")
     except Exception as e:
         return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -133,3 +131,25 @@ def addCollection(request):
     posts_user.postID.add(post)
     
     return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def getCollections(request):
+    try:
+        user = request.user
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        posts_user = PostsUser.objects.get(userID=user)
+
+    except PostsUser.DoesNotExist:
+        posts_user = []
+    
+    print(posts_user)
+    serializer = PostsUserSerializer(posts_user)
+    postlist = serializer.data.get('postID')
+    posts = Posts.objects.filter(id__in=postlist)
+    serializer = PostsSerializer(posts, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
