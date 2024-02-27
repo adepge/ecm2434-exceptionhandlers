@@ -10,6 +10,8 @@ import { useState, useEffect, useMemo } from "react";
 import { differenceInDays, format, set } from "date-fns";
 import { PathLayer } from "@deck.gl/layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
+import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { usePinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
@@ -20,18 +22,17 @@ import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
 
-
-// Debugging options
-const seeAllPins = true;
-const spoofLocation = false;
-
-// Placeholder imports
 const image1 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
 const image2 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297961943050/1000015958.JPG?ex=65dfdc7e&is=65cd677e&hm=6413142376bf1efe664ef897cd70325b1f5f2d03e9d177ab4b9c541a5fb1de59&";
 const image3 =
   "https://cdn.discordapp.com/attachments/1204728741230809098/1207497298116874311/1000016354.JPG?ex=65dfdc7e&is=65cd677e&hm=e497673ab0de533871fc5fb4bb6e702ce4fbaa856f99461dc3abf555c6f0d510&";
+
+
+// Debugging options
+const seeAllPins = true;
+const spoofLocation = false;
 
 // Overlay constructor component (from deck.gl documentation)
 export const DeckGlOverlay = ({ layers }) => {
@@ -47,7 +48,9 @@ export const DeckGlOverlay = ({ layers }) => {
 // get all the post from database 
 const getPosts = async () => {
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/posts/");
+    const response = await axios.get(
+      "http://127.0.0.1:8000/api/getRecentPosts/"
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -72,8 +75,17 @@ function MapPage() {
   const [path, setPath] = useState([]);
   const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
-  const [position, setPosition] = useState({ lat: undefined, lng: undefined });
-  const [locationTag, setLocationTag] = useState("Finding location...");
+
+  const position = usePositionStore(state => state.position);
+  const setPosition = usePositionStore(state => state.setPosition);
+
+  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
+
+  const locationTag = useGeoTagStore(state => state.geoTag);
+  const setLocationTag = useGeoTagStore(state => state.setGeoTag);
+
+  const pins = usePinStore(state => state.pins);
+  const setPins = usePinStore(state => state.setPins);
 
   // Local state, to be replaced with fetched data
   const [locations, setLocations] = useState([
@@ -182,41 +194,41 @@ function MapPage() {
 
   // Checks if mood has been set before, if not call mood prompt;
   useEffect(() => {
-    setProgress(20);
     new Promise((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((position) => {
+          setPosition(position.coords.latitude,position.coords.longitude);
+        });
+      }
+      setProgress(oldProgress => oldProgress + 50);
+      resolve();
+    })
+    .then(() => {
       if (sessionStorage.mood === undefined) {
         setShowMoodPrompt(true);
       } else {
         setMood(sessionStorage.mood);
       }
       setProgress(oldProgress => oldProgress + 30);
-      resolve();
-    })
-    .then(() => {
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((position) => {
-          setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
-        });
-      }
-      setProgress(oldProgress => oldProgress + 50);
     });
   }, []);
 
-  useEffect(() => {
-    if (navigator.geolocation && walking) {
-      const watchId = navigator.geolocation.watchPosition((position) => {
-        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
-        setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-        setWatchId(watchId);
-      });
-    } else if (!walking) {
-      navigator.geolocation.clearWatch(watchId);
-    }
-  }, [walking]);
+  // useEffect(() => {
+  //   if (navigator.geolocation && walking) {
+  //     const watchId = navigator.geolocation.watchPosition((position) => {
+  //       setPosition(position.coords.latitude, position.coords.longitude);
+  //       setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
+  //       setWatchId(watchId);
+  //     });
+  //   } else if (!walking) {
+  //     navigator.geolocation.clearWatch(watchId);
+  //   }
+  // }, [walking]);
 
   useEffect(() => {
-    if (position.lat && position.lng) {
-      Geolocation(position.lat, position.lng, setLocationTag)
+    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
+      Geolocation(position.lat, position.lng, setLocationTag);
+      setLastPosition({lat: position.lat, lng: position.lng});
     }
   }, [position]);
 
@@ -224,12 +236,12 @@ function MapPage() {
   const filterPins = (lat, lng) => {
     const radius = 0.0005; // Radius of tolerance (about 35m from the position)
   
-    const closeLocations = locations.filter((location) => {
-      const dLat = deg2rad(location.position.lat - lat);
-      const dLng = deg2rad(location.position.lng - lng);
+    const closePins = pins.filter((pin) => {
+      const dLat = deg2rad(pin.position.lat - lat);
+      const dLng = deg2rad(pin.position.lng - lng);
       const a = 
         Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(location.position.lat)) * 
+        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(pin.position.lat)) * 
         Math.sin(dLng/2) * Math.sin(dLng/2)
       ; 
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
@@ -237,7 +249,7 @@ function MapPage() {
   
       return distance < radius;
     });
-    return seeAllPins ? locations: closeLocations;
+    return seeAllPins ? pins: closePins;
   }
   
   // Converts degrees to radians
@@ -250,13 +262,13 @@ function MapPage() {
     e.domEvent.preventDefault();
 
     setLocations(
-      locations.map((location) => {
-        if (location.id === id) {
+      pins.map((pin) => {
+        if (pin.id === id) {
           setDrawerTopVisible(true);
-          setDrawerImage(location.image);
-          return { ...location, open: !location.open };
+          setDrawerImage(pin.image);
+          return { ...pin, open: !pin.open };
         } else {
-          return { ...location, open: false };
+          return { ...pin, open: false };
         }
       })
     );
@@ -306,14 +318,14 @@ function MapPage() {
                 }}
               ></div>
             </AdvancedMarker>
-            {filterPins(position.lat, position.lng).map((location) => {
+            {filterPins(position.lat, position.lng).map((pin) => {
               const color = `var(--${mood})`;
               return (
                 <>
                   <AdvancedMarker
-                    key={location.id}
-                    position={location.position}
-                    onClick={(e) => handleOpen(e, location.id)}
+                    key={pin.id}
+                    position={pin.position}
+                    onClick={(e) => handleOpen(e, pin.id)}
                   >
                     <Pin
                       background={color}

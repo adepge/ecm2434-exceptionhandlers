@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import "./stylesheets/capture.css";
-
+import { useNavigate } from "react-router-dom";
+import { usePositionStore, useGeoTagStore} from "../stores/geolocationStore";
 import Send from "../assets/send.svg";
 import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
-
+import Geolocation from "../features/Geolocation";
 import LoadingScreen from "../features/loadingScreen";
+
+import "./stylesheets/capture.css";
 
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
@@ -23,16 +24,10 @@ function Capture() {
   // }
 
   // the user's position
-  const [position, setPosition] = useState({ lat: 0, lng: 0 });
+  const position = usePositionStore(state => state.position);
+  const locationTag = useGeoTagStore(state => state.geoTag);
 
-  // Get user's location
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
-      });
-    }
-  }, [])
+  const [lastPosition, setLastPosition] = useState({ lat: 0, lng: 0 });
 
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -217,7 +212,7 @@ function Capture() {
                       {/* the location button */}
                       <div className="location element">
                         <img src={Location} />
-                        Forum
+                        {locationTag}
                       </div>
 
                       {/* the submit button */}
