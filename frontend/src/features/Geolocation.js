@@ -1,17 +1,19 @@
-import {CircleLayer} from '@deck.gl/layers';
 
-function Geolocation(latitude, longitude) {
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+function Geolocation(latitude, longitude, setLocation) {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`)
   .then(response => response.json())
   .then(data => {
     if (data.results && data.results.length > 0) {
       const placeName = data.results[0].formatted_address;
-      console.log(placeName);
+      setLocation(placeName.split(',')[0]);
     } else {
-      console.log('No results found');
+      setLocation('Unknown Location');
     }
   })
-  .catch(error => console.error(error));
+  .catch(error => {
+    console.error(error);
+  });
 }
  
-export default places;
+export default Geolocation;

@@ -18,6 +18,7 @@ import Location from "../assets/location.svg";
 
 import axios from "axios";
 import InitMap from "../features/InitMap";
+import Geolocation from "../features/Geolocation";
 
 
 // Debugging options
@@ -71,7 +72,8 @@ function MapPage() {
   const [path, setPath] = useState([]);
   const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
-  const [position, setPosition] = useState({ lat: 50.73585, lng: -3.533415 });
+  const [position, setPosition] = useState({ lat: undefined, lng: undefined });
+  const [locationTag, setLocationTag] = useState("Finding location...");
 
   // Local state, to be replaced with fetched data
   const [locations, setLocations] = useState([
@@ -171,7 +173,6 @@ function MapPage() {
   });
 
   useEffect(() => {
-    console.log(progress);
     if (progress >= 100) {
       setTimeout(() => {
         setLoading(false);
@@ -181,6 +182,7 @@ function MapPage() {
 
   // Checks if mood has been set before, if not call mood prompt;
   useEffect(() => {
+    setProgress(20);
     new Promise((resolve, reject) => {
       if (sessionStorage.mood === undefined) {
         setShowMoodPrompt(true);
@@ -192,11 +194,11 @@ function MapPage() {
     })
     .then(() => {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.watchPosition((position) => {
           setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
-          setProgress(oldProgress => oldProgress + 50);
         });
       }
+      setProgress(oldProgress => oldProgress + 50);
     });
   }, []);
 
@@ -211,6 +213,12 @@ function MapPage() {
       navigator.geolocation.clearWatch(watchId);
     }
   }, [walking]);
+
+  useEffect(() => {
+    if (position.lat && position.lng) {
+      Geolocation(position.lat, position.lng, setLocationTag)
+    }
+  }, [position]);
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
@@ -268,7 +276,7 @@ function MapPage() {
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
       />
-      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <div
           className={
             showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
@@ -283,7 +291,7 @@ function MapPage() {
             mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
           >
             <DeckGlOverlay layers={layer} />
-            <AdvancedMarker position={position}>
+            <AdvancedMarker key="current-position" position={position}>
               <div
                 style={{
                   width: 16,
@@ -319,11 +327,11 @@ function MapPage() {
             })}
           </Map>
         </div>
-      </APIProvider>
+      </APIProvider>}
       {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
       <div className="bottom-prompt">
         <div className="bottom-prompt-wrapper">
-          <img src={Location} />Start Walking
+          <img src={Location} />{locationTag}
         </div>
       </div>
     </>
