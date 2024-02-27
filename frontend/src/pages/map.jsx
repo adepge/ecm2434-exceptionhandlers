@@ -23,7 +23,7 @@ import Geolocation from "../features/Geolocation";
 
 // Debugging options
 const seeAllPins = true;
-
+const spoofLocation = false;
 
 // Placeholder imports
 const image1 =
