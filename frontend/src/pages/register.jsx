@@ -93,7 +93,6 @@ function RegisterPage() {
         "http://127.0.0.1:8000/api/register/",
         userData
       );
-      console.log(response.data);
       cookies.set("token", response.data.token, { path: "/" });
       navigate("/");
     } catch (error) {
