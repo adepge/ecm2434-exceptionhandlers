@@ -4,18 +4,35 @@
   padding: 20px;
 }
 
-h1 {
+#status {
   color: #333;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: bold;
 }
 
-p {
+#description {
+  margin-top: -2px;
   color: #666;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 400;
+  text-align: center;
+  padding: 0 40px;
 }
 
 .error-message {
   color: red;
   font-weight: bold;
+}
+
+#display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#display img {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
 }
