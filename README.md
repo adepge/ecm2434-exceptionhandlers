@@ -7,6 +7,12 @@ A progressive web app to upload images and posts that users can make as they exp
 ### Quicklinks
 
 - [Design specification](https://app.capacities.io/home/463a8802-6f14-4a08-ae38-84f59633b099) - Problem and requirements analysis + MoSCoW matrix
+- [Trello Kanban Board](https://trello.com/invite/b/BJR31baF/ATTIb1c6e5342ef1688706a802c27e588be71483CB5A/exceptionhandler)
+- [Meeting minutes](https://docs.google.com/document/d/12DYmSQIUxew5tGOtPeQzCtYuHQSk108R6Vdqpxnqd7c/edit?usp=sharing)
+- [Figma board](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)
+- [Coursework specification](https://ele.exeter.ac.uk/pluginfile.php/1800367/mod_label/intro/ECM2434%20project-spec-2024-2.pdf)
+- [Group meeting spreadsheet](https://universityofexeteruk-my.sharepoint.com/:x:/r/personal/s_oyelere_exeter_ac_uk/Documents/Associate%20Professor%20-%20Exeter/courses/Term%202/ECM2434/Week%204/ECM2434%20SEGP%20Group%20Meeting%20Bookings.xlsx?d=wa61503cbd510454d8c3277457f2f1c3f&csf=1&web=1&e=XT7wpQ&nav=MTVfezY3NkNDRkFBLTc5RjctNDFFRi05QjU3LTU3MDAxNTE0ODAwRn0)
+- [Week 7 and 11 presentation spreadsheet](https://universityofexeteruk-my.sharepoint.com/:x:/r/personal/s_oyelere_exeter_ac_uk/Documents/Associate%20Professor%20-%20Exeter/courses/Term%202/ECM2434/Week%204/ECM2434%20SEGP%20Group%20Prototype%20and%20final%20presentation%20Bookings.xlsx?d=w661392c6e7aa4fdcbff1cd7409cd0a7b&csf=1&web=1&e=oNQt6A&nav=MTVfezRDNEVENzk5LUYyRDEtNEZFMS05NTQ5LUI1QUY5ODI0N0ExQX0)
 
 
 # Welcome to the Exeter Orienteering Project
@@ -37,13 +43,13 @@ We have also taken regular snapshots of the kanban board in trello to archive ou
 
 Within process documents we have also included the meeting notes, agenda and minutes. These will be found in the repository below.
 
-[./process-documents/meeting-notes/](./process-documents/meeting-notes/)
+[Meeting notes](https://docs.google.com/document/d/12DYmSQIUxew5tGOtPeQzCtYuHQSk108R6Vdqpxnqd7c/edit?usp=sharing)
 
 
 ## TECHNICAL DOCUMENTS
 Our technical documents are primarily managed on the github system. The link to the project is below:
 
-github link: [https://github.com/adepge/ecm2434-exceptionhandlers]
+GitHub link: [https://github.com/adepge/ecm2434-exceptionhandlers]
 
 We have also include the versioned source code for archiving.
 
@@ -55,5 +61,6 @@ Technical documents are broken down into front end and back end etc.
 Our product documents are primarily in the form of a product UI. Below is a link to our latest version.
 
 public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW)https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW]
+
 
 
