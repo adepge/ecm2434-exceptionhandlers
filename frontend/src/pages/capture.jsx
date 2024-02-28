@@ -17,14 +17,10 @@ axios.defaults.withCredentials = true;
 
 function Capture() {
 
-  // islogged in
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   // check if the user is logged in
   useEffect(() => {
     async function check() {
       const res = await CheckLogin();
-      setIsLoggedIn(res);
-      console.log(res)
       capture();
     }
     check();
