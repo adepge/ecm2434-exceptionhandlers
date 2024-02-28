@@ -4,13 +4,13 @@ import Polaroid from "./polaroid";
 import handle from "../assets/map/handle.svg";
 import "../styles/drawer-down.css";
 
-function DrawerDown({ id, image, drawerVisible, setDrawerVisible, handleSubmit }) {
+function DrawerDown({ id, image, drawerVisible, setDrawerVisible, handleSubmit, handleClickPolaroid }) {
   const elementRef = useRef(null);
   const [closing, setClosing] = useState(drawerVisible);
   const [collected, setCollected] = useState(false);
 
   const collectedPins = useCollectedPinStore((state) => state.pinIds);
-  
+
   useEffect(() => {
     if (collectedPins.includes(id)) {
       setCollected(true);
@@ -50,7 +50,7 @@ function DrawerDown({ id, image, drawerVisible, setDrawerVisible, handleSubmit }
         {drawerVisible && (
           <div className={drawerClass} ref={elementRef}>
             <div id="texture">
-              <div id="polariod-container">
+              <div id="polariod-container" onClick={handleClickPolaroid}>
                 <Polaroid id="collect-polaroid" src={image} rotation={-5} />
               </div>
             </div>

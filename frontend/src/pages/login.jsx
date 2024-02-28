@@ -87,7 +87,7 @@ function LoginPage() {
                 <div id="message">
                   Not a member?{" "}
                   <Link to={"/register"}>
-                    <a>Sign Up</a>
+                    Sign Up
                   </Link>
                 </div>
               </div>

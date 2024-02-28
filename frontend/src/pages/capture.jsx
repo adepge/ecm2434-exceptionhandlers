@@ -18,7 +18,13 @@ axios.defaults.withCredentials = true;
 function Capture() {
 
   // check if the user is logged in
-  CheckLogin();
+  useEffect(() => {
+    async function check() {
+      const res = await CheckLogin();
+      capture();
+    }
+    check();
+  }, []);
 
   // the navigate function
   const navigate = useNavigate();
@@ -123,13 +129,6 @@ function Capture() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    // Check if the input element exists and then click it programmatically
-    if (inputRef.current) {
-      inputRef.current.click();
-    }
-  }, []); // Empty dependency array means this runs once after the initial render
-
   // triggered when the user clicks the capture button
   const capture = () => {
     // Trigger file input
@@ -151,7 +150,7 @@ function Capture() {
     <>
 
       <LoadingScreen active={isLoading} />
-      <div id="capturePage" class="page active">
+      <div id="capturePage" className="page active">
         {/* the invisible file input element */}
         <input
           type="file"

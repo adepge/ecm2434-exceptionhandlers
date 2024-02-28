@@ -13,7 +13,6 @@ import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
-import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
 import Location from "../assets/location.svg";
@@ -21,6 +20,7 @@ import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
+import PostView from "../features/PostView";
 
 const cookies = new Cookies();
 
@@ -71,6 +71,9 @@ const getCollectedPosts = async (token) => {
 };
 
 function MapPage() {
+  // State for active post in the view
+  const [activePost, setActive] = useState({});
+
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
 
@@ -156,28 +159,28 @@ function MapPage() {
       // Get the user's current position
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition((position) => {
-          setPosition(position.coords.latitude,position.coords.longitude);
+          setPosition(position.coords.latitude, position.coords.longitude);
         });
       }
       setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
-    .then(() => {
-      // Checks if mood has been set before, if not call mood prompt;
-      if (sessionStorage.mood === undefined) {  
-        setShowMoodPrompt(true);
-      } else {
-        setMood(sessionStorage.mood);
-      }
-      setProgress(oldProgress => oldProgress + 30);
-    })
-    .then(() => {
-      getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
-      getPosts().then((data) => {
-        setPins(data);
-        setProgress(oldProgress => oldProgress + 20);
+      .then(() => {
+        // Checks if mood has been set before, if not call mood prompt;
+        if (sessionStorage.mood === undefined) {
+          setShowMoodPrompt(true);
+        } else {
+          setMood(sessionStorage.mood);
+        }
+        setProgress(oldProgress => oldProgress + 30);
+      })
+      .then(() => {
+        getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
+        getPosts().then((data) => {
+          setPins(data);
+          setProgress(oldProgress => oldProgress + 20);
+        });
       });
-    });
   }, []);
 
   // useEffect(() => {
@@ -195,10 +198,10 @@ function MapPage() {
   useEffect(() => {
     if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
       Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({lat: position.lat, lng: position.lng});
+      setLastPosition({ lat: position.lat, lng: position.lng });
     }
   }, [position]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -228,21 +231,21 @@ function MapPage() {
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
     const radius = 0.0005; // Radius of tolerance (about 35m from the position)
-  
+
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
       const dLng = deg2rad(pin.position.lng - lng);
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(pin.position.lat)) * 
-        Math.sin(dLng/2) * Math.sin(dLng/2)
-      ; 
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(pin.position.lat)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        ;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
       return distance < radius;
     });
-    return seeAllPins ? pins: closePins;
+    return seeAllPins ? pins : closePins;
   }
 
   // Converts degrees to radians
@@ -276,13 +279,25 @@ function MapPage() {
 
   return (
     <>
+      {/* the absolute position post view */}
+      <PostView
+        isActive={Object.keys(activePost).length !== 0}
+        image={"http://127.0.0.1:8000/" + activePost['image']}
+        leaveFunction={() => {
+          setActive({});
+        }}
+        caption={activePost["caption"]}
+        location={activePost["location"]}
+      />
+
       {loading && <InitMap progress={progress} />}
       <DrawerDown
-        id = {form.postid}
+        id={form.postid}
         image={drawerImage}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
         handleSubmit={handleSubmit}
+        handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
       />
       {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <div

@@ -8,6 +8,11 @@ const cookies = new Cookies();
 
 async function CheckLogin() {
 
+    if (cookies.get('token') === undefined) {
+        window.location.href = "/login";
+        return false;
+    }
+
     try {
         const response = await axios.get(
             "http://127.0.0.1:8000/api/getUser/"
@@ -19,18 +24,18 @@ async function CheckLogin() {
                 },
             }
         );
-        return response.data;
+        return true;
     } catch (error) {
-        console.error("Error occurred:", error);
         if (error.response) {
-            console.log("Response data:", error.response.data);
-            console.log("Response status:", error.response.status);
-            console.log("Response headers:", error.response.headers);
             if (error.response.data.detail === "Invalid token.") {
                 cookies.remove('token');
                 console.log("not logged in");
                 window.location.href = "/login";
-
+                return false
+            } else {
+                console.log("Response data:", error.response.data);
+                console.log("Response status:", error.response.status);
+                console.log("Response headers:", error.response.headers);
             }
         }
     }
