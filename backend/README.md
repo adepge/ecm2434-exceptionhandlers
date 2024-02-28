@@ -51,7 +51,7 @@ $ python manage.py runserver
 
 You can visit it at `http://localhost:8000/` (`http://127.0.0.1:8000/`).
 
-# API ENDPOINTS DESCRIPTION #
+### API ENDPOINTS DESCRIPTION 
 
 Url : http://127.0.0.1:8000/api/register/ <br>
 What requests it accepts : "Post" <br>
@@ -135,5 +135,3 @@ What requests it accepts : "Post" , "Get" <br>
 What it returns if successful : Status 200 and user details : userID and username <br>
 What it returns if unsuccessful : status 400 and the error message : "User not logged in" <br>
 Permissions : Any <br>
-
-# API ENDPOINTS DESCRIPTION #
