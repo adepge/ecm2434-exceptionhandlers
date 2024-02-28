@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePositionStore, useGeoTagStore} from "../stores/geolocationStore";
+import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
 import Send from "../assets/send.svg";
 import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
@@ -46,12 +46,6 @@ function Capture() {
 
   // if the page is loading
   const [isLoading, setIsLoading] = useState(false);
-
-  // the post data to send
-  const [postData, setPostData] = useState({
-    caption: "",
-    geolocID: 0,
-  });
 
   const [caption, setCaption] = useState("");
 

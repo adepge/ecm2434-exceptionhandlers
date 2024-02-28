@@ -8,8 +8,6 @@ const cookies = new Cookies();
 
 async function CheckLogin() {
 
-    const navigate = useNavigate();
-
     try {
         const response = await axios.get(
             "http://127.0.0.1:8000/api/getUser/"
@@ -21,6 +19,7 @@ async function CheckLogin() {
                 },
             }
         );
+        return response.data;
     } catch (error) {
         console.error("Error occurred:", error);
         if (error.response) {
@@ -29,8 +28,8 @@ async function CheckLogin() {
             console.log("Response headers:", error.response.headers);
             if (error.response.data.detail === "Invalid token.") {
                 cookies.remove('token');
-                console.log("not logged in")
-                navigate("/login");
+                console.log("not logged in");
+                window.location.href = "/login";
 
             }
         }

@@ -11,17 +11,7 @@ import PageNoFound from "./pages/pageNoFound";
 import ProfilePage from "./pages/profilepage";
 import Test from "./pages/test";
 
-import axios from "axios";
-import Cookies from "universal-cookie";
-
-import { useState } from "react";
-
-
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
 function App() {
-  const navigate = useNavigate();
 
   return (
     <>
