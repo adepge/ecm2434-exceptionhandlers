@@ -70,7 +70,7 @@ function Capture() {
         {
           latitude: position.lat,
           longitude: position.lng,
-          location: "University of exeter"
+          location: locationTag,
         }
       );
       const geolocID = response.data.id;

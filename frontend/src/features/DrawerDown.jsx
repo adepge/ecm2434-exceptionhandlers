@@ -1,11 +1,21 @@
 import { useState, useEffect, useRef } from "react";
+import { useCollectedPinStore } from "../stores/pinStore";
 import Polaroid from "./polaroid";
 import handle from "../assets/map/handle.svg";
 import "../styles/drawer-down.css";
 
-function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
+function DrawerDown({ id, image, drawerVisible, setDrawerVisible, handleSubmit }) {
   const elementRef = useRef(null);
   const [closing, setClosing] = useState(drawerVisible);
+  const [collected, setCollected] = useState(false);
+
+  const collectedPins = useCollectedPinStore((state) => state.pinIds);
+  
+  useEffect(() => {
+    if (collectedPins.includes(id)) {
+      setCollected(true);
+    }
+  }, [collectedPins, id]);
 
   useEffect(() => {
     if (drawerVisible) {
@@ -44,7 +54,7 @@ function DrawerDown({ image, drawerVisible, setDrawerVisible }) {
                 <Polaroid id="collect-polaroid" src={image} rotation={-5} />
               </div>
             </div>
-            <button>Add to collection</button>
+            <button disabled={collected} onClick={handleSubmit}>{collected ? "Pin collected" : "Add to collection"}</button>
             <img id="handle" src={handle}></img>
           </div>
         )}

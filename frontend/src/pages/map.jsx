@@ -11,24 +11,18 @@ import { differenceInDays, format, set } from "date-fns";
 import { PathLayer } from "@deck.gl/layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
-import { usePinStore } from "../stores/pinStore";
+import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import napoleon from "../assets/map/napoleon.svg";
 import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
 import Location from "../assets/location.svg";
-
 import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
+import Cookies from "universal-cookie";
 
-const image1 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297022160978/1000016508.JPG?ex=65dfdc7d&is=65cd677d&hm=295b9625886c4e12ea212d291878bb71d37e22a31d71e5757546d0a4a0a1bdb4&";
-const image2 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497297961943050/1000015958.JPG?ex=65dfdc7e&is=65cd677e&hm=6413142376bf1efe664ef897cd70325b1f5f2d03e9d177ab4b9c541a5fb1de59&";
-const image3 =
-  "https://cdn.discordapp.com/attachments/1204728741230809098/1207497298116874311/1000016354.JPG?ex=65dfdc7e&is=65cd677e&hm=e497673ab0de533871fc5fb4bb6e702ce4fbaa856f99461dc3abf555c6f0d510&";
-
+const cookies = new Cookies();
 
 // Debugging options
 const seeAllPins = true;
@@ -57,7 +51,24 @@ const getPosts = async () => {
   }
 };
 
-getPosts().then((data) => console.log(data));
+// Get collected posts from the database
+const getCollectedPosts = async (token) => {
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/api/collectedPosts/",
+      {},
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Token ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 function MapPage() {
   const [loading, setLoading] = useState(true);
@@ -69,83 +80,31 @@ function MapPage() {
 
   // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
-  const [drawerImage, setDrawerImage] = useState(image1);
+  const [drawerImage, setDrawerImage] = useState(null);
 
   // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
   const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
-
-  const position = usePositionStore(state => state.position);
-  const setPosition = usePositionStore(state => state.setPosition);
-
   const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
 
+  // State for form data ( adding posts to collection )
+  const [form, setForm] = useState({ "postid": 0 })
+
+  // Global state for current position, location tag and pins
+  const position = usePositionStore(state => state.position);
+  const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
-
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
 
-  // Local state, to be replaced with fetched data
-  const [locations, setLocations] = useState([
-    {
-      id: 1,
-      position: { lat: 50.735224, lng: -3.536504 },
-      caption: "This is what I strive for",
-      image: image1,
-      date: "2024-02-15T16:53:21",
-      open: false,
-    },
-    {
-      id: 2,
-      position: { lat: 50.73515821650297, lng: -3.5374750416490075 },
-      caption: "Caption 2",
-      image: image2,
-      date: "2024-02-14T15:23:02",
-      open: false,
-    },
-    {
-      id: 3,
-      position: { lat: 50.73570670084978, lng: -3.532460585178674 },
-      caption: "Caption 3",
-      image: image3,
-      date: "2024-02-13T09:58:33",
-      open: false,
-    },
-    {
-      id: 4,
-      position: { lat: 50.73788280412368, lng: -3.530794042942085 },
-      caption: "Caption 4",
-      image: image3,
-      date: "2024-02-13T07:25:41",
-      open: false,
-    },
-    {
-      id: 5,
-      position: { lat: 50.736341371401544, lng: -3.5391262256961586 },
-      caption: "Caption 4",
-      image: image3,
-      date: "2024-02-13T07:25:41",
-      open: false,
-    },
-    {
-      id: 6,
-      position: { lat: 50.738038832528616, lng: -3.5306508139149866 },
-      caption: "Caption 4",
-      image: image3,
-      date: "2024-02-13T07:25:41",
-      open: false,
-    },
-    {
-      id: 7,
-      position: { lat: 50.73782485058377, lng: -3.530022719410907 },
-      caption: "Caption 4",
-      image: image3,
-      date: "2024-02-13T07:25:41",
-      open: false,
-    },
-  ]);
+  // Global state for collected pins
+  const collectedPins = useCollectedPinStore(state => state.pinIds);
+  const setCollectedPins = useCollectedPinStore(state => state.setPinIds);
+  const addCollectedPin = useCollectedPinStore(state => state.addPinId);
+
+  const token = cookies.get('token');
 
   // Sample data for path layer (to be replaced as well)
   const path2 = [
@@ -192,24 +151,32 @@ function MapPage() {
     }
   }, [progress]);
 
-  // Checks if mood has been set before, if not call mood prompt;
   useEffect(() => {
     new Promise((resolve, reject) => {
+      // Get the user's current position
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition((position) => {
           setPosition(position.coords.latitude,position.coords.longitude);
         });
       }
-      setProgress(oldProgress => oldProgress + 50);
+      setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
     .then(() => {
-      if (sessionStorage.mood === undefined) {
+      // Checks if mood has been set before, if not call mood prompt;
+      if (sessionStorage.mood === undefined) {  
         setShowMoodPrompt(true);
       } else {
         setMood(sessionStorage.mood);
       }
       setProgress(oldProgress => oldProgress + 30);
+    })
+    .then(() => {
+      getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
+      getPosts().then((data) => {
+        setPins(data);
+        setProgress(oldProgress => oldProgress + 20);
+      });
     });
   }, []);
 
@@ -231,6 +198,32 @@ function MapPage() {
       setLastPosition({lat: position.lat, lng: position.lng});
     }
   }, [position]);
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Update the API URL as per your configuration
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/collectPost/",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Token ${token}`, // Assuming postData.username is the token
+          },
+        }
+      );
+      addCollectedPin(form.postid);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
+    }
+  };
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
@@ -261,11 +254,12 @@ function MapPage() {
     // prevent the user from clicking into the outsite area and the map icon
     e.domEvent.preventDefault();
 
-    setLocations(
+    setPins(
       pins.map((pin) => {
         if (pin.id === id) {
+          setForm({ "postid": id })
           setDrawerTopVisible(true);
-          setDrawerImage(pin.image);
+          setDrawerImage("http://127.0.0.1:8000" + pin.image);
           return { ...pin, open: !pin.open };
         } else {
           return { ...pin, open: false };
@@ -284,9 +278,11 @@ function MapPage() {
     <>
       {loading && <InitMap progress={progress} />}
       <DrawerDown
+        id = {form.postid}
         image={drawerImage}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
+        handleSubmit={handleSubmit}
       />
       {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <div

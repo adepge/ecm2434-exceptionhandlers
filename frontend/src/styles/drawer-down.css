@@ -43,6 +43,13 @@
   border-radius: 50px;
   border: 0px;
   background-color: var(--primary);
+  cursor: pointer;
+}
+
+.drawer-container button:disabled {
+  color: #dfdfdf;
+  background-color: #74d6be;
+  cursor: not-allowed;
 }
 
 .drawer-container #handle {
