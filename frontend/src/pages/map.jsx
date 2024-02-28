@@ -288,6 +288,8 @@ function MapPage() {
           setActive({});
         }}
         caption={activePost["caption"]}
+        // perform a null check or ensure that activePost["position"]["location"] exists before accessing its location property.
+        location={activePost["position"] && activePost["position"]["location"]}
       />
 
       {loading && <InitMap progress={progress} />}
