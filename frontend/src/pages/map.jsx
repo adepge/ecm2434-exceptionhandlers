@@ -277,7 +277,6 @@ function MapPage() {
     setShowMoodPrompt(false);
   };
 
-  console.log(activePost);
   return (
     <>
       {/* the absolute position post view */}
