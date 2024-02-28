@@ -34,9 +34,9 @@ function LoginPage() {
         "http://127.0.0.1:8000/api/login/",
         userData
       );
-      console.log(response.data);
       cookies.set("token", response.data.token, { path: "/" });
       navigate("/");
+      return
     }
     catch (error) {
       // Display the error message from the server
@@ -46,12 +46,15 @@ function LoginPage() {
             ...errors,
             username: error.response.data.username,
           });
+          return
         } else {
           console.log(error);
+          alert("An error occured. Please try again later.");
         }
       }
     }
     console.log(errors);
+    alert("An error occured. Please try again later.");
   }
 
   return (
