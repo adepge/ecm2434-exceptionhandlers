@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 
 @api_view(['POST']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
 @permission_classes([AllowAny])
-
 def UserRegisterAuthentication(request):
     serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid():
@@ -30,15 +29,18 @@ def UserRegisterAuthentication(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)                   # Failed user creation
 
 
-@api_view(['POST']) # Secuirty purposes we dont want to append user details to header
+@api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny]) 
 def UserLoginAuthentication(request):
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(username=username, password=password)
-    if user:
+
+    if user: # checks to see if user exists in database 
+
         token, _ = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     else:
+        # if user does not exist
         return Response({"username": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
      

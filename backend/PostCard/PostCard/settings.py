@@ -39,7 +39,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+# Included all the apps we add , and other dependiences
 INSTALLED_APPS = [
     'posts',
     'database.apps.DatabaseConfig',
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
 ]
 
+# configured the settings to allow us to use the restframe
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -79,7 +80,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-
+#Allows frontend to connect to our server
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", "http://localhost:5174", "http://localhost:5175",
     # 'corsheaders.middleware.CorsMiddleware',

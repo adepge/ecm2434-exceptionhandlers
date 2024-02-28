@@ -10,53 +10,65 @@ from rest_framework import status
 
 
 # creating the views based on the models, should be able to list and view the data
+
+
+#Returns All posts objects
 class PostsList(generics.ListCreateAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostsSerializer
     permission_classes = [AllowAny]
 
+#Returns a specific post made by using the postID
 class PostsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostsSerializer
     permission_classes = [AllowAny]
 
+#Returns all geolocations retrieved from posts made
 class GeolocationList(generics.ListCreateAPIView):
     queryset = Geolocation.objects.all()
     serializer_class = GeolocationSerializer
     permission_classes = [AllowAny]
 
+#Returns a specific geolocation
 class GeolocationDetail(generics.RetrieveAPIView):
     queryset = Geolocation.objects.all()
     serializer_class = GeolocationSerializer
     permission_classes = [AllowAny]
 
+#Returns all stickers made
 class StickersList(generics.ListCreateAPIView):
     queryset = Stickers.objects.all()
     serializer_class = StickersSerializer
     permission_classes = [AllowAny]
 
+#Returns a specific sticker made 
 class StickersDetail(generics.RetrieveAPIView):
     queryset = Stickers.objects.all()
     serializer_class = StickersSerializer
     permission_classes = [AllowAny]
 
+#Returns all stickers owned by a user
 class StickersUserList(generics.ListCreateAPIView):
     queryset = StickersUser.objects.all()
     serializer_class = StickersUserSerializer
     permission_classes = [AllowAny]
 
+#Returns a sticker owned by a user
 class StickersUserDetail(generics.RetrieveAPIView):
     queryset = StickersUser.objects.all()
     serializer_class = StickersUserSerializer
     permission_classes = [AllowAny]
 
+#Returns all posts made by a user    
 class PostUser(generics.ListCreateAPIView):
     queryset = PostsUser.objects.all()
     serializer_class = PostsUserSerializer
     permission_classes = [AllowAny]
 
-@api_view(['POST']) # Secuirty purposes we dont want to append user details to header
-@permission_classes([AllowAny]) # idk , doesnt work without it smh
+
+@api_view(['POST']) # Secuirty purposes we do not want to append user details to header
+@permission_classes([AllowAny])
 def createPost(request):
     try:
         userid = request.user.id
@@ -64,11 +76,13 @@ def createPost(request):
         # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     
+    #Getting the length of image name
     filename = request.FILES['image'].name
     filename_length = len(filename)
 
+    #If its larger than 100 than get upload the last 30 chars to avoid errors
     if filename_length > 100:
-        request.FILES['image'].name = filename[-30:]
+        request.FILES['image'].name = filename[-30:] 
 
     # Create a mutable copy of request.data
     data = request.data.copy()
@@ -83,12 +97,12 @@ def createPost(request):
     
     if serialized.is_valid():
         serialized.save()
-        return Response({"message":"Post made"},status=status.HTTP_201_CREATED) # Successful user creation
+        return Response({"message":"Post made"},status=status.HTTP_201_CREATED) # Successful post creation
     else: 
-        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed user creation  
+        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed post creation  
 
-@api_view(['POST' ,'Get']) # Secuirty purposes we dont want to append user details to header
-@permission_classes([AllowAny]) # idk , doesnt work without it smh
+@api_view(['POST' ,'Get']) 
+@permission_classes([AllowAny])
 def getUser(request):
     try:
         userid = request.user.id
@@ -97,6 +111,7 @@ def getUser(request):
         # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     return Response({"userid":userid,"username":username},status=status.HTTP_200_OK) # Successful user creation
+
     
 from django.utils import timezone
 from datetime import timedelta
@@ -106,8 +121,11 @@ from datetime import timedelta
 def getPostsLast24Hours(request):
     try:
         current_time = timezone.now()
+        
+        #stores the last 24 hrs
         time_24_hours_ago = current_time - timedelta(days=1)
 
+        #Stores posts made in the last 24hrs
         recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time]).select_related('geolocID')
         
         data = []
@@ -142,10 +160,12 @@ def addCollection(request):
     try:
         user = request.user
     except Exception as e:
+        #if user is not logged in
         return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     post_id = request.data.get('postid')
     if not post_id:
+        #If post not found
         return Response({"message": "postid not provided"}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
@@ -164,6 +184,7 @@ def addCollection(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+#returns the collection of posts saved by a user
 def getCollections(request):
     try:
         user = request.user
