@@ -39,7 +39,6 @@ function FeedPage() {
           },
         }
       );
-      console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error occurred:", error);

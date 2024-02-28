@@ -39,7 +39,9 @@ function Capture() {
 
   // the user's position
   const position = usePositionStore(state => state.position);
+  const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
+  const setLocationTag = useGeoTagStore(state => state.setGeoTag);
 
   const [lastPosition, setLastPosition] = useState({ lat: 0, lng: 0 });
 
@@ -60,10 +62,28 @@ function Capture() {
     setCaption(e.target.value);
   };
 
+  // get the user's position
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition((position) => {
+        setPosition(position.coords.latitude, position.coords.longitude);
+      });
+    }
+  }, []);
+
+  // set the location tag
+  useEffect(() => {
+    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
+      Geolocation(position.lat, position.lng, setLocationTag);
+      setLastPosition({ lat: position.lat, lng: position.lng });
+    }
+  }, [position]);
+
   // on submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/geolocations/",
