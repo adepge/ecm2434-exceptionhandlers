@@ -23,33 +23,6 @@ import { useEffect } from "react";
 function App() {
   const navigate = useNavigate();
 
-  // get the user token
-  const cookies = new Cookies();
-
-  const token = cookies.get("token");
-
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    console.log("token", token);
-    // get all the post from database
-    const getUser = async () => {
-      try {
-        let response = await axios.post("http://127.0.0.1:8000/api/getUser/", {}, {
-          headers: {
-            "Authorization": `Token ${token + ""}`, // Assuming postData.username is the token
-          },
-        });
-        setIsLoggedIn(true);
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
-    }
-
-    getUser();
-  }, [cookies.get("token")]);
-
   return (
     <>
       <Header />
