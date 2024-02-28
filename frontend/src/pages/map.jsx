@@ -20,6 +20,7 @@ import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
+import PostView from "../features/PostView";
 
 const cookies = new Cookies();
 
@@ -70,6 +71,9 @@ const getCollectedPosts = async (token) => {
 };
 
 function MapPage() {
+  // State for active post in the view
+  const [activePost, setActive] = useState({});
+
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
 
@@ -275,6 +279,17 @@ function MapPage() {
 
   return (
     <>
+      {/* the absolute position post view */}
+      <PostView
+        isActive={Object.keys(activePost).length !== 0}
+        image={"http://127.0.0.1:8000/" + activePost['image']}
+        leaveFunction={() => {
+          setActive({});
+        }}
+        caption={activePost["caption"]}
+        location={activePost["location"]}
+      />
+
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
@@ -282,6 +297,7 @@ function MapPage() {
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
         handleSubmit={handleSubmit}
+        handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
       />
       {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <div

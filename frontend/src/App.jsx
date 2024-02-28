@@ -20,8 +20,6 @@ function App() {
 
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-
-
         <Route path="/" element={<MapPage />} />
         <Route path="/feed" element={<FeedPage />} />
         <Route path="/capture" element={<Capture />} />

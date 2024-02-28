@@ -110,7 +110,6 @@ def getPostsLast24Hours(request):
 
         recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time]).select_related('geolocID')
         
-        print(recent_posts)
         data = []
         # Prepare the data to return
         for post in recent_posts:
