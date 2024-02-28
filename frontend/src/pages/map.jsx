@@ -21,6 +21,7 @@ import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
+import CheckLogin from "../features/CheckLogin";
 
 const cookies = new Cookies();
 
@@ -71,6 +72,10 @@ const getCollectedPosts = async (token) => {
 };
 
 function MapPage() {
+
+  // check if the user is logged in
+  CheckLogin()
+
   // State for active post in the view
   const [activePost, setActive] = useState({});
 
@@ -175,6 +180,7 @@ function MapPage() {
         setProgress(oldProgress => oldProgress + 30);
       })
       .then(() => {
+        cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
           setPins(data);
