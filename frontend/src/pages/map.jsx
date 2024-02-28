@@ -277,6 +277,7 @@ function MapPage() {
     setShowMoodPrompt(false);
   };
 
+  console.log(activePost);
   return (
     <>
       {/* the absolute position post view */}
@@ -287,7 +288,7 @@ function MapPage() {
           setActive({});
         }}
         caption={activePost["caption"]}
-        location={activePost["location"]}
+        location={activePost["position"]["location"]}
       />
 
       {loading && <InitMap progress={progress} />}
