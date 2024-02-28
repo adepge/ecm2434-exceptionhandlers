@@ -288,7 +288,6 @@ function MapPage() {
           setActive({});
         }}
         caption={activePost["caption"]}
-        location={activePost["position"]["location"]}
       />
 
       {loading && <InitMap progress={progress} />}
