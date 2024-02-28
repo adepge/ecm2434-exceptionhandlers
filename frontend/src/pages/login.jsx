@@ -83,7 +83,7 @@ function LoginPage() {
                   />
                   <label className="error">{errors.username}</label>
                 </div>
-                <button>login</button>
+                <button>Login</button>
                 <div id="message">
                   Not a member?{" "}
                   <Link to={"/register"}>

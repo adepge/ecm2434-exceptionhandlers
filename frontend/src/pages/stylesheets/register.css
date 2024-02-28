@@ -64,11 +64,12 @@
   width: 100%;
 
   /* styles */
+  font-family: Outfit, sans-serif;
   font-size: 16px;
   border: none;
   border-radius: 100px;
   padding: 13px 21px;
-  font-weight: 700;
+  font-weight: 600;
   color: black;
   background-color: #e7e7e7;
 
