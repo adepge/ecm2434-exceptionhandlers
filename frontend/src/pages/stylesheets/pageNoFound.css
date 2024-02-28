@@ -4,13 +4,13 @@
   padding: 20px;
 }
 
-#status {
+#status-not-found {
   color: #333;
   font-size: 40px;
   font-weight: bold;
 }
 
-#description {
+#description-not-found {
   margin-top: -2px;
   color: #666;
   font-size: 20px;
@@ -24,14 +24,15 @@
   font-weight: bold;
 }
 
-#display {
+#display-not-found {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-#display img {
+#not-found-img {
   width: 200px;
   height: 200px;
   margin-bottom: 20px;
