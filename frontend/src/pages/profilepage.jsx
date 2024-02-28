@@ -1,6 +1,6 @@
 import "./stylesheets/profilepage.css";
 
-import userIcon from "../assets/header/user-icon.svg";
+import userIcon from "../assets/header/user-icon.jpg";
 
 function ProfilePage() {
   return (
