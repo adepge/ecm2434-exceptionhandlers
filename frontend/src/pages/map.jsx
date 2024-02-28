@@ -83,7 +83,7 @@ function MapPage() {
 
   // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
-  const [drawerImage, setDrawerImage] = useState(null);
+  const [drawerPost, setDrawerPost] = useState(null);
 
   // State for walking and tracking path coordinates and map position
   const [path, setPath] = useState([]);
@@ -262,7 +262,7 @@ function MapPage() {
         if (pin.id === id) {
           setForm({ "postid": id })
           setDrawerTopVisible(true);
-          setDrawerImage("http://127.0.0.1:8000" + pin.image);
+          setDrawerPost(pin);
           return { ...pin, open: !pin.open };
         } else {
           return { ...pin, open: false };
@@ -293,7 +293,8 @@ function MapPage() {
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
-        image={drawerImage}
+        image={"http://127.0.0.1:8000/" + drawerPost?.image}
+        caption={drawerPost?.caption}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
         handleSubmit={handleSubmit}
