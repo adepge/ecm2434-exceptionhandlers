@@ -59,81 +59,81 @@ What it returns if successful : Status 200 and token generated for user created 
 What it returns if unsuccessful : status 400 <br>
 Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/login/
-What requests it accepts : "Post"
-What it returns if successful: Status 200 and token assigned to existsing user
-What it returns if unsuccessful : status 400 and the error message: "Invalid credentials"
-Permissions : Any
+Url : http://127.0.0.1:8000/api/login/ <br>
+What requests it accepts : "Post" <br>
+What it returns if successful: Status 200 and token assigned to existsing user <br>
+What it returns if unsuccessful : status 400 and the error message: "Invalid credentials" <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/posts/
-What requests it accepts : Any
-What it returns if successful : All posts made
-Permissions : Any
+Url : http://127.0.0.1:8000/api/posts/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : All posts made <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/posts/<int:pk>/
-What requests it accepts : Any
-What it returns if successful : A specific post made by using postID
-Permissions : Any
+Url : http://127.0.0.1:8000/api/posts/<int:pk>/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : A specific post made by using postID <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/geolocations/
-What requests it accepts : Any
-What it returns if successful : All geolocations retrieved by making posts
-Permissions : Any
+Url : http://127.0.0.1:8000/api/geolocations/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : All geolocations retrieved by making posts <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/geolocations/<int:pk>/
-What requests it accepts : Any
-What it returns if successful : Specific geolocation retrieved from a post made
-Permissions : Any
+Url : http://127.0.0.1:8000/api/geolocations/<int:pk>/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : Specific geolocation retrieved from a post made <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/stickers/
-What requests it accepts : Any
-What it returns if successful : All stickers made 
-Permissions : Any
+Url : http://127.0.0.1:8000/api/stickers/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : All stickers made <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/stickers/<int:pk>/
-What requests it accepts : Any
-What it returns if successful : A specific sticker made using stickerID
-Permissions : Any
+Url : http://127.0.0.1:8000/api/stickers/<int:pk>/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : A specific sticker made using stickerID <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/stickerusers/
-What requests it accepts : Any
-What it returns if successful : All stickers owned by a user
-Permissions : Any
+Url : http://127.0.0.1:8000/api/stickerusers/ <br>
+What requests it accepts : Any <br>
+What it returns if successful : All stickers owned by a user <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/stickerusers/<int:pk>/
-What requests it accepts : Any
-What it returns if successful: A sticker owned by a user
-Permissions : Any
+Url : http://127.0.0.1:8000/api/stickerusers/<int:pk>/ <br>
+What requests it accepts : Any <br>
+What it returns if successful: A sticker owned by a user <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/createPost/
-What requests it accepts : "Post"
-What it returns if successful : Status 200, post saved to db and a message : "post made"
-What it returns if unsuccessful : status 400
-Permissions : Any
+Url : http://127.0.0.1:8000/api/createPost/ <br>
+What requests it accepts : "Post" <br>
+What it returns if successful : Status 200, post saved to db and a message : "post made" <br>
+What it returns if unsuccessful : status 400 <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/getRecentPosts/
-What requests it accepts : "Post" , "Get"
-What it returns if successful : Status 200 and all posts made in the last 24hrs
-What it returns if unsuccessful : status 400 and the error message
+Url : http://127.0.0.1:8000/api/getRecentPosts/ <br>
+What requests it accepts : "Post" , "Get" <br>
+What it returns if successful : Status 200 and all posts made in the last 24hrs <br>
+What it returns if unsuccessful : status 400 and the error message <br>
 
-Permissions : Any
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/collectPost/
-What requests it accepts : "Post"
-What it returns if successful : Status 201 and message: "Post added to collection"
-What it returns if unsuccessful : status 400 and the error message: "User not logged in"
-Permissions : Any
+Url : http://127.0.0.1:8000/api/collectPost/ <br>
+What requests it accepts : "Post" <br>
+What it returns if successful : Status 201 and message: "Post added to collection" <br>
+What it returns if unsuccessful : status 400 and the error message: "User not logged in" <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/collectedPosts/
-What requests it accepts : "Post"
-What it returns if successful : Status 200 and all posts collected by a user
-What it returns if unsuccessful : status 400 and the error message
-Permissions : Any
+Url : http://127.0.0.1:8000/api/collectedPosts/ <br>
+What requests it accepts : "Post" <br>
+What it returns if successful : Status 200 and all posts collected by a user <br>
+What it returns if unsuccessful : status 400 and the error message <br>
+Permissions : Any <br>
 
-Url : http://127.0.0.1:8000/api/getUser/
-What requests it accepts : "Post" , "Get"
-What it returns if successful : Status 200 and user details : userID and username
-What it returns if unsuccessful : status 400 and the error message : "User not logged in"
-Permissions : Any
+Url : http://127.0.0.1:8000/api/getUser/ <br>
+What requests it accepts : "Post" , "Get" <br>
+What it returns if successful : Status 200 and user details : userID and username <br>
+What it returns if unsuccessful : status 400 and the error message : "User not logged in" <br>
+Permissions : Any <br>
 
 # API ENDPOINTS DESCRIPTION #
