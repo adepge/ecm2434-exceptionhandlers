@@ -13,9 +13,7 @@ A progressive web app to upload images and posts that users can make as they exp
 - [Coursework specification](https://ele.exeter.ac.uk/pluginfile.php/1800367/mod_label/intro/ECM2434%20project-spec-2024-2.pdf)
 - [Group meeting spreadsheet](https://universityofexeteruk-my.sharepoint.com/:x:/r/personal/s_oyelere_exeter_ac_uk/Documents/Associate%20Professor%20-%20Exeter/courses/Term%202/ECM2434/Week%204/ECM2434%20SEGP%20Group%20Meeting%20Bookings.xlsx?d=wa61503cbd510454d8c3277457f2f1c3f&csf=1&web=1&e=XT7wpQ&nav=MTVfezY3NkNDRkFBLTc5RjctNDFFRi05QjU3LTU3MDAxNTE0ODAwRn0)
 - [Week 7 and 11 presentation spreadsheet](https://universityofexeteruk-my.sharepoint.com/:x:/r/personal/s_oyelere_exeter_ac_uk/Documents/Associate%20Professor%20-%20Exeter/courses/Term%202/ECM2434/Week%204/ECM2434%20SEGP%20Group%20Prototype%20and%20final%20presentation%20Bookings.xlsx?d=w661392c6e7aa4fdcbff1cd7409cd0a7b&csf=1&web=1&e=oNQt6A&nav=MTVfezRDNEVENzk5LUYyRDEtNEZFMS05NTQ5LUI1QUY5ODI0N0ExQX0)
-
-
-# Welcome to the Exeter Orienteering Project
+- 
 
 ### Exception Handler
 ___
