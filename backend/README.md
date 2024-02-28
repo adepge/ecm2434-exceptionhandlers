@@ -53,11 +53,11 @@ You can visit it at `http://localhost:8000/` (`http://127.0.0.1:8000/`).
 
 # API ENDPOINTS DESCRIPTION #
 
-Url : http://127.0.0.1:8000/api/register/
-What requests it accepts : "Post"
-What it returns if successful : Status 200 and token generated for user created and saved
-What it returns if unsuccessful : status 400
-Permissions : Any
+Url : http://127.0.0.1:8000/api/register/ <br>
+What requests it accepts : "Post" <br>
+What it returns if successful : Status 200 and token generated for user created and saved <br>
+What it returns if unsuccessful : status 400 <br>
+Permissions : Any <br>
 
 Url : http://127.0.0.1:8000/api/login/
 What requests it accepts : "Post"
