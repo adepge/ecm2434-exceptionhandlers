@@ -31,7 +31,7 @@ This is a submission for Sprint 1. There are three types of document that you wi
 ## PROCESS DOCUMENTS
 Our process documents are managed in the trello platform. The link to our project page is below. We (specific username that added) have added mattcollison2 to the board so it is visible.
 
-trello link: [https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cbaa7608a1A837EBFF/exceptionhandler]
+[Link to Kanban Board (Trello)](https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cbaa7608a1A837EBFF/exceptionhandler)
 
 We have also taken regular snapshots of the kanban board in Trello to archive our progress. These are held in the repository below.
 
@@ -60,6 +60,12 @@ Public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universit
 [Design specification](https://app.capacities.io/home/463a8802-6f14-4a08-ae38-84f59633b099) - Problem and requirements analysis + MoSCoW matrix  
 [Figma board (UI/UX Designs)](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)
 [Other process documents](./docs/process-documents/)
+
+***
+### Instructions for running front/backend environments
+[Frontend instructions](./frontend/README.md)
+[Frontend instructions](./backend/README.md)
+
 
 
 
