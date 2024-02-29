@@ -1,7 +1,6 @@
 ## Post-i-tivity 
 <img src= "https://cdn.discordapp.com/attachments/1203725883135885402/1210042110984851516/SmartSelect_20240222_015424_Samsung_Notes.jpg?ex=65e91e88&is=65d6a988&hm=e95f279565d36de4297d783e4605c32a0b85121320567b327850b7fc81e7dd94&" width="250px"></img>
 
-
 A progressive web app to upload images and posts that users can make as they explore Exeter University's campus and promote sustainability through improving mental health, exercise, community engagement, social welfare and awareness of the environment. 
 
 ### Quicklinks
@@ -36,7 +35,7 @@ trello link: [https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cba
 
 We have also taken regular snapshots of the kanban board in Trello to archive our progress. These are held in the repository below.
 
-[./process-documents/kanban-snapshot/](./docs/process-documents/Kanban%20Snapshots%20(Trello)/)
+[Kanban Board Snapshots](./docs/process-documents/Kanban%20Snapshots%20(Trello)/)
 
 Within process documents we have also included the meeting notes, agenda and minutes. These will be found in the repository below.
 
@@ -50,14 +49,17 @@ GitHub link: [https://github.com/adepge/ecm2434-exceptionhandlers]
 
 We have also include the versioned source code for archiving.
 
-[./technical-documents/](./technical-documents/)
+[Compiled source code documents](./docs/technical-documents/)
 
 Technical documents are broken down into front end and back end etc.  
 
 ## PRODUCT DOCUMENTS
 Our product documents are primarily in the form of a product UI. Below is a link to our latest version.
 
-public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW)https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW]
+Public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW)https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW]  
+[Design specification](https://app.capacities.io/home/463a8802-6f14-4a08-ae38-84f59633b099) - Problem and requirements analysis + MoSCoW matrix  
+[Figma board (UI/UX Designs)](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)
+[Other process documents](./docs/process-documents/)
 
 
 
