@@ -58,7 +58,7 @@ Our product documents are primarily in the form of a product UI. Below is a link
 
 [Design specification](https://app.capacities.io/home/463a8802-6f14-4a08-ae38-84f59633b099) - Problem and requirements analysis + MoSCoW matrix  
 [Figma board (UI/UX Designs)](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)  
-[ER Diagram](./docs/product-documents/ER%20Diagram)  
+[ER Diagram](./docs/product-documents/ER%20Diagram.pdf)  
 [Other product documents](./docs/product-documents/)
 
 ***
