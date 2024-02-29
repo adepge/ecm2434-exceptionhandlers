@@ -118,6 +118,7 @@ function FeedPage() {
         }}
         caption={activePost["caption"]}
         location={"Forum"}
+        showBottomBar={false}
       />
 
       {/* the feed */}
