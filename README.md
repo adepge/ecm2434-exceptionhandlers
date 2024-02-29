@@ -56,15 +56,15 @@ Technical documents are broken down into front end and back end etc.
 ## PRODUCT DOCUMENTS
 Our product documents are primarily in the form of a product UI. Below is a link to our latest version.
 
-Public link: [[https://ibm/cloud/12i7dvgj/exeter-orienteering](https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW)https://universityofexeteruk-my.sharepoint.com/:w:/r/personal/jc1465_exeter_ac_uk/Documents/Year2/Y2-Term2/Group%20Software.docx?d=wfcbd4730e4f74ea1a4ad55c879e57d38&csf=1&web=1&e=jnKDdW]  
 [Design specification](https://app.capacities.io/home/463a8802-6f14-4a08-ae38-84f59633b099) - Problem and requirements analysis + MoSCoW matrix  
-[Figma board (UI/UX Designs)](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)
-[Other process documents](./docs/process-documents/)
+[Figma board (UI/UX Designs)](https://www.figma.com/file/nqrpx6RnDdkeYhZkXTt9QS/Home?type=design&node-id=0%3A1&mode=design&t=HJN6YjjbWdqIllhD-1)  
+[ER Diagram](./docs/product-documents/ER%20Diagram)
+[Other product documents](./docs/product-documents/)
 
 ***
 ### Instructions for running front/backend environments
-[Frontend instructions](./frontend/README.md)
-[Frontend instructions](./backend/README.md)
+[Frontend instructions](./frontend/README.md)  
+[Backend instructions](./backend/README.md)
 
 
 
