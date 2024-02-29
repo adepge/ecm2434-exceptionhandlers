@@ -34,9 +34,9 @@ Our process documents are managed in the trello platform. The link to our projec
 
 trello link: [https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cbaa7608a1A837EBFF/exceptionhandler]
 
-We have also taken regular snapshots of the kanban board in trello to archive our progress. These are held in the repository below.
+We have also taken regular snapshots of the kanban board in Trello to archive our progress. These are held in the repository below.
 
-[./process-documents/kanban-snapshot/](./process-documents/kanban-snapshot/)
+[./process-documents/kanban-snapshot/](./docs/process-documents/Kanban_Snapshots_(Trello)/)
 
 Within process documents we have also included the meeting notes, agenda and minutes. These will be found in the repository below.
 
