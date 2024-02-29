@@ -36,7 +36,7 @@ trello link: [https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cba
 
 We have also taken regular snapshots of the kanban board in Trello to archive our progress. These are held in the repository below.
 
-[./process-documents/kanban-snapshot/](./docs/process-documents/Kanban_Snapshots_(Trello)/)
+[./process-documents/kanban-snapshot/](./docs/process-documents/Kanban%20Snapshots%20(Trello)/)
 
 Within process documents we have also included the meeting notes, agenda and minutes. These will be found in the repository below.
 
