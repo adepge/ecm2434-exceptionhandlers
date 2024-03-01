@@ -1,41 +1,34 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
 import Cookies from "universal-cookie";
-import './stylesheets/test.css'
-import { useState } from "react";
-import CheckLogin from "../features/CheckLogin";
+import './stylesheets/test.css';
 
 const cookies = new Cookies();
 
-function test() {
-
-  // CheckLogin();
-
+function Test() {
   const token = cookies.get('token');
-
   console.log(token);
 
   const [form, setForm] = useState({
-    "postid": 2
-  })
+    userId: '', // You need to capture the user ID somehow, adjust as necessary
+  });
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     try {
-      // Update the API URL as per your configuration
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/getUser/"
-        ,
+      // Assuming your API endpoint for POST request is /api/getUsername/
+      // and it expects a payload with 'userId'
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/getUser/",
+        { userId: form.userId }, // Sending the user ID in the request body
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Token ${cookies.get('token')}`, // Assuming postData.username is the token
+            "Content-Type": "application/json",
+            "Authorization": `Token ${token}`,
           },
         }
       );
-      console.log(response.data);
+      console.log(response.data); // Assuming response.data contains the username
     } catch (error) {
       console.error("Error occurred:", error);
       if (error.response) {
@@ -44,16 +37,26 @@ function test() {
         console.log("Response headers:", error.response.headers);
       }
     }
-  }
+  };
 
+  // Update the state to capture the user ID from an input field
+  const handleUserIdChange = (e) => {
+    setForm({ ...form, userId: e.target.value });
+  };
 
   return (
     <div className="test">
       <form onSubmit={handleSubmit}>
-        <button type="submit">submit</button>
+        <input
+          type="text"
+          placeholder="User ID"
+          value={form.userId}
+          onChange={handleUserIdChange}
+        />
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
 }
 
-export default test;
+export default Test;
