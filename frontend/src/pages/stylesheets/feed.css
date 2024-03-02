@@ -1,5 +1,4 @@
 #feed {
-  padding: 80px 20px;
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
@@ -87,4 +86,8 @@
     scale: 1;
     transform: rotateY(0deg);
   }
+}
+
+#feed #padding {
+  padding: 80px 20px;
 }

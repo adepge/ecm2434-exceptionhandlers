@@ -123,26 +123,28 @@ function FeedPage() {
 
       {/* the feed */}
       <div id="feed">
-        <div id="daily-feed">
-          <div id="grid-wrapper">
-            {/* map each columns */}
-            {columns.map((column, index) => (
-              <div key={index} className={"image-grid " + index}>
-                {/* map each posts in the column */}
-                {column.map((post) => (
-                  <div className={post["id"]} key={post["id"]}>
-                    <Polaroid
-                      src={post["image"]}
-                      func={() => {
-                        setActive(post);
-                      }}
-                      caption={post["caption"]}
-                      rotation={post["rotation"]}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
+        <div id="padding">
+          <div id="daily-feed">
+            <div id="grid-wrapper">
+              {/* map each columns */}
+              {columns.map((column, index) => (
+                <div key={index} className={"image-grid " + index}>
+                  {/* map each posts in the column */}
+                  {column.map((post) => (
+                    <div className={post["id"]} key={post["id"]}>
+                      <Polaroid
+                        src={post["image"]}
+                        func={() => {
+                          setActive(post);
+                        }}
+                        caption={post["caption"]}
+                        rotation={post["rotation"]}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
