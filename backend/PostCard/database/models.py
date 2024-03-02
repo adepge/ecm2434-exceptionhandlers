@@ -46,7 +46,7 @@ class StickersUser(models.Model):
 #   Rename table to UserData
 class PostsUser(models.Model):
     userID = models.ForeignKey(User,  on_delete = models.CASCADE)
-    coins = models.PositiveBigIntegerField
+    coins = models.PositiveIntegerField(default=0)
     postID = models.ManyToManyField(Posts)
     unlockedAvatars = models.ManyToManyField(Stickers, related_name="unlocked")
     avatarInUse = models.ForeignKey(Stickers, default=1, related_name="profile_pic", on_delete = models.CASCADE)
@@ -63,4 +63,5 @@ class Challenges(models.Model):
     stepsNeeded = models.PositiveIntegerField(default=max)
     postsNeeded = models.PositiveSmallIntegerField(default=max)
     savesNeeded = models.PositiveSmallIntegerField(default=max)
-    inUse = models.BooleanField()    
+    inUse = models.BooleanField()
+    coinsRewarded = models.PositiveIntegerField(default=0)
