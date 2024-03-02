@@ -2,10 +2,10 @@
 
 import "./stylesheets/polaroid.css";
 
-function Polaroid({ src, func, rotation, caption}) {
+function Polaroid({ src, func, rotation, caption, shadow = true }) {
   return (
     <div
-      className="polaroid"
+      className={shadow ? "polaroid shadow" : "polaroid"}
       style={{ transform: `rotate(${rotation}deg)` }}
       onClick={func}
     >

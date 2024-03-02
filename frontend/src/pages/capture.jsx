@@ -11,6 +11,7 @@ import LoadingScreen from "../features/loadingScreen";
 
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
+import Polaroid from "../features/polaroid";
 
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
@@ -72,7 +73,7 @@ function Capture() {
       return;
     }
     setIsLoading(true);
-  
+
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/geolocations/",
@@ -92,10 +93,10 @@ function Capture() {
         setIsLoading(false);
         return;
       }
-  
+
       formData.append("caption", caption);
       formData.append("geolocID", geolocID);
-  
+
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/createPost/",
@@ -107,7 +108,7 @@ function Capture() {
             },
           }
         );
-  
+
         navigate("/");
       } catch (error) {
         handleNetworkError(error);
@@ -115,10 +116,10 @@ function Capture() {
     } catch (error) {
       handleNetworkError(error);
     }
-  
+
     setIsLoading(false);
   };
-  
+
   const handleNetworkError = (error) => {
     console.error("Error occurred:", error);
     if (error.response) {
@@ -133,7 +134,7 @@ function Capture() {
       alert("An error occurred while creating the post");
     }
   };
-  
+
 
   const capture = () => {
     inputRef.current.click();
@@ -166,17 +167,23 @@ function Capture() {
               <div id="spacer">
                 <div id="contents">
                   {previewImg ? (
-                    <img
+                    // <img
+                    //   src={previewImg}
+                    //   alt="Preview Image"
+                    //   style={{ maxWidth: "100%", height: "auto" }}
+                    // />
+                    <Polaroid
                       src={previewImg}
-                      alt="Preview Image"
-                      style={{ maxWidth: "100%", height: "auto" }}
+                      caption={caption}
                     />
                   ) : (
                     <div
                       id="previewPlaceholder"
-                      onClick={() => {
-                        capture();
-                      }}
+                      onClick={
+                        () => {
+                          capture();
+                        }
+                      }
                     >
                       <p>Tap to take a picture</p>
                     </div>
@@ -190,7 +197,9 @@ function Capture() {
                         value={caption}
                         onChange={handleChange}
                       />
-                      <p style={{ color: caption.length >= 200 ? "orange" : "black" }}>{captionError}</p>
+                      {captionError &&
+                        <div style={{ width: "100%", textAlign: "right" }}>
+                          <div style={{ color: caption.length >= 250 ? "red" : "orange" }}>{captionError}</div></div>}
                     </div>
                     <div id="previewButtons">
                       <div className="retake element">
@@ -219,8 +228,8 @@ function Capture() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }
