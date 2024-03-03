@@ -55,7 +55,7 @@ function FeedPage() {
 
   useEffect(() => {
     // Function to load an image and update its height in the state
-    function getImageHeight(url) {
+    function getImageRatio(url) {
       // wait for the image to load
       return new Promise((resolve, reject) => {
         // create a new image
@@ -63,7 +63,7 @@ function FeedPage() {
 
         // when the image loads, resolve with the height
         img.onload = () => {
-          resolve(img.height);
+          resolve(img.height / img.width);
         };
 
         // if there is an error, reject with the error
@@ -91,18 +91,22 @@ function FeedPage() {
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        const imageHeight = await getImageHeight(image);
+        const imageRatio = await getImageRatio(image);
+        console.log("image height", imageRatio)
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
-          heightDifference += imageHeight + 10; //10 for the margin
+          heightDifference += imageRatio; //10 for the margin
         } else {
           leftPosts[i] = postList[i];
-          heightDifference -= imageHeight + 10; //10 for the margin
+          heightDifference -= imageRatio; //10 for the margin
         }
         setColumns([leftPosts, rightPosts]);
         setProgress((i / postList.length) * 100);
+
+
+        console.log(heightDifference, "height difference")
       }
 
       setLoadingImage(false);

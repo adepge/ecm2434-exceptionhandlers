@@ -207,9 +207,11 @@ function Capture() {
                           src={Reset}
                           width={"15px"}
                           height={"15px"}
-                          onClick={() => {
-                            capture();
-                          }}
+                          onClick={
+                            () => {
+                              capture();
+                            }
+                          }
                         />
                       </div>
                       <div className="location element">
