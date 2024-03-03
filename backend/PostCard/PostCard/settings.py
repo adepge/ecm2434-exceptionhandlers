@@ -84,7 +84,7 @@ MIDDLEWARE = [
 ]
 #Allows frontend to connect to our server
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", "http://localhost:5174", "http://localhost:5175",
+    "https://post-i-tivity.me",
     # 'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.common.CommonMiddleware',
 ]
