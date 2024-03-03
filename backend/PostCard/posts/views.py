@@ -7,7 +7,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from ..database.daily_reset import dailyReset
+from .daily_reset import dailyReset
 
 
 # creating the views based on the models, should be able to list and view the data
@@ -108,7 +108,7 @@ def getUser(request):
     try:
         # INITIATES AUTOMATIC 24HR DATABASE RESET, CONSIDER REPOSITIONING LATER
         import datetime
-        dailyReset.schedule(repeat=dailyReset.DAILY, time=datetime.time(hour=0, minute=0))
+        dailyReset.schedule(repeat=Task.DAILY, time=datetime.time(hour=0, minute=0))
         userid = request.user.id
         username = request.user.username
     except:

@@ -19,4 +19,4 @@ def dailyReset():
     z=Challenges.objects.all()[random.randint(1,10)]
     z.inUse=True
     z.save
-    console.log("Database Reset.")
+    print("DATABASE RESET")
