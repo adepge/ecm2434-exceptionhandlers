@@ -20,8 +20,6 @@ from storages.backends.s3boto3 import S3Boto3Storage
 
 
 # settings.py
-from storages.backends.s3boto3 import S3Boto3Storage
-
 
 class MediaStorage(S3Boto3Storage):
     bucket_name = "post-i-tivity"
@@ -103,6 +101,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+# Allows root domain to communicate with api subdomain
+CSRF_TRUSTED_ORIGINS = ['https://*.post-i-tivity.me','https://*.127.0.0.1']
+
 #Allows frontend to connect to our server
 CORS_ALLOWED_ORIGINS = [
     "https://post-i-tivity.me"
