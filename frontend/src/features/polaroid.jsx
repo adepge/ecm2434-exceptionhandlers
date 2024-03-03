@@ -12,7 +12,7 @@ function Polaroid({ src, func, rotation, caption, shadow = true }) {
       <div className="padding">
         <img src={src} alt="polaroid" style={{ width: "100%" }} />
         <div className="caption">
-          {caption}
+          {caption}&nbsp;
         </div>
       </div>
     </div>

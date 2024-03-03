@@ -3,10 +3,10 @@ import "./stylesheets/feed.css";
 import { useState, useEffect } from "react";
 import PostView from "../features/PostView";
 import Polaroid from "../features/polaroid";
-import { set } from "date-fns";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
+import InitMap from "../features/InitMap";
 
 
 
@@ -20,6 +20,9 @@ function FeedPage() {
 
   const [activePost, setActive] = useState({});
   const [columns, setColumns] = useState([]);
+
+  const [loadingImage, setLoadingImage] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   // get all the post from database
   const getPosts = async () => {
@@ -99,7 +102,10 @@ function FeedPage() {
           heightDifference -= imageHeight + 10; //10 for the margin
         }
         setColumns([leftPosts, rightPosts]);
+        setProgress((i / postList.length) * 100);
       }
+
+      setLoadingImage(false);
 
     };
 
@@ -109,6 +115,8 @@ function FeedPage() {
 
   return (
     <>
+      {/* the loading screen */}
+      {loadingImage && <InitMap progress={progress} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -122,7 +130,7 @@ function FeedPage() {
       />
 
       {/* the feed */}
-      <div id="feed">
+      <div id="feed" className={Object.keys(activePost).length !== 0 ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
