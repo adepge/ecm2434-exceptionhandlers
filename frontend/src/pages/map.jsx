@@ -300,7 +300,7 @@ function MapPage() {
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
-        image={"https://api.post-i-tivity.me/" + drawerPost?.image}
+        image={"https://api.post-i-tivity.me" + drawerPost?.image}
         caption={drawerPost?.caption}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
