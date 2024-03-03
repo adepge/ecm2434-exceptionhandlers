@@ -26,7 +26,7 @@ def UserRegisterAuthentication(request):
         
         return Response({f"token": token.key},status=status.HTTP_200_OK)    # Successful user creation
     else: 
-        return Response(status=status.HTTP_400_BAD_REQUEST)                   # Failed user creation
+        return Response({"error": "Failed to create user"}, status=status.HTTP_400_BAD_REQUEST)          # Failed user creation
 
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
