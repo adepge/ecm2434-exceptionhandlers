@@ -86,7 +86,7 @@ function Capture() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/geolocations/",
+        "https://api.post-i-tivity.me/api/geolocations/",
         {
           latitude: position.lat,
           longitude: position.lng,
@@ -113,7 +113,7 @@ function Capture() {
       try {
         // Update the API URL as per your configuration
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/createPost/",
+          "https://api.post-i-tivity.me/api/createPost/",
           formData,
           {
             headers: {
