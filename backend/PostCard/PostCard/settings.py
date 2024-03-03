@@ -38,7 +38,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost", "post-i-tivity.me",).split(",")
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # Application definition
 # Included all the apps we add , and other dependiences
@@ -84,7 +84,7 @@ MIDDLEWARE = [
 ]
 #Allows frontend to connect to our server
 CORS_ALLOWED_ORIGINS = [
-    "https://post-i-tivity.me",
+    "https://post-i-tivity.me"
     # 'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.common.CommonMiddleware',
 ]
