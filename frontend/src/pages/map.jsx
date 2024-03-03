@@ -288,7 +288,7 @@ function MapPage() {
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={"https://api.post-i-tivity.me/" + activePost['image']}
+        image={"https://api.post-i-tivity.me" + activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
