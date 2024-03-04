@@ -92,21 +92,19 @@ function FeedPage() {
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
         const imageRatio = await getImageRatio(image);
-        console.log("image height", imageRatio)
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
-          heightDifference += imageRatio; //10 for the margin
+          heightDifference += imageRatio * 1.1; // 1.1% for the padding of the polaroid
         } else {
           leftPosts[i] = postList[i];
-          heightDifference -= imageRatio; //10 for the margin
+          heightDifference -= imageRatio * 1.1; // 1.1% for the padding of the polaroid
         }
         setColumns([leftPosts, rightPosts]);
         setProgress((i / postList.length) * 100);
 
 
-        console.log(heightDifference, "height difference")
       }
 
       setLoadingImage(false);
