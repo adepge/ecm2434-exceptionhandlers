@@ -34,17 +34,21 @@ AWS_STORAGE_BUCKET_NAME = "post-i-tivity"
 AWS_S3_REGION_NAME = "ams3"
 AWS_S3_ENDPOINT_URL = "https://post-i-tivity.ams3.digitaloceanspaces.com"
 
-
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
+
+AWS_MEDIA_LOCATION = 'media'
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = '%s%s' % (AWS_S3_ENDPOINT_URL, AWS_MEDIA_LOCATION)
+DEFAULT_FILE_STORAGE = 'PostCard.storage_backends.MediaStorage'
 
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_URL = "https://post-i-tivity.ams3.digitaloceanspaces.com/media/"
+
 
 
 # Quick-start development settings - unsuitable for production
