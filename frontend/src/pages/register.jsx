@@ -91,12 +91,7 @@ function RegisterPage() {
     try {
       const response = await axios.post(
         "https://api.post-i-tivity.me/api/register/",
-        userData,
-        {
-          headers: {
-        "X-CSRFToken": cookies.get("csrftoken"),
-          },
-        }
+        userData
       );
       cookies.set("token", response.data.token, { path: "/" });
       navigate("/");
