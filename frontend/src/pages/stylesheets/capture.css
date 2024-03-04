@@ -26,10 +26,8 @@
 }
 
 #preview {
-  position: absolute;
   width: inherit;
   max-height: 100vh;
-  transform: translateY(-50%);
   top: 50%;
 }
 
