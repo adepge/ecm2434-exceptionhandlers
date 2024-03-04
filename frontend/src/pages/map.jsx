@@ -288,7 +288,7 @@ function MapPage() {
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={"https://api.post-i-tivity.me" + activePost['image']}
+        image={activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -300,7 +300,7 @@ function MapPage() {
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
-        image={"https://api.post-i-tivity.me" + drawerPost?.image}
+        image={drawerPost?.image}
         caption={drawerPost?.caption}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
