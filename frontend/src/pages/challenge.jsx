@@ -77,7 +77,6 @@ function Challenge() {
                         <div id='shop' className='challenge-box-with-title'>
                             Shop
                             <div id='shop-box'>
-
                                 <div className='shop-item'>
                                     <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
                                     Napoleon
@@ -86,7 +85,22 @@ function Challenge() {
                                         <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
                                     </div>
                                 </div>
-
+                                <div className='shop-item'>
+                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
+                                    Napoleon
+                                    <div className='cost'>
+                                        100
+                                        <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
+                                    </div>
+                                </div>
+                                <div className='shop-item'>
+                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
+                                    Napoleon
+                                    <div className='cost'>
+                                        100
+                                        <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
+                                    </div>
+                                </div>
                                 <div className='shop-item'>
                                     <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
                                     <div className='details'>
