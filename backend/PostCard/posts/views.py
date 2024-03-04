@@ -195,9 +195,8 @@ def getCollections(request):
         posts_user = PostsUser.objects.get(userID=user)
 
     except PostsUser.DoesNotExist:
-        posts_user = []
+        return Response([], status=status.HTTP_200_OK)
     
-    print(posts_user)
     serializer = PostsUserSerializer(posts_user)
     postlist = serializer.data.get('postID')
     posts = Posts.objects.filter(id__in=postlist)
