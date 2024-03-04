@@ -29,8 +29,7 @@
   width: inherit;
   max-height: 100vh;
   top: 50%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
 }
 
 #spacer {
