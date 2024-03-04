@@ -181,7 +181,7 @@ function Capture() {
           onChange={handleCapture}
           style={{ display: "none" }}
         />
-        <div id="display">
+        <div id="displayCapture">
           <div id="preview-wrapper">
             <div id="preview">
               <div id="spacer">

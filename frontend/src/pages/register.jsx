@@ -128,7 +128,7 @@ function RegisterPage() {
   return (
     <>
       <LoadingScreen active={isLoading} />
-      <div id="display">
+      <div id="displayRegister">
         <div id="register-wrapper">
           <div id="register">
             <div id="spacer">

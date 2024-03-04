@@ -1,4 +1,4 @@
-#capturePage #display {
+#displayCapture {
   position: fixed; /* changed from absolute to fixed */
   box-sizing: border-box; /* fixed the height issue */
   top: 0; /* position from the top */
