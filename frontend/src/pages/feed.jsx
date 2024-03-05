@@ -16,7 +16,9 @@ const cookies = new Cookies();
 function FeedPage() {
 
   // check if the user is logged in
-  CheckLogin();
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   const [activePost, setActive] = useState({});
   const [columns, setColumns] = useState([]);

@@ -74,7 +74,9 @@ const getCollectedPosts = async (token) => {
 function MapPage() {
 
   // check if the user is logged in
-  CheckLogin()
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
@@ -340,20 +342,18 @@ function MapPage() {
             {filterPins(position.lat, position.lng).map((pin) => {
               const color = `var(--${mood})`;
               return (
-                <>
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                    onClick={(e) => handleOpen(e, pin.id)}
-                  >
-                    <Pin
-                      background={color}
-                      borderColor={color}
-                      glyphColor="white"
-                      scale={0.8}
-                    ></Pin>
-                  </AdvancedMarker>
-                </>
+                <AdvancedMarker
+                  key={pin.id}
+                  position={pin.position}
+                  onClick={(e) => handleOpen(e, pin.id)}
+                >
+                  <Pin
+                    background={color}
+                    borderColor={color}
+                    glyphColor="white"
+                    scale={0.8}
+                  ></Pin>
+                </AdvancedMarker>
               );
             })}
           </Map>
