@@ -44,7 +44,7 @@ export const DeckGlOverlay = ({ layers }) => {
 const getPosts = async () => {
   try {
     const response = await axios.get(
-      "https://api.post-i-tivity.me/api/getRecentPosts/"
+      "http://127.0.0.1:8000/api/getRecentPosts/"
     );
     return response.data;
   } catch (error) {
@@ -56,7 +56,7 @@ const getPosts = async () => {
 const getCollectedPosts = async (token) => {
   try {
     const response = await axios.post(
-      "https://api.post-i-tivity.me/api/collectedPosts/",
+      "http://127.0.0.1:8000/api/collectedPosts/",
       {},
       {
         headers: {
@@ -74,7 +74,9 @@ const getCollectedPosts = async (token) => {
 function MapPage() {
 
   // check if the user is logged in
-  CheckLogin()
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
@@ -213,7 +215,7 @@ function MapPage() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectPost/",
+        "http://127.0.0.1:8000/api/collectPost/",
         form,
         {
           headers: {
@@ -288,7 +290,7 @@ function MapPage() {
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={activePost['image']}
+        image={"http://127.0.0.1:8000/" + activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -300,7 +302,7 @@ function MapPage() {
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
-        image={drawerPost?.image}
+        image={"http://127.0.0.1:8000/" + drawerPost?.image}
         caption={drawerPost?.caption}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}
@@ -340,20 +342,18 @@ function MapPage() {
             {filterPins(position.lat, position.lng).map((pin) => {
               const color = `var(--${mood})`;
               return (
-                <>
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                    onClick={(e) => handleOpen(e, pin.id)}
-                  >
-                    <Pin
-                      background={color}
-                      borderColor={color}
-                      glyphColor="white"
-                      scale={0.8}
-                    ></Pin>
-                  </AdvancedMarker>
-                </>
+                <AdvancedMarker
+                  key={pin.id}
+                  position={pin.position}
+                  onClick={(e) => handleOpen(e, pin.id)}
+                >
+                  <Pin
+                    background={color}
+                    borderColor={color}
+                    glyphColor="white"
+                    scale={0.8}
+                  ></Pin>
+                </AdvancedMarker>
               );
             })}
           </Map>

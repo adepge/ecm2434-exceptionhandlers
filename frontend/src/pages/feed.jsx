@@ -33,7 +33,7 @@ function FeedPage() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectedPosts/",
+        "http://127.0.0.1:8000/api/collectedPosts/",
         {},
         {
           headers: {
@@ -85,7 +85,10 @@ function FeedPage() {
 
       for (let i = 0; i < postList.length; i++) {
 
-        const image = postList[i]["image"];
+        postList[i]["image"] = "http://127.0.0.1:8000/" + postList[i]["image"];
+
+        const image = postList[i]["image"]
+
 
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
