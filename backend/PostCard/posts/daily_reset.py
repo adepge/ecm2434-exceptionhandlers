@@ -18,5 +18,5 @@ def dailyReset():
     y.save()
     z=Challenges.objects.all()[random.randint(1,10)]
     z.inUse=True
-    z.save
+    z.save()
     print("DATABASE RESET")

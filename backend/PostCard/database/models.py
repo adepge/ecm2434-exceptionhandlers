@@ -48,8 +48,8 @@ class PostsUser(models.Model):
     userID = models.ForeignKey(User,  on_delete = models.CASCADE)
     coins = models.PositiveIntegerField(default=0)
     postID = models.ManyToManyField(Posts)
-    unlockedAvatars = models.ManyToManyField(Stickers, related_name="unlocked")
-    avatarInUse = models.ForeignKey(Stickers, default=1, related_name="profile_pic", on_delete = models.CASCADE)
+    unlockedAvatars = models.ManyToManyField(Stickers,default=1 ,related_name="unlocked")
+    avatarInUse = models.ForeignKey(Stickers, related_name="profile_pic", on_delete = models.CASCADE)
     stepsTaken = models.PositiveBigIntegerField(default=0)
     postsMade = models.PositiveIntegerField(default=0)
     postsSaved = models.PositiveIntegerField(default=0)
@@ -65,3 +65,7 @@ class Challenges(models.Model):
     savesNeeded = models.PositiveSmallIntegerField(default=max)
     inUse = models.BooleanField()
     coinsRewarded = models.PositiveIntegerField(default=0)
+
+    # We specifiy start & end dates
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()

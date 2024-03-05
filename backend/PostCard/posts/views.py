@@ -86,15 +86,14 @@ def createPost(request):
         request.FILES['image'].name = filename[-30:] 
 
     # Create a mutable copy of request.data
-    data = request.data.copy()
-    print(data['image'])
-    print(data)
-    data['userid'] = userid  # Add 'userid' key
+    #data = request.data.copy()
+    print(request.data)
+    request.data['userid'] = userid  # Add 'userid' key
 
-    print(data)
+   
 
     # Create a serializer instance with the mutable copy of request.data
-    serialized = PostsSerializer(data=data)
+    serialized = PostsSerializer(data=request.data)
     
     if serialized.is_valid():
         serialized.save()
@@ -106,9 +105,6 @@ def createPost(request):
 @permission_classes([AllowAny])
 def getUser(request):
     try:
-        # INITIATES AUTOMATIC 24HR DATABASE RESET, CONSIDER REPOSITIONING LATER
-        import datetime
-        dailyReset.schedule(repeat=Task.DAILY, time=datetime.time(hour=0, minute=0))
         userid = request.user.id
         username = request.user.username
     except:
@@ -178,8 +174,10 @@ def addCollection(request):
     except Posts.DoesNotExist:
         return Response({"message": "Post does not exist"}, status=status.HTTP_404_NOT_FOUND)
     
+    sticker_default = Stickers.objects.first() # setting up a temporary sticker instance to prevent NOT NULL ERROR for avatarInUse
+
     # Get or create a PostsUser instance for the user
-    posts_user, created = PostsUser.objects.get_or_create(userID=user)
+    posts_user, created = PostsUser.objects.get_or_create(userID=user,avatarInUse=sticker_default)
     
     # Add the post to the user's collection
     posts_user.postID.add(post)
@@ -199,7 +197,7 @@ def getCollections(request):
         posts_user = PostsUser.objects.get(userID=user)
 
     except PostsUser.DoesNotExist:
-        posts_user = []
+        posts_user = [] 
     
     print(posts_user)
     serializer = PostsUserSerializer(posts_user)
