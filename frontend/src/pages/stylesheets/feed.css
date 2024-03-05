@@ -2,6 +2,11 @@
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
+  transition: filter 0.3s ease-in-out;
+}
+
+#feed.blur {
+  filter: blur(5px);
 }
 
 #top {

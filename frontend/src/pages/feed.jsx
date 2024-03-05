@@ -3,10 +3,10 @@ import "./stylesheets/feed.css";
 import { useState, useEffect } from "react";
 import PostView from "../features/PostView";
 import Polaroid from "../features/polaroid";
-import { set } from "date-fns";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
+import InitMap from "../features/InitMap";
 
 
 
@@ -20,6 +20,9 @@ function FeedPage() {
 
   const [activePost, setActive] = useState({});
   const [columns, setColumns] = useState([]);
+
+  const [loadingImage, setLoadingImage] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   // get all the post from database
   const getPosts = async () => {
@@ -52,7 +55,7 @@ function FeedPage() {
 
   useEffect(() => {
     // Function to load an image and update its height in the state
-    function getImageHeight(url) {
+    function getImageRatio(url) {
       // wait for the image to load
       return new Promise((resolve, reject) => {
         // create a new image
@@ -60,7 +63,7 @@ function FeedPage() {
 
         // when the image loads, resolve with the height
         img.onload = () => {
-          resolve(img.height);
+          resolve(img.height / img.width);
         };
 
         // if there is an error, reject with the error
@@ -88,18 +91,23 @@ function FeedPage() {
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        const imageHeight = await getImageHeight(image);
+        const imageRatio = await getImageRatio(image);
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
-          heightDifference += imageHeight + 10; //10 for the margin
+          heightDifference += imageRatio * 1.1; // 1.1% for the padding of the polaroid
         } else {
           leftPosts[i] = postList[i];
-          heightDifference -= imageHeight + 10; //10 for the margin
+          heightDifference -= imageRatio * 1.1; // 1.1% for the padding of the polaroid
         }
         setColumns([leftPosts, rightPosts]);
+        setProgress((i / postList.length) * 100);
+
+
       }
+
+      setLoadingImage(false);
 
     };
 
@@ -109,6 +117,8 @@ function FeedPage() {
 
   return (
     <>
+      {/* the loading screen */}
+      {loadingImage && <InitMap progress={progress} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -122,7 +132,7 @@ function FeedPage() {
       />
 
       {/* the feed */}
-      <div id="feed">
+      <div id="feed" className={Object.keys(activePost).length !== 0 ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">

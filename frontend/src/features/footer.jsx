@@ -3,6 +3,7 @@ import mapicon from "../assets/footer/map.svg";
 import feedicon from "../assets/footer/feed.svg";
 import topicon from "../assets/footer/top.svg";
 import captureicon from "../assets/footer/capture.svg";
+import calendericon from "../assets/footer/calendar.svg";
 import { useLocation } from "react-router-dom";
 
 import "./stylesheets/footer.css";
@@ -32,17 +33,17 @@ export default function Footer() {
       {/* top icon */}
       <div className="button">
         {/* send user to the top page on click */}
-        <Link to="/top">
+        <Link to="/challenge">
           {/* if the user is on the top page, add backdrop to the icon */}
           <div
             className="backdrop"
             style={{
-              background: location.pathname === "/top" ? "#00DCA5" : "none",
+              background: location.pathname === "/challenge" ? "#00DCA5" : "none",
             }}
           >
-            <img src={topicon} id="top-icon" alt="top-icon" />
+            <img src={calendericon} id="top-icon" alt="top-icon" />
           </div>
-          <div className="footer-text">top</div>
+          <div className="footer-text">challenge</div>
         </Link>
       </div>
 
