@@ -16,7 +16,7 @@
 
   /* prevent the display from being clipped */
   overflow-y: auto;
-  z-index: 10;
+  z-index: 11;
 
   /* center the wrapper */
   display: flex;

@@ -142,16 +142,10 @@ function FeedPage() {
             <div id="grid-wrapper">
               {loadingImage ? (
                 <>
-
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
                       <div className="padding skeleton">
-                        <div className="image skeleton"></div>
-                      </div>
-                    </div>
-                    <div className="polaroid skeleton shadow">
-                      <div className="padding skeleton">
-                        <div className="image skeleton"></div>
+                        <div className="image skeleton" style={{ aspectRatio: 2 / 3 }}></div>
                       </div>
                     </div>
                     <div className="polaroid skeleton shadow">
@@ -169,12 +163,7 @@ function FeedPage() {
                     </div>
                     <div className="polaroid skeleton shadow">
                       <div className="padding skeleton">
-                        <div className="image skeleton"></div>
-                      </div>
-                    </div>
-                    <div className="polaroid skeleton shadow">
-                      <div className="padding skeleton">
-                        <div className="image skeleton"></div>
+                        <div className="image skeleton" style={{ aspectRatio: 2 / 3 }}></div>
                       </div>
                     </div>
                   </div>
