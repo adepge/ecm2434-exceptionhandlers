@@ -84,6 +84,11 @@ function Challenge() {
                         <div id='shop' className='challenge-box-with-title'>
                             Shop
                             <div id='shop-box'>
+                                {/* dummy item to enforce grid */}
+                                <div style={{ width: '85px' }} />
+                                <div style={{ width: '85px' }} />
+                                <div style={{ width: '85px' }} />
+                                <div id={"forth"} style={{ width: '85px' }} />
                                 <div className='shop-item'>
                                     <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
                                     Napoleon

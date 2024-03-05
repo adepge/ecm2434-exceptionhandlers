@@ -12,6 +12,7 @@ import ProfilePage from "./pages/profilepage";
 import Test from "./pages/test";
 import Challenge from "./pages/challenge";
 import EditProfile from "./pages/editProfile";
+import ChangeIcon from "./pages/changeIcon";
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/challenge" element={<Challenge />} />
         <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/changeIcon" element={<ChangeIcon />} />
 
       </Routes>
       <Footer />

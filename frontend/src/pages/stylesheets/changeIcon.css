@@ -1,0 +1,97 @@
+#changeIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#changeIcon #title {
+  font-size: 36px;
+  font-weight: 700;
+  color: black;
+  text-align: center;
+}
+
+#changeIcon #spacer {
+  width: 100%;
+  padding: 70px 0;
+}
+
+#changeIcon #content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 40px);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
+}
+
+#changeIcon #user-icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+#changeIcon #user-icon img {
+  width: 90px;
+  height: 90px;
+  border: none;
+  border-radius: 90px;
+}
+
+#changeIcon #selections {
+  width: 100%;
+  margin-top: 35px;
+}
+
+#changeIcon #selections #title {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: left;
+}
+
+#selection-box {
+  margin-top: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  grid-template-columns: auto auto auto;
+  gap: 10px;
+  color: black;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+#selection-box #forth {
+  display: none;
+}
+
+@media screen and (min-width: 500px) {
+  #selection-box {
+    grid-template-columns: auto auto auto auto;
+  }
+
+  #selection-box #forth {
+    display: block;
+  }
+}
+
+.selection-item {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.selection-item .cost {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

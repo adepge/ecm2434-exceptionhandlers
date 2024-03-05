@@ -135,9 +135,17 @@
   gap: 10px;
 }
 
+#shop-box #forth {
+  display: none;
+}
+
 @media screen and (min-width: 500px) {
   #shop-box {
     grid-template-columns: auto auto auto auto;
+  }
+
+  #shop-box #forth {
+    display: block;
   }
 }
 
