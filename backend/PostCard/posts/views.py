@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser
-from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer, PostsUserSerializer
+from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser, Challenges
+from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer, PostsUserSerializer, ChallengesSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
@@ -62,11 +62,28 @@ class StickersUserDetail(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
 
 #Returns all posts made by a user    
-class PostUser(generics.ListCreateAPIView):
+class PostUserList(generics.ListCreateAPIView):
     queryset = PostsUser.objects.all()
     serializer_class = PostsUserSerializer
     permission_classes = [AllowAny]
 
+#Returns a specific post made by a user    
+class PostUserDetail(generics.RetrieveAPIView):
+    queryset = PostsUser.objects.all()
+    serializer_class = PostsUserSerializer
+    permission_classes = [AllowAny]
+
+#Returns all Challenges    
+class ChallengesList(generics.ListCreateAPIView):
+    queryset = Challenges.objects.all()
+    serializer_class = ChallengesSerializer
+    permission_classes = [AllowAny]
+
+#Returns a specific challenge
+class ChallengesDetail(generics.RetrieveAPIView):
+    queryset = Challenges.objects.all()
+    serializer_class = ChallengesSerializer
+    permission_classes = [AllowAny]
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny])
@@ -90,6 +107,13 @@ def createPost(request):
     print(request.data)
     request.data['userid'] = userid  # Add 'userid' key
 
+    try:
+        userData = PostsUser.objects.get(userID = request.data['userid'])
+        userData.postsMade += 1
+        userData.postsMadeToday += 1
+        dailyReset()
+    except:
+        print("Failed to get user data")
    
 
     # Create a serializer instance with the mutable copy of request.data
@@ -105,6 +129,7 @@ def createPost(request):
 @permission_classes([AllowAny])
 def getUser(request):
     try:
+        dailyReset()
         userid = request.user.id
         username = request.user.username
     except:
@@ -181,7 +206,12 @@ def addCollection(request):
     
     # Add the post to the user's collection
     posts_user.postID.add(post)
-    
+    try:
+        posts_user.postsMade += 1
+        posts_user.postsMadeToday += 1
+    except:
+        print("Failed to get user data")
+    dailyReset()
     return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
