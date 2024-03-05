@@ -3,6 +3,10 @@
   width: 100vw;
 }
 
+#map-content.blur {
+  filter: blur(5px);
+}
+
 /* Override Google Maps default styling (move the close button further in window) */
 button.gm-ui-hover-effect {
   top: -2px !important;

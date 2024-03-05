@@ -74,7 +74,7 @@
 }
 
 #feed .polaroid {
-  animation: polaroidFadeIn 0.8s ease-out;
+  animation: polaroidFadeIn 0.3s ease-out;
 }
 
 /* Animation css classes */
@@ -95,9 +95,10 @@
   padding: 80px 20px;
 }
 
-.polaroid.skeleton {
+#feed .polaroid.skeleton {
   width: 100%;
   background-color: white;
+  animation: none;
 }
 
 .polaroid.skeleton .padding.skeleton {

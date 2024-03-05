@@ -138,30 +138,66 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {/* map each columns */}
-              {columns.map((column, index) => (
-                <div key={index} className={"image-grid " + index}>
-                  {/* map each posts in the column */}
-                  {column.map((post) => (
-                    <div className={post["id"]} key={post["id"]}>
-                      {!loadingImage && <Polaroid
-                        src={post["image"]}
-                        func={() => {
-                          setActive(post);
-                        }}
-                        caption={post["caption"]}
-                        rotation={post["rotation"]}
-                      />}
-                      {loadingImage &&
-                        <div className="polaroid skeleton shadow">
-                          <div className="padding skeleton">
-                            <div className="image skeleton"></div>
-                          </div>
-                        </div>}
+              {loadingImage ? (
+                <>
+
+                  <div className={"image-grid "}>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              ))}
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={"image-grid "}>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+
+              ) : (
+                // map the columns
+                (columns.map((column, index) => (
+                  <div key={index} className={"image-grid " + index}>
+                    {/* map each posts in the column */}
+                    {column.map((post) => (
+                      <div className={post["id"]} key={post["id"]}>
+                        {!loadingImage && <Polaroid
+                          src={post["image"]}
+                          func={() => {
+                            setActive(post);
+                          }}
+                          caption={post["caption"]}
+                          rotation={post["rotation"]}
+                        />}
+                      </div>
+                    ))}
+                  </div>
+                )))
+              )}
             </div>
           </div>
         </div>
