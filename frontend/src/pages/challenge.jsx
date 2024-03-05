@@ -2,7 +2,14 @@ import './stylesheets/challenge.css';
 import Coin from '../assets/challenge/coin.png';
 import Cat from '../assets/store/Napoleon.png';
 
+import CheckLogin from '../features/CheckLogin';
+import { useEffect } from 'react';
+
 function Challenge() {
+
+    useEffect(() => {
+        CheckLogin();
+    }, []);
     return (
         <>
             <div id='challenge'>

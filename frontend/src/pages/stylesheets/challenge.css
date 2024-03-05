@@ -33,6 +33,10 @@
   font-weight: 700;
 }
 
+#challenge #daily {
+  margin-top: 20px;
+}
+
 .challenge-box-with-title .title {
   font-size: 22px;
   font-weight: 700;
