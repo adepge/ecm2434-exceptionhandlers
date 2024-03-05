@@ -8,6 +8,7 @@ const cookies = new Cookies();
 
 async function CheckLogin() {
 
+
     if (cookies.get('token') === undefined) {
         window.location.href = "/login";
         return false;

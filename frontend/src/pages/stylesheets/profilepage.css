@@ -25,7 +25,7 @@
 }
 
 /* the spacer for header and footer */
-#spacer {
+#profile #spacer {
   padding: 70px 0;
   overflow: scroll;
 
@@ -41,7 +41,7 @@
   font-size: 20px;
 }
 
-#user-icon img {
+#profile #user-icon img {
   width: 120px;
   height: 120px;
   border: none;
