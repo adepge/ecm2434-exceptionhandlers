@@ -1,5 +1,4 @@
-#display {
-  position: fixed; /* changed from absolute to fixed */
+#displayCapture {
   box-sizing: border-box; /* fixed the height issue */
   top: 0; /* position from the top */
   left: 0; /* position from the left */
@@ -26,11 +25,10 @@
 }
 
 #preview {
-  position: absolute;
   width: inherit;
-  max-height: 100vh;
-  transform: translateY(-50%);
+  /* max-height: 100vh; */
   top: 50%;
+  width: 100%;
 }
 
 #preview #spacer {

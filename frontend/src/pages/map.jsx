@@ -44,7 +44,7 @@ export const DeckGlOverlay = ({ layers }) => {
 const getPosts = async () => {
   try {
     const response = await axios.get(
-      "http://127.0.0.1:8000/api/getRecentPosts/"
+      "https://api.post-i-tivity.me/api/getRecentPosts/"
     );
     return response.data;
   } catch (error) {
@@ -56,7 +56,7 @@ const getPosts = async () => {
 const getCollectedPosts = async (token) => {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/collectedPosts/",
+      "https://api.post-i-tivity.me/api/collectedPosts/",
       {},
       {
         headers: {
@@ -213,7 +213,7 @@ function MapPage() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/collectPost/",
+        "https://api.post-i-tivity.me/api/collectPost/",
         form,
         {
           headers: {
@@ -288,7 +288,7 @@ function MapPage() {
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={"http://127.0.0.1:8000/" + activePost['image']}
+        image={activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -300,7 +300,7 @@ function MapPage() {
       {loading && <InitMap progress={progress} />}
       <DrawerDown
         id={form.postid}
-        image={"http://127.0.0.1:8000/" + drawerPost?.image}
+        image={drawerPost?.image}
         caption={drawerPost?.caption}
         drawerVisible={drawerTopVisible}
         setDrawerVisible={setDrawerTopVisible}

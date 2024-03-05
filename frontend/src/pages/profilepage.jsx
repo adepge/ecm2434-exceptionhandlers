@@ -17,7 +17,7 @@ function ProfilePage() {
 
   return (
 
-    <div id="display">
+    <div id="displayProfile">
       <div id="profile-wrapper">
         <div id="profile">
           <div id="spacer">

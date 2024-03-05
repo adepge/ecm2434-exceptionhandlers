@@ -31,7 +31,7 @@ function LoginPage() {
     console.log(userData);
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/login/",
+        "https://api.post-i-tivity.me/api/login/",
         userData
       );
       cookies.set("token", response.data.token, { path: "/" });
@@ -58,7 +58,7 @@ function LoginPage() {
   }
 
   return (
-    <div id="display">
+    <div id="displayLogin">
       <div id="login-wrapper">
         <div id="login">
           {/* a spacer for the hader and footer  */}

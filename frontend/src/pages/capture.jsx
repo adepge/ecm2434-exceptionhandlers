@@ -76,7 +76,7 @@ function Capture() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/geolocations/",
+        "https://api.post-i-tivity.me/api/geolocations/",
         {
           latitude: position.lat,
           longitude: position.lng,
@@ -99,7 +99,7 @@ function Capture() {
 
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/createPost/",
+          "https://api.post-i-tivity.me/api/createPost/",
           formData,
           {
             headers: {
@@ -161,7 +161,7 @@ function Capture() {
           onChange={handleCapture}
           style={{ display: "none" }}
         />
-        <div id="display">
+        <div id="displayCapture">
           <div id="preview-wrapper">
             <div id="preview">
               <div id="spacer">

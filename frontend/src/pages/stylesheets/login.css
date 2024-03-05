@@ -1,5 +1,5 @@
 /* center the content */
-#display {
+#displayLogin {
   display: flex;
   justify-content: center;
   align-items: center;
