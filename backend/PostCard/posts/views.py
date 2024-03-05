@@ -85,22 +85,19 @@ def createPost(request):
         request.FILES['image'].name = filename[-30:] 
 
     # Create a mutable copy of request.data
-    data = request.data.copy()
-    print(data['image'])
-    print(data)
-    data['userid'] = userid  # Add 'userid' key
+    #data = request.data.copy()
+    print(request.data)
+    request.data['userid'] = userid  # Add 'userid' key
 
-    print(data)
 
     # Create a serializer instance with the mutable copy of request.data
-    serialized = PostsSerializer(data=data)
+    serialized = PostsSerializer(data=request.data)
     
     if serialized.is_valid():
         serialized.save()
         return Response({"message":"Post made"},status=status.HTTP_201_CREATED) # Successful post creation
     else: 
-        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed post creation  
-
+        return Response(status=status.HTTP_400_BAD_REQUEST) # Failed post creation 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
 def getUser(request):
