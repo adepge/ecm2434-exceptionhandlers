@@ -60,12 +60,11 @@ class PostsUser(models.Model):
 class Challenges(models.Model):
     id = models.AutoField(primary_key=True)
     challengeDesc = models.CharField(max_length = 100)
-    stepsNeeded = models.PositiveIntegerField(default=max)
-    postsNeeded = models.PositiveSmallIntegerField(default=max)
-    savesNeeded = models.PositiveSmallIntegerField(default=max)
-    inUse = models.BooleanField()
+    stepsNeeded = models.PositiveIntegerField(default=9999999)
+    postsNeeded = models.PositiveSmallIntegerField(default=9999999)
+    savesNeeded = models.PositiveSmallIntegerField(default=9999999)
+    inUse = models.BooleanField(default=False)
     coinsRewarded = models.PositiveIntegerField(default=0)
 
-    # We specifiy start & end dates
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+class CurrentDay(models.Model):
+    dateOfLastInteraction = models.DateField(default="1111-11-11")
