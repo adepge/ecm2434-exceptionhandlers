@@ -1,28 +1,33 @@
-import random
-import datetime
-import pytz
+
 
 def dailyReset():
-    # Import the Employee model
-    from database.models import PostsUser, Challenges, CurrentDay
-    date = CurrentDay.objects.all()[0]
-    timezone = pytz.timezone('Europe/London')
-    currentDate = datetime.now(timezone).date()
-    if currentDate != date.date:
-        random.seed()
-        for i in PostsUser.objects.all():
-            x=PostsUser.objects.all()[i]
-            x.stepsTakenToday=0
-            x.postsMadeToday=0
-            x.postsSavedToday=0
-            x.save()
-        y=Challenges.objects.all()[0:9]
-        for j in y:
-            j.inUse=False
-        y.save()
-        z=Challenges.objects.all()[random.randint(1,10)]
-        z.inUse=True
-        z.save()
-        date.dateOfLastInteraction = currentDate
-        print("DAILY RESET SUCCESSFUL")
-    print("DAILY RESET NOT NEEDED")
+    try:
+        import random
+        from datetime import datetime
+        import pytz
+        from database.models import PostsUser, Challenges, CurrentDay
+        timezone = pytz.timezone('Europe/London')
+        currentDate = datetime.now(timezone).date()
+        print("CURRENT DATE ACCORDING TO DEVICE = " + str(currentDate))
+        date = CurrentDay.objects.first()
+        print("CURRENT DATE ACCORDING TO DATABASE = " + str(date.dateOfLastInteraction))
+        if currentDate != date.dateOfLastInteraction:
+            random.seed()
+            for x in PostsUser.objects.all():
+                x.stepsTakenToday=0
+                x.postsMadeToday=0
+                x.postsSavedToday=0
+                x.save()
+            
+            for y in Challenges.objects.all()[0:9]:
+                y.inUse=False
+                y.save()
+            z=Challenges.objects.all()[random.randint(0,9)]
+            z.inUse=True
+            z.save()
+            date.dateOfLastInteraction = currentDate
+            date.save()
+            print("DAILY RESET SUCCESSFUL")
+        print("DAILY RESET NOT NEEDED")
+    except Exception as err:
+        print(err)
