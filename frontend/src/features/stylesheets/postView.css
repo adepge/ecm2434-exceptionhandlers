@@ -79,3 +79,7 @@
   font-size: 12px;
   font-weight: 700;
 }
+
+.post-wrapper .spacer {
+  padding: 70px 0;
+}
