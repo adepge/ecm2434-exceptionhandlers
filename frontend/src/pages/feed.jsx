@@ -21,6 +21,7 @@ function FeedPage() {
   }, []);
 
   const [activePost, setActive] = useState({});
+  const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
 
   const [loadingImage, setLoadingImage] = useState(true);
@@ -33,14 +34,13 @@ function FeedPage() {
     const token = cookies.get('token');
 
     try {
-      // Update the API URL as per your configuration
       const response = await axios.post(
         "http://127.0.0.1:8000/api/collectedPosts/",
         {},
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": `Token ${token}`, // Assuming postData.username is the token
+            "Authorization": `Token ${token}`,
           },
         }
       );
@@ -51,7 +51,9 @@ function FeedPage() {
         console.log("Response data:", error.response.data);
         console.log("Response status:", error.response.status);
         console.log("Response headers:", error.response.headers);
+        alert("Internal server error");
       }
+      alert("Cannot connect to the server");
     }
   };
 
@@ -80,6 +82,9 @@ function FeedPage() {
     const processImages = async (e) => {
 
       const postList = await getPosts();
+      if (postList.length === 0) {
+        setNoPost(true);
+      }
 
       let heightDifference = 0;
       const rightPosts = [];
@@ -135,17 +140,40 @@ function FeedPage() {
         showBottomBar={false}
       />
 
+      {/* prompt the user to collect some posts if there is no post */}
+      {noPost && (
+        <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
+          <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
+            <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
+              <div style={{ marginBottom: "5px" }}>You have no collected post yet
+              </div>
+              <button id="button" style={{
+                width: "100%",
+                padding: "10px",
+                border: "none",
+                borderRadius: "100px",
+                background: "var(--primary)",
+                fontWeight: "700",
+                fontSize: "16px"
+              }}>Go to collect</button>
+            </div>
+          </div >
+        </div >
+      )
+      }
+
       {/* the feed */}
-      <div id="feed" className={Object.keys(activePost).length !== 0 ? "blur" : "none"}>
+      {/* if there is no post or the post view is active, blur the feed */}
+      <div id="feed" className={Object.keys(activePost).length !== 0 || noPost ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {loadingImage ? (
+              {loadingImage || noPost ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
                       <div className="padding skeleton">
-                        <div className="image skeleton" style={{ aspectRatio: 2 / 3 }}></div>
+                        <div className="image skeleton" style={{ aspectRatio: 4 / 5 }}></div>
                       </div>
                     </div>
                     <div className="polaroid skeleton shadow">
@@ -163,7 +191,7 @@ function FeedPage() {
                     </div>
                     <div className="polaroid skeleton shadow">
                       <div className="padding skeleton">
-                        <div className="image skeleton" style={{ aspectRatio: 2 / 3 }}></div>
+                        <div className="image skeleton" style={{ aspectRatio: 4 / 5 }}></div>
                       </div>
                     </div>
                   </div>

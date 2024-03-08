@@ -38,3 +38,36 @@ header {
 #icon {
   margin-right: 10px;
 }
+
+#slide-menu {
+  display: none;
+  position: fixed;
+  right: 5px;
+  background: white;
+  color: black;
+  list-style: none;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+}
+
+header #slide-menu.show {
+  display: block;
+  animation: slide 0.3s ease-in-out;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+#slide-menu #menu {
+  display: flex;
+  align-items: center;
+}
