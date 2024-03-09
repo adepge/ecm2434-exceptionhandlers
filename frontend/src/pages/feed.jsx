@@ -7,6 +7,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
 import InitMap from "../features/InitMap";
+import { Link } from "react-router-dom";
 
 
 
@@ -145,18 +146,22 @@ function FeedPage() {
         <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
           <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
             <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
-              <div style={{ marginBottom: "5px" }}>You have no collected post yet
+              <div style={{ marginBottom: "10px" }}>You have no collected post yet
               </div>
-              <button id="button" style={{
-                width: "100%",
-                padding: "10px",
-                border: "none",
-                borderRadius: "100px",
-                background: "var(--primary)",
-                fontWeight: "700",
-                fontSize: "16px"
-              }}>Go to collect</button>
+              <Link to="/">
+                <button id="button" style={{
+                  width: "100%",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "100px",
+                  background: "var(--primary)",
+                  fontWeight: "700",
+                  fontSize: "16px",
+                  fontFamily: "Outfit",
+                }}>Go to collect</button>
+              </Link>
             </div>
+
           </div >
         </div >
       )
