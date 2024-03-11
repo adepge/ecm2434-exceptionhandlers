@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'database.apps.DatabaseConfig',
     'user_authentication',
     'rest_framework',
+    'background_task',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,7 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'PostCard',
-    'rest_framework.authtoken', 
+    'rest_framework.authtoken' 
 ]
 
 # configured the settings to allow us to use the restframe
