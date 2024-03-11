@@ -7,6 +7,15 @@
   font-size: 20px;
 }
 
+.polaroid.shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+  /* space for the width to not get the shadow to cut off */
+  width: calc(100% - 8px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* added padding */
 .polaroid .padding {
   padding: 5% 3%;

@@ -15,14 +15,16 @@ function PostView({ caption, image, isActive, leaveFunction, location, userIcon,
       >
         <div className="post-wrapper">
           <div className="post">
-            <InteractivesTop />
-            <div className="image">
-              <Polaroid src={image} caption={caption} />
+            <div className="spacer">
+              <InteractivesTop />
+              <div className="image">
+                <Polaroid src={image} caption={caption} />
+              </div>
+              {showBottomBar && (
+                <Interactives location={location} isActive={isActive} />
+              )
+              }
             </div>
-            {showBottomBar && (
-              <Interactives location={location} isActive={isActive} />
-            )
-            }
           </div>
         </div>
       </div>

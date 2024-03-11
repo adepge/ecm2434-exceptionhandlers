@@ -58,7 +58,7 @@ function LoginPage() {
   }
 
   return (
-    <div id="display">
+    <div id="displayLogin">
       <div id="login-wrapper">
         <div id="login">
           {/* a spacer for the hader and footer  */}

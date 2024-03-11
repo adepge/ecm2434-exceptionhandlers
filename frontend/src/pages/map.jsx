@@ -74,7 +74,9 @@ const getCollectedPosts = async (token) => {
 function MapPage() {
 
   // check if the user is logged in
-  CheckLogin()
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
@@ -296,51 +298,50 @@ function MapPage() {
         // perform a null check or ensure that activePost["position"]["location"] exists before accessing its location property.
         location={activePost["position"] && activePost["position"]["location"]}
       />
-
-      {loading && <InitMap progress={progress} />}
-      <DrawerDown
-        id={form.postid}
-        image={"http://127.0.0.1:8000/" + drawerPost?.image}
-        caption={drawerPost?.caption}
-        drawerVisible={drawerTopVisible}
-        setDrawerVisible={setDrawerTopVisible}
-        handleSubmit={handleSubmit}
-        handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
-      />
-      {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <div
-          className={
-            showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
-          }
-        >
-          <Map
-            id="map"
-            defaultCenter={position}
-            defaultZoom={17}
-            gestureHandling={"greedy"}
-            disableDefaultUI={true}
-            mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      <div className={Object.keys(activePost).length !== 0 ? "blur" : ""} id="map-content">
+        {loading && <InitMap progress={progress} />}
+        <DrawerDown
+          id={form.postid}
+          image={"http://127.0.0.1:8000/" + drawerPost?.image}
+          caption={drawerPost?.caption}
+          drawerVisible={drawerTopVisible}
+          setDrawerVisible={setDrawerTopVisible}
+          handleSubmit={handleSubmit}
+          handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
+        />
+        {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+          <div
+            className={
+              showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
+            }
           >
-            <DeckGlOverlay layers={layer} />
-            <AdvancedMarker key="current-position" position={position}>
-              <div
-                style={{
-                  width: 16,
-                  height: 16,
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  background: "#4185f5",
-                  border: "2px solid #ffffff",
-                  borderRadius: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              ></div>
-            </AdvancedMarker>
-            {filterPins(position.lat, position.lng).map((pin) => {
-              const color = `var(--${mood})`;
-              return (
-                <>
+            <Map
+              id="map"
+              defaultCenter={position}
+              defaultZoom={17}
+              gestureHandling={"greedy"}
+              disableDefaultUI={true}
+              mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+            >
+              <DeckGlOverlay layers={layer} />
+              <AdvancedMarker key="current-position" position={position}>
+                <div
+                  style={{
+                    width: 16,
+                    height: 16,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    background: "#4185f5",
+                    border: "2px solid #ffffff",
+                    borderRadius: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                ></div>
+              </AdvancedMarker>
+              {filterPins(position.lat, position.lng).map((pin) => {
+                const color = `var(--${mood})`;
+                return (
                   <AdvancedMarker
                     key={pin.id}
                     position={pin.position}
@@ -353,18 +354,19 @@ function MapPage() {
                       scale={0.8}
                     ></Pin>
                   </AdvancedMarker>
-                </>
-              );
-            })}
-          </Map>
-        </div>
-      </APIProvider>}
-      {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-      <div className="bottom-prompt">
-        <div className="bottom-prompt-wrapper">
-          <img src={Location} />{locationTag}
+                );
+              })}
+            </Map>
+          </div>
+        </APIProvider>}
+        {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
+        <div className="bottom-prompt">
+          <div className="bottom-prompt-wrapper">
+            <img src={Location} />{locationTag}
+          </div>
         </div>
       </div>
+
     </>
   );
 }

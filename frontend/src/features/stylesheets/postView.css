@@ -9,14 +9,14 @@
   min-width: 100vw;
 
   /* background color with opacity */
-  background-color: rgba(25, 25, 25, 0.8);
+  /* background-color: rgba(25, 25, 25, 0.8); */
 
   /* show the display */
   display: block;
 
   /* prevent the display from being clipped */
   overflow-y: auto;
-  z-index: 10;
+  z-index: 11;
 
   /* center the wrapper */
   display: flex;
@@ -78,4 +78,8 @@
   z-index: 2;
   font-size: 12px;
   font-weight: 700;
+}
+
+.post-wrapper .spacer {
+  padding: 70px 0;
 }

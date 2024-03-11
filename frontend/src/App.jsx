@@ -10,6 +10,9 @@ import LoginPage from "./pages/login";
 import PageNoFound from "./pages/pageNoFound";
 import ProfilePage from "./pages/profilepage";
 import Test from "./pages/test";
+import Challenge from "./pages/challenge";
+import EditProfile from "./pages/editProfile";
+import ChangeIcon from "./pages/changeIcon";
 
 function App() {
 
@@ -26,6 +29,10 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<PageNoFound />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/challenge" element={<Challenge />} />
+        <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/changeIcon" element={<ChangeIcon />} />
+
       </Routes>
       <Footer />
     </>

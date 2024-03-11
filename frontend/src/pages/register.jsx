@@ -128,7 +128,7 @@ function RegisterPage() {
   return (
     <>
       <LoadingScreen active={isLoading} />
-      <div id="display">
+      <div id="displayRegister">
         <div id="register-wrapper">
           <div id="register">
             <div id="spacer">
@@ -145,7 +145,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.username}</label>
+                    {errors.username && <label className="error">{errors.username}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -157,7 +157,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.email}</label>
+                    {errors.email && <label className="error">{errors.email}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -169,7 +169,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.password}</label>
+                    {errors.password && <label className="error">{errors.password}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -180,7 +180,7 @@ function RegisterPage() {
                       onChange={handleChange}
                       required
                     />
-                    <label className="error">{errors.confirmPassword}</label>
+                    {errors.confirmPassword && <label className="error">{errors.confirmPassword}</label>}
                   </div>
                   <div className="field">
                     <label className="checkbox">
@@ -193,7 +193,8 @@ function RegisterPage() {
                       Terms & Conditions and Privacy Policy
                       <br />
                     </label>
-                    <label className="error">{errors.checkbox}</label>
+                    {errors.checkbox &&
+                      <label className="error">{errors.checkbox}</label>}
                   </div>
                   <button type="submit">Register</button>
                 </form>

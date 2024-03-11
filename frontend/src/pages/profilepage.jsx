@@ -17,33 +17,33 @@ function ProfilePage() {
 
   return (
 
-    <div id="display">
+    <div id="displayProfile">
       <div id="profile-wrapper">
         <div id="profile">
           <div id="spacer">
-            <h1>Jay</h1>
+            <div id="title">Jay</div>
             <div id="user-icon">
-              <img src={userIcon} alt="user icon" width={"100%"} />
-            </div>
-            <div id="socials">
-              <a id="youtube" className="social-icon" href="https://www.youtube.com/channel/UCFbNIlppjAuEX4v1zgC7LzQ">
-                <img src={ytIcon} alt="YouTube" width={"17px"} height={"17px"} />
-                youtube
-              </a>
-              <a href="https://www.instagram.com/" id="instagram" className="social-icon">
-                <img src={instaIcon} alt="YouTube" width={"17px"} height={"17px"} />
-                instagram
-              </a>
-              <a id="twitter" className="social-icon" >
-                <img src={twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
-                twitter
-              </a>
+              <img src='https://www.w3schools.com/howto/img_avatar.png' alt="user icon" width={"100%"} />
             </div>
             <div id="bio">
               The only one that can truely understand you is
               yourself, so why not be yourself and let the world
               see who you really are.
               <hr></hr>
+            </div>
+            <div id="socials">
+              <a id="youtube" className="social-icon" href="https://www.youtube.com/channel/UCFbNIlppjAuEX4v1zgC7LzQ">
+                <img src={ytIcon} alt="YouTube" width={"17px"} height={"17px"} />
+                Youtube
+              </a>
+              <a href="https://www.instagram.com/" id="instagram" className="social-icon">
+                <img src={instaIcon} alt="YouTube" width={"17px"} height={"17px"} />
+                Instagram
+              </a>
+              <a id="twitter" className="social-icon" >
+                <img src={twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
+                Twitter
+              </a>
             </div>
           </div>
         </div>
