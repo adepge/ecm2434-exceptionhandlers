@@ -69,7 +69,7 @@ function Challenge() {
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress' >
-                                                <div className='progress-bar-fill' style={{ width: '70%' }}></div>
+                                                <div className='progress-bar-fill' style={{ width: '100%' }}></div>
                                             </div>
                                             <div>3/5</div>
                                         </div>
