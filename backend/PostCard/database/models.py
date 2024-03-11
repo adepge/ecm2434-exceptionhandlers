@@ -30,6 +30,7 @@ class Posts(models.Model):
 class Stickers(models.Model):
     id   = models.AutoField(primary_key=True)
     stickersName = models.CharField(max_length = 50)
+    stickerPrice = models.IntegerField(default = 25)
     stickersDescription = models.CharField(max_length = 100)
     fileName = models.CharField(max_length = 100)
     
@@ -49,7 +50,7 @@ class PostsUser(models.Model):
     coins = models.PositiveIntegerField(default=0)
     postID = models.ManyToManyField(Posts)
     unlockedAvatars = models.ManyToManyField(Stickers,default=1 ,related_name="unlocked")
-    avatarInUse = models.ForeignKey(Stickers, related_name="profile_pic", on_delete = models.CASCADE)
+    avatarInUse = models.ForeignKey(Stickers, default = 1,related_name="profile_pic", on_delete = models.CASCADE)
     stepsTaken = models.PositiveBigIntegerField(default=0)
     postsMade = models.PositiveIntegerField(default=0)
     postsSaved = models.PositiveIntegerField(default=0)

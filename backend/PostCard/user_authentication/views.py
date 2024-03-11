@@ -80,4 +80,16 @@ def UserLoginAuthentication(request):
     else:
         # if user does not exist
         return Response({"username": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
+@api_view(['POST']) 
+@permission_classes([AllowAny])
+def UserLogout(request):
+    try:
+        user = request.user
+        user_token = Token.objects.get(user=user)
+
+        user_token.delete() # Token for given user deleted 
+    except:
+        return Response({"Message": "User does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"Message": "User logged out successful"},status=status.HTTP_200_OK)
