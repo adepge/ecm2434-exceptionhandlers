@@ -10,6 +10,7 @@ urlpatterns = [
     #USER AUTHENTICATION API ENDPOINT
     path('register/', UserRegisterAuthentication, name="register"),
     path('login/',UserLoginAuthentication, name='login'),
+    path('logout/',UserLogout, name="logout"),
     #-----
     #POSTS API ENDPOINT
     path('posts/', PostsList.as_view(), name='posts-list'),
@@ -30,6 +31,11 @@ urlpatterns = [
     #POSTUSER API ENDPOINT
     path('collectPost/', addCollection, name='postuser-list'),
     path('collectedPosts/', getCollections, name='collected-posts'),
+
+    #CHALLENGES API ENDPOINT
+    path('getChallenges/',getChallenges, name='get-challenges'),
+    path('checkWinner/',checkWinner, name='get-challenges'),
+    path('purchase/',purchase, name ="purchase"),
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),

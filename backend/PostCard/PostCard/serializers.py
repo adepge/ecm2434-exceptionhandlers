@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser
+from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser, Challenges, CurrentDay
 from django.contrib.auth.models import User
 
 # Add all the serializers here for the models
@@ -32,3 +32,13 @@ class PostsUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostsUser
         fields = '__all__'  # This will include all fields from the PostsUser model
+
+class ChallengesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenges
+        fields = '__all__'  # This will include all fields from the Challenges model
+
+class CurrentDaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CurrentDay
+        fields = '__all__'  # This will include all fields from the CurrentDay model
