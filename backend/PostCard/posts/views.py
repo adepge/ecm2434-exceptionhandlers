@@ -135,15 +135,20 @@ def createPost(request):
 @permission_classes([AllowAny])
 def getUser(request):
     try:
-        dailyReset()
+        #dailyReset()
         user = request.user
         user_information,_ = PostsUser.objects.get_or_create(userID=user)
         username = request.user.username
-
     except Exception as e:
         # if user is not logged in, then raise an error
         return Response({"Message":"error"},status=status.HTTP_400_BAD_REQUEST)
-    return Response({"username":username,"coins":user_information.coins,"Profile picture":user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
+    
+    if user_information.avatarInUse == None:
+        sticker_default,_ = Stickers.objects.get_or_create(stickersName="default",stickerPrice=0,fileName="NULL")
+        user_information.avatarInUse = sticker_default
+        user_information.save()
+
+    return Response({"username":username,"coins":user_information.coins,"Profile picture": user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
 
 #TODO 
 #1 create view to return all avatars avaiable for user
