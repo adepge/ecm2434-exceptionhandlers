@@ -106,18 +106,31 @@ function RegisterPage() {
             username: error.response.data.username,
           });
         }
+        console.log(error.response.data);
+        if (error.response.data["error messages"]) {
+          e = error.response.data["error messages"]
+          setErrors({
+            ...errors,
+            username: error.response.data.username,
+          });
+        }
         if (error.response.data.email) {
           setErrors({
             ...errors,
             email: error.response.data.email,
           });
         }
+        if (error.response.data["Password error"]) {
+          setErrors({
+            ...errors,
+            password: error.response.data["Password error"],
+          });
+        }
       } else {
         // The request was made but no response was received or other errors occurred
         console.error("Error:", error.message);
+        alert("Cannot connect to the server");
       }
-
-      alert("An error occurred.")
       // remove the loading screen
       setIsLoading(false);
       return;

@@ -49,12 +49,15 @@ function LoginPage() {
           return
         } else {
           console.log(error);
-          alert("An error occured. Please try again later.");
+          alert("Internal server error. Please try again later.");
         }
+      } else {
+        console.log(errors);
+        alert("Cannot connect to the server");
       }
     }
-    console.log(errors);
-    alert("An error occured. Please try again later.");
+
+
   }
 
   return (
