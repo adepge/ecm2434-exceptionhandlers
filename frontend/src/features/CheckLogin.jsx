@@ -38,7 +38,11 @@ async function CheckLogin() {
                 console.log("Response status:", error.response.status);
                 console.log("Response headers:", error.response.headers);
             }
+            console.log(error.response.data);
+            alert("Internal server error");
         }
+        console.log(error)
+        alert("Cannot connect to the server");
     }
 
 }

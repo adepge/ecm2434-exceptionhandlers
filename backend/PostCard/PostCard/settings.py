@@ -41,19 +41,19 @@ ALLOWED_HOSTS = []
 # Application definition
 # Included all the apps we add , and other dependiences
 INSTALLED_APPS = [
-    'PostCard',
     'posts',
+    'database.apps.DatabaseConfig',
     'user_authentication',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken' 
-    'database.apps.DatabaseConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'PostCard',
+    'rest_framework.authtoken' 
 ]
 
 # configured the settings to allow us to use the restframe
