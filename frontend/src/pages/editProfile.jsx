@@ -1,5 +1,7 @@
 import './stylesheets/editProfile.css';
 
+import { Link } from 'react-router-dom';
+
 function editProfile() {
     return (
         <div id='editProfile'>
@@ -10,6 +12,9 @@ function editProfile() {
                         <div id='profilePic'>
                             <img src='https://www.w3schools.com/howto/img_avatar.png' alt='profile pic' />
                         </div>
+                        <Link to={"/changeIcon"}>
+                            <button style={{ width: "auto", fontSize: "16px", padding: "5px 10px", marginTop: "20px" }}>Change Icon</button>
+                        </Link>
                         <form>
                             <div className='field'>
                                 <label for='name'>Bio</label>

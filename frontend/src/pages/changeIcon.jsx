@@ -1,7 +1,53 @@
 import './stylesheets/changeIcon.css'
 import Cat from '../assets/store/Napoleon.png';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+
 
 function ChangeIcon() {
+
+    const [avatars, setAvatars] = useState([]);
+    useEffect(() => {
+        const token = cookies.get('token');
+        if (token === undefined) {
+            window.location.href = '/login';
+        }
+
+        const getIcons = async () => {
+            try {
+                // Update the API URL as per your configuration
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/api/getAvatars/"
+                    ,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Token ${token}`,
+                        },
+                    }
+                );
+                return response.data;
+            } catch (error) {
+                console.error("Error occurred:", error);
+                if (error.response) {
+                    console.log("Response data:", error.response.data);
+                    console.log("Response status:", error.response.status);
+                    console.log("Response headers:", error.response.headers);
+                }
+            }
+        }
+
+        getIcons().then((data) => {
+            setAvatars(data);
+        });
+
+    }, []);
+    console.log(avatars)
+
+
     return (
         <div id="changeIcon">
             <div id='spacer'>
@@ -19,24 +65,15 @@ function ChangeIcon() {
                             <div style={{ width: '85px' }} />
                             <div style={{ width: '85px' }} />
                             <div id={"forth"} style={{ width: '85px' }} />
-                            <div className='selection-item'>
-                                <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                Napoleon
-                            </div>
-                            <div className='selection-item'>
-                                <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                Napoleon
-                            </div>
-                            <div className='selection-item'>
-                                <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                Napoleon
-                            </div>
-                            <div className='selection-item'>
-                                <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                <div className='details'>
-                                    Napoleon
-                                </div>
-                            </div>
+                            {
+                                // avatarsList[0]
+                                avatars.map((avatar) => (
+                                    <div className='selection-item'>
+                                        <img src={avatar.image} alt='cat' width={"85px"} height={"85px"} />
+                                        {avatar.name}
+                                    </div>
+                                ))
+                            }
                         </div>
                     </div>
                 </div>

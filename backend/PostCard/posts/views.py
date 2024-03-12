@@ -158,9 +158,6 @@ def getUser(request):
 @permission_classes([AllowAny])
 def getAvatars(request):
     try:
-        
-        
-
         user = request.user
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
 
@@ -182,11 +179,11 @@ def getAvatars(request):
         all_avatars = user_info.unlockedAvatars.all()
         all_avatars_list = []
         for avatars in all_avatars:
-            all_avatars_list.append(avatars.fileName)
+            all_avatars_list.append({"name":avatars.stickersName, "price":avatars.stickerPrice, "image":avatars.fileName})
 
     except IntegrityError as e:
         return Response({"Message":e}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"Message":all_avatars_list},status=status.HTTP_200_OK)
+    return Response(all_avatars_list,status=status.HTTP_200_OK)
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
