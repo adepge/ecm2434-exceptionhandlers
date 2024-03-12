@@ -1,13 +1,18 @@
 from django.shortcuts import render
 from rest_framework import generics
-from database.models import Geolocation, Posts, Stickers, StickersUser, PostsUser, Challenges
-from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer, StickersUserSerializer, PostsUserSerializer, ChallengesSerializer
+from database.models import Geolocation, Posts, Stickers, PostsUser, Challenges
+from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer,StickersUser, StickersUserSerializer, PostsUserSerializer, ChallengesSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .daily_reset import dailyReset
+from django.conf import settings
+from django.urls import path
+import os
+
+
 
 
 # creating the views based on the models, should be able to list and view the data
@@ -134,7 +139,7 @@ def getUser(request):
         user_information,_ = PostsUser.objects.get_or_create(userID=user)
         userid = request.user.id
         username = request.user.username
-        print(user_information.coins)
+
     except Exception as e:
         # if user is not logged in, then raise an error
         return Response({"Message":"error"},status=status.HTTP_400_BAD_REQUEST)
@@ -143,6 +148,36 @@ def getUser(request):
 #TODO 
 #1 create view to return all avatars avaiable for user
 #2 modify getUser to return the img avatar they're using
+
+@api_view(['POST','GET'])
+@permission_classes([AllowAny])
+def getAvatars(request):
+    try:
+        user = request.user
+        user_info = PostsUser.objects.get(userID = user)
+        
+        base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
+        avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
+            #Loops through all the avatar files and appending it to base
+        for files in avatar_files:
+            # Splicing the extension to get name, ie. crown,hoodie etc
+            index = files.index(".")
+
+            # Creating all the needed sticker objects to link the avatars and the sticker model for price etc
+            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
+            if y == False: # if sticker object doesnt exist yet
+                x.save()
+
+
+        # loops and returns all avatars a user owns in a list
+        all_avatars = user_info.unlockedAvatars.all()
+        all_avatars_list = []
+        for avatars in all_avatars:
+            all_avatars_list.append(avatars.fileName)
+
+    except Exception as e:
+        return Response({"Message":e}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"Message":all_avatars_list},status=status.HTTP_200_OK)
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
@@ -159,6 +194,7 @@ def getChallenges():
     except Exception as error:
         return Response({"Error": error},status=status.HTTP_400_BAD_REQUEST)
     # Returns the challenge requirement
+
     return Response({"Todays Challenge": active_challenge.challengeDesc, "No. of Post creation":active_challenge.postsNeeded, "No. of Post saves":active_challenge.savesNeeded, "Coins rewarded" : active_challenge.coinsRewarded,
                      "Milestone Challenge 1": milestone_1.challengeDesc, "No. of Post creation":milestone_1.postsNeeded, "No. of Post saves":milestone_1.savesNeeded, "Coins rewarded" : milestone_1.coinsRewarded,
                      "Milestone Challenge 2": milestone_2.challengeDesc, "No. of Post creation":milestone_2.postsNeeded, "No. of Post saves":milestone_2.savesNeeded, "Coins rewarded" : milestone_2.coinsRewarded,}, status=status.HTTP_200_OK)
@@ -197,6 +233,7 @@ def checkWinner(request):
     if milestone_2.postsNeeded or milestone_2.savesNeeded == user_data.postsMade or user_data.postsSaved:
         user_data.coins += milestone_2.coinsRewarded
         return Response({"Message": f"You completed a Milestone! Your reward is {milestone_2.coinsRewarded}"})
+
     
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])

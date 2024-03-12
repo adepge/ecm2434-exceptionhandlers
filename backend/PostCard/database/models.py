@@ -31,16 +31,14 @@ class Stickers(models.Model):
     id   = models.AutoField(primary_key=True)
     stickersName = models.CharField(max_length = 50)
     stickerPrice = models.IntegerField(default = 25)
-    stickersDescription = models.CharField(max_length = 100)
+    stickersDescription = models.CharField(default ="sticker",max_length = 100)
     fileName = models.CharField(max_length = 100)
     
-# DEPRECATED TABLE
 
 class StickersUser(models.Model):
     id = models.AutoField(primary_key=True)
     stickersID = models.ForeignKey(Stickers, on_delete = models.CASCADE)
-    username   = models.ForeignKey(User, on_delete = models.CASCADE)
-
+    username   = models.ForeignKey(User, on_delete = models.CASCADE)    
 # the post user has collected
 # {userid: 1, postids: [1,2,3,4,5]}
 # TODO
@@ -49,7 +47,8 @@ class PostsUser(models.Model):
     userID = models.ForeignKey(User,  on_delete = models.CASCADE)
     coins = models.PositiveIntegerField(default=0)
     postID = models.ManyToManyField(Posts)
-    unlockedAvatars = models.ManyToManyField(Stickers,default=1 ,related_name="unlocked")
+    unlockedAvatars = models.ManyToManyField(Stickers ,related_name="unlocked")
+    avatar_free = models.ManyToManyField(Stickers)
     avatarInUse = models.ForeignKey(Stickers, default = 1,related_name="profile_pic", on_delete = models.CASCADE)
     stepsTaken = models.PositiveBigIntegerField(default=0)
     postsMade = models.PositiveIntegerField(default=0)
@@ -62,8 +61,8 @@ class Challenges(models.Model):
     id = models.AutoField(primary_key=True)
     challengeDesc = models.CharField(max_length = 100)
     stepsNeeded = models.PositiveIntegerField(default=9999999)
-    postsNeeded = models.PositiveSmallIntegerField(default=9999999)
-    savesNeeded = models.PositiveSmallIntegerField(default=9999999)
+    postsNeeded = models.PositiveSmallIntegerField(default=0)
+    savesNeeded = models.PositiveSmallIntegerField(default=0)
     inUse = models.BooleanField(default=False)
     coinsRewarded = models.PositiveIntegerField(default=0)
 
