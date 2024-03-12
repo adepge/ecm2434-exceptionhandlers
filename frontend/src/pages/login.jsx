@@ -41,6 +41,7 @@ function LoginPage() {
     catch (error) {
       // Display the error message from the server
       if (error.response) {
+        console.log(error.response.data.username)
         if (error.response.data.username) {
           setErrors({
             ...errors,

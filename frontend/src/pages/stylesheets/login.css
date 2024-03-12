@@ -112,3 +112,8 @@
 #login #message {
   width: 100%;
 }
+
+label.error {
+  color: red;
+  margin-left: 5px;
+}
