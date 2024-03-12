@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'database.apps.DatabaseConfig',
     'user_authentication',
     'rest_framework',
-    'background_task',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',

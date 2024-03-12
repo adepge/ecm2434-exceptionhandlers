@@ -74,7 +74,7 @@
 }
 
 #feed .polaroid {
-  animation: polaroidFadeIn 0.3s ease-out;
+  animation: polaroidFadeIn 0.5s ease-out;
 }
 
 /* Animation css classes */

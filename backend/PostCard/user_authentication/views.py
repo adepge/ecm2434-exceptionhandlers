@@ -62,8 +62,8 @@ def UserRegisterAuthentication(request):
         
         return Response({f"token": token.key},status=status.HTTP_200_OK)   # Successful user creation
     else: 
-        errors = str(serializer.errors) # Shows erros for: already used username in db and an invalid email (no "@" and ending such as ".com")
-        return Response({"error messages":errors},status=status.HTTP_400_BAD_REQUEST) # Failed user creation
+        # errors = str(serializer.errors) # Shows erros for: already used username in db and an invalid email (no "@" and ending such as ".com")
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST) # Failed user creation
 
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
