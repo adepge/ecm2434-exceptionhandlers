@@ -11,6 +11,7 @@ from .daily_reset import dailyReset
 from django.conf import settings
 from django.urls import path
 import os
+from django.db import IntegrityError
 
 
 
@@ -137,13 +138,12 @@ def getUser(request):
         dailyReset()
         user = request.user
         user_information,_ = PostsUser.objects.get_or_create(userID=user)
-        userid = request.user.id
         username = request.user.username
 
     except Exception as e:
         # if user is not logged in, then raise an error
         return Response({"Message":"error"},status=status.HTTP_400_BAD_REQUEST)
-    return Response({"userid":userid,"username":username,"coins":user_information.coins},status=status.HTTP_200_OK)  # Successful user creation
+    return Response({"username":username,"coins":user_information.coins,"Profile picture":user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
 
 #TODO 
 #1 create view to return all avatars avaiable for user
@@ -153,11 +153,15 @@ def getUser(request):
 @permission_classes([AllowAny])
 def getAvatars(request):
     try:
-        user = request.user
-        user_info = PostsUser.objects.get(userID = user)
         
+        
+
+        user = request.user
+        user_info,_ = PostsUser.objects.get_or_create(userID=user)
+
         base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
         avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
+
             #Loops through all the avatar files and appending it to base
         for files in avatar_files:
             # Splicing the extension to get name, ie. crown,hoodie etc
@@ -175,7 +179,7 @@ def getAvatars(request):
         for avatars in all_avatars:
             all_avatars_list.append(avatars.fileName)
 
-    except Exception as e:
+    except IntegrityError as e:
         return Response({"Message":e}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"Message":all_avatars_list},status=status.HTTP_200_OK)
 

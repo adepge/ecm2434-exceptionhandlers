@@ -44,12 +44,11 @@ class StickersUser(models.Model):
 # TODO
 #   Rename table to UserData
 class PostsUser(models.Model):
-    userID = models.ForeignKey(User,  on_delete = models.CASCADE)
+    userID = models.OneToOneField(User,  on_delete = models.CASCADE)
     coins = models.PositiveIntegerField(default=0)
-    postID = models.ManyToManyField(Posts)
-    unlockedAvatars = models.ManyToManyField(Stickers ,related_name="unlocked")
-    avatar_free = models.ManyToManyField(Stickers)
-    avatarInUse = models.ForeignKey(Stickers, default = 1,related_name="profile_pic", on_delete = models.CASCADE)
+    postID = models.ManyToManyField(Posts,blank=True)
+    unlockedAvatars = models.ManyToManyField(Stickers, blank=True ,related_name="unlocked")
+    avatarInUse = models.ForeignKey(Stickers,related_name="profile_pic", on_delete = models.CASCADE, null = True)
     stepsTaken = models.PositiveBigIntegerField(default=0)
     postsMade = models.PositiveIntegerField(default=0)
     postsSaved = models.PositiveIntegerField(default=0)
