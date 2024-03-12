@@ -9,7 +9,7 @@ def dailyReset():
         timezone = pytz.timezone('Europe/London')
         currentDate = datetime.now(timezone).date()
         print("CURRENT DATE ACCORDING TO DEVICE = " + str(currentDate))
-        date = CurrentDay.objects.first()
+        date,_ = CurrentDay.objects.get_or_create()
         print("CURRENT DATE ACCORDING TO DATABASE = " + str(date.dateOfLastInteraction))
         if currentDate != date.dateOfLastInteraction:
             random.seed()
