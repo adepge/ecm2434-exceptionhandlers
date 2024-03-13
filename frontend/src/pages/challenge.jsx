@@ -3,13 +3,49 @@ import Coin from '../assets/challenge/coin.png';
 import Cat from '../assets/store/Napoleon.png';
 
 import CheckLogin from '../features/CheckLogin';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 function Challenge() {
 
+
     useEffect(() => {
+        const token = cookies.get('token');
+        if (token === undefined) {
+            window.location.href = '/login';
+        }
         CheckLogin();
     }, []);
+
+    
+        
+    async function purchase(StickersName) {
+        
+        const token = cookies.get('token');
+        if (token === undefined) {
+            window.location.href = '/login';
+        }
+
+        const response = axios.post(
+        "http://127.0.0.1:8000/api/changeAvatar/"
+        ,{
+            "Stickersname": StickersName
+        },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`,
+            },
+        }
+        )
+        console.log(response)
+    }
+
+    purchase("sad")
+
     return (
         <>
             <div id='challenge'>
