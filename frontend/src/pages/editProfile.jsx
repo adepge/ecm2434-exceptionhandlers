@@ -1,8 +1,32 @@
 import './stylesheets/editProfile.css';
 
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import CheckLogin from '../features/CheckLogin';
+import usericon from "../assets/header/user-icon.jpg";
 
 function editProfile() {
+
+    const [user, setUser] = useState()
+    const [profilePicture, setProfilePicture] = useState("")
+
+    useEffect(() => {
+        const getIcon = async () => {
+            let response = await CheckLogin();
+            return response.data
+        }
+        getIcon().then((user) => {
+            setUser(user)
+            if (user.profilePicture !== "NULL") {
+                setProfilePicture(user.profilePicture)
+            } else {
+                setProfilePicture(usericon)
+            }
+        });
+    }, []);
+
+
+
     return (
         <div id='editProfile'>
             <div id='main'>
@@ -10,7 +34,7 @@ function editProfile() {
                     <div id='content'>
                         <div id='title'>Edit Profile</div>
                         <div id='profilePic'>
-                            <img src='https://www.w3schools.com/howto/img_avatar.png' alt='profile pic' />
+                            <img src={profilePicture} alt='profile pic' />
                         </div>
                         <Link to={"/changeIcon"}>
                             <button style={{ width: "auto", fontSize: "16px", padding: "5px 10px", marginTop: "20px" }}>Change Icon</button>

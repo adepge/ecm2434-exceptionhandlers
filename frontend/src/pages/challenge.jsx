@@ -11,6 +11,8 @@ const cookies = new Cookies();
 
 function Challenge() {
 
+    const [avatars, setAvatars] = useState([]);
+    const [challenges, setChallenges] = useState([]);
 
     useEffect(() => {
         const token = cookies.get('token');
@@ -19,7 +21,42 @@ function Challenge() {
         }
         CheckLogin();
 
+        const getAvatars = async () => {
 
+
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/getAvatars/"
+                , {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    }
+                }
+            )
+            return response.data
+        }
+
+        getAvatars().then((avatars) => {
+            setAvatars(avatars);
+        });
+
+        const getChallenges = async () => {
+            const response = await axios.get(
+                "http://127.0.0.1:8000/api/getChallenges/"
+                , {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    }
+                }
+            )
+            console.log(response)
+            return response
+        }
+
+        getChallenges().then((challenges) => {
+            setChallenges(challenges);
+        });
     }, []);
 
 
@@ -46,7 +83,6 @@ function Challenge() {
         console.log(response)
     }
 
-    purchase("sad")
 
     return (
         <>
@@ -127,40 +163,16 @@ function Challenge() {
                                 <div style={{ width: '85px' }} />
                                 <div style={{ width: '85px' }} />
                                 <div id={"forth"} style={{ width: '85px' }} />
-                                <div className='shop-item'>
-                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                    Napoleon
-                                    <div className='cost'>
-                                        100
-                                        <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
-                                    </div>
-                                </div>
-                                <div className='shop-item'>
-                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                    Napoleon
-                                    <div className='cost'>
-                                        100
-                                        <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
-                                    </div>
-                                </div>
-                                <div className='shop-item'>
-                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                    Napoleon
-                                    <div className='cost'>
-                                        100
-                                        <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
-                                    </div>
-                                </div>
-                                <div className='shop-item'>
-                                    <img src={Cat} alt='cat' width={"85px"} height={"85px"} />
-                                    <div className='details'>
-                                        Napoleon
+                                {avatars.map((avatar) => (
+                                    <div className='shop-item' key={avatar.name}>
+                                        <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
+                                        {avatar.name}
                                         <div className='cost'>
-                                            100
+                                            {avatar.price}
                                             <img src={Coin} alt='coin' width={"15px"} height={"15px"} />
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>
