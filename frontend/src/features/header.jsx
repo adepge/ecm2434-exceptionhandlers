@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/logo-notext.png";
 import usericon from "../assets/header/user-icon.jpg";
 
@@ -6,9 +6,17 @@ import user from "../assets/header/user.svg";
 import settings from "../assets/header/setting.svg";
 import "./stylesheets/header.css";
 import { Link } from "react-router-dom";
+import CheckLogin from "./CheckLogin";
+import { useLocation } from "react-router-dom";
+import Coin from '../assets/challenge/coin.png';
 
 function Header() {
-  const [showMenu, setShowMenu] = React.useState(false);
+  const location = useLocation();
+
+  const [showMenu, setShowMenu] = useState(false);
+  const [userIcon, setUserIcon] = useState(usericon)
+  const [showIcon, setShowIcon] = useState(false)
+  const [coins, setCoins] = useState(0)
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -16,12 +24,33 @@ function Header() {
 
   useEffect(() => {
     document.addEventListener("click", (e) => {
-      console.log(e.target)
       if (e.target.id !== "user-icon") {
         setShowMenu(false);
       }
     });
-  }, []);
+
+
+    const getIcon = async () => {
+      let response = await CheckLogin(false);
+      // if the user is not logged in, no icon will be shown
+      if (response === false) {
+        setShowIcon(false)
+      }
+      else {
+        setShowIcon(true)
+      }
+      return response.data
+    }
+
+    getIcon().then((user) => {
+      // if the user has not set a profile picture, the default one will be used
+      if (user.profilePicture !== "NULL") {
+        setUserIcon(user.profilePicture)
+      }
+      setCoins(user.coins)
+    });
+
+  }, [location.pathname]);
 
   return (
     <header>
@@ -34,7 +63,17 @@ function Header() {
 
         {/* the user icon */}
         <div>
-          <img src={usericon} id="user-icon" alt="user-icon" width={"25px"} height={"25px"} style={{ border: "none", borderRadius: "25px" }} onClick={toggleMenu} />
+          {showIcon &&
+            (
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div id="coin">
+                  <img src={Coin} width={"15px"} height={"15px"} />
+                  <div>{coins}</div>
+                </div>
+                <img src={userIcon} id="user-icon" width={"25px"} height={"25px"} style={{ border: "none", borderRadius: "25px" }} onClick={toggleMenu} />
+              </div>
+            )
+          }
 
           <ul id="slide-menu" className={showMenu ? "show" : ""}>
             <Link to="/profile">

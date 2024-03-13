@@ -19,7 +19,7 @@ axios.defaults.withCredentials = true;
 function Capture() {
   useEffect(() => {
     async function check() {
-      const res = await CheckLogin();
+      await CheckLogin();
       capture();
     }
     check();
