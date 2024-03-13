@@ -110,18 +110,17 @@ def createPost(request):
 
     # Create a mutable copy of request.data
     #data = request.data.copy()
-    print(request.data)
     request.data['userid'] = userid  # Add 'userid' key
 
     try:
-        userData = PostsUser.objects.get(userID = request.data['userid'])
+        userData = PostsUser.objects.get(userID = userid)
         userData.postsMade += 1
         userData.postsMadeToday += 1
+        userData.save()
         dailyReset()
     except:
         print("Failed to get user data")
    
-
     # Create a serializer instance with the mutable copy of request.data
     serialized = PostsSerializer(data=request.data)
     
@@ -135,7 +134,7 @@ def createPost(request):
 @permission_classes([AllowAny])
 def getUser(request):
     try:
-        #dailyReset()
+        dailyReset()
         user = request.user
         user_information,_ = PostsUser.objects.get_or_create(userID=user)
         username = request.user.username
@@ -187,23 +186,56 @@ def getAvatars(request):
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
-def getChallenges():
+def getChallenges(request):
     try:
-        # checks to see if the challenge is daily (ID's 1,2,3) & its active 
-        todays_challenge = Challenges.objects.filter(id__in= [1,2,3],inUse=True) 
-        active_challenge = todays_challenge.first() # We can get the active challenge today
+        user = request.user.id
+        user_info,_ = PostsUser.objects.get_or_create(userID=user)
+        print(user_info.postsMadeToday)
 
-        milestone_1 = Challenges.objects.get(id= 4)
-        milestone_2 = Challenges.objects.get(id= 5) 
+        # checks to see if the challenge exists in DB
+        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
+        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
+        z,_ = Challenges.objects.get_or_create(savesNeeded = 2, postsNeeded = 2, coinsRewarded = 25, challengeDesc="Create 2 posts and Save 2 posts")
+
+
+        # gets list of objects that are active, loops and checks to see if postsneed and savesneeded are less than milestones
+        Inuse_challenges = Challenges.objects.filter(inUse=True)
+        for i in Inuse_challenges:
+            if i.postsNeeded < 10 and i.savesNeeded < 10:
+                todays_challenge = i
+
+        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
+        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
+
+        milestone_1 = Challenges.objects.get(postsNeeded = 35)
+        milestone_2 = Challenges.objects.get(savesNeeded = 35) 
  
 
     except Exception as error:
         return Response({"Error": error},status=status.HTTP_400_BAD_REQUEST)
-    # Returns the challenge requirement
 
-    return Response({"Todays Challenge": active_challenge.challengeDesc, "No. of Post creation":active_challenge.postsNeeded, "No. of Post saves":active_challenge.savesNeeded, "Coins rewarded" : active_challenge.coinsRewarded,
-                     "Milestone Challenge 1": milestone_1.challengeDesc, "No. of Post creation":milestone_1.postsNeeded, "No. of Post saves":milestone_1.savesNeeded, "Coins rewarded" : milestone_1.coinsRewarded,
-                     "Milestone Challenge 2": milestone_2.challengeDesc, "No. of Post creation":milestone_2.postsNeeded, "No. of Post saves":milestone_2.savesNeeded, "Coins rewarded" : milestone_2.coinsRewarded,}, status=status.HTTP_200_OK)
+    # dict containing all challenge related info
+    all_challenges = {"Daily Challenge":todays_challenge.challengeDesc, "Daily Coins Rewarded":25,"Milestone 1 Challenge":milestone_1.challengeDesc
+                      ,"Milestone 1 Coins Rewarded": milestone_1.coinsRewarded, "Milestone 2 Challenge": milestone_2.challengeDesc, "Milestone 2 Coins Rewarded":milestone_2.coinsRewarded}
+
+    if todays_challenge.savesNeeded == 0: 
+        all_challenges["Daily Post Creation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
+    elif todays_challenge.postsNeeded == 0:
+        all_challenges["Daily Post Creation"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
+    else:
+        all_challenges["Daily Post Creation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
+        all_challenges["Daily Post saves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded) 
+
+    
+    if milestone_1.postsNeeded == 0:
+        all_challenges["Milestone 1 saves neeed"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
+    elif milestone_2.savesNeeded == 0:
+        all_challenges["Milestone 2 posts creation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+    else:
+        all_challenges["Milestone 1 posts creation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone 2 saves neeed"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
+    print(all_challenges)
+    return Response(all_challenges, status=status.HTTP_200_OK)
 
 
 @api_view(['POST' ,'Get']) 
@@ -329,16 +361,16 @@ def addCollection(request):
     except Posts.DoesNotExist:
         return Response({"message": "Post does not exist"}, status=status.HTTP_404_NOT_FOUND)
     
-    sticker_default = Stickers.objects.first() # setting up a temporary sticker instance to prevent NOT NULL ERROR for avatarInUse
 
     # Get or create a PostsUser instance for the user
-    posts_user, created = PostsUser.objects.get_or_create(userID=user,avatarInUse=sticker_default)
+    posts_user, created = PostsUser.objects.get_or_create(userID=user)
     
     # Add the post to the user's collection
     posts_user.postID.add(post)
     try:
-        posts_user.postsMade += 1
-        posts_user.postsMadeToday += 1
+        posts_user.postsSaved += 1
+        posts_user.postsSavedToday += 1
+        posts_user.save()
     except:
         print("Failed to get user data")
     dailyReset()
