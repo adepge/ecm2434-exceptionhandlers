@@ -37,6 +37,7 @@ urlpatterns = [
     path('getAvatars/',getAvatars,name="get-avatars"),
     path('changeAvatar/',changeAvatar,name="change-avatar"),
     path('getAllAvatars/',getAllAvatars,name="get-all-avatars"),
+    path('createObjects/',createObjects,name="create-Objects"),
     path('checkWinner/',checkWinner, name='get-challenges'),
     path('purchase/',purchase, name ="purchase"),
 
