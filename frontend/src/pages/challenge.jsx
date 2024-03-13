@@ -6,6 +6,7 @@ import CheckLogin from '../features/CheckLogin';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import ErrorBox from '../features/ErrorBox';
 
 const cookies = new Cookies();
 
@@ -86,6 +87,7 @@ function Challenge() {
 
     return (
         <>
+            <ErrorBox />
             <div id='challenge'>
                 <div id='spacer'>
                     <div className='title'>
@@ -164,7 +166,7 @@ function Challenge() {
                                 <div style={{ width: '85px' }} />
                                 <div id={"forth"} style={{ width: '85px' }} />
                                 {avatars.map((avatar) => (
-                                    <div className='shop-item' key={avatar.name}>
+                                    <div className='shop-item' key={avatar.name} onClick={() => { purchase(avatar.name) }}>
                                         <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
                                         {avatar.name}
                                         <div className='cost'>
