@@ -53,6 +53,7 @@ function ChangeIcon() {
             } catch (error) {
                 console.error("Error occurred:", error);
                 if (error.response) {
+                    alert("internal server error")
                     console.log("Response data:", error.response.data);
                     console.log("Response status:", error.response.status);
                     console.log("Response headers:", error.response.headers);
