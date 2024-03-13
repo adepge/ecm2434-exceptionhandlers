@@ -45,7 +45,8 @@ function ChangeIcon() {
         });
 
     }, []);
-    console.log(avatars)
+
+    
 
 
     return (
