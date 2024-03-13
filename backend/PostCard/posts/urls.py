@@ -35,6 +35,7 @@ urlpatterns = [
     #CHALLENGES API ENDPOINT
     path('getChallenges/',getChallenges, name='get-challenges'),
     path('getAvatars/',getAvatars,name="get-avatars"),
+    path('changeAvatar/',changeAvatar,name="change-avatar"),
     path('checkWinner/',checkWinner, name='get-challenges'),
     path('purchase/',purchase, name ="purchase"),
 
