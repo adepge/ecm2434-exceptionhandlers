@@ -18,6 +18,8 @@ function Challenge() {
             window.location.href = '/login';
         }
         CheckLogin();
+
+        
     }, []);
 
     
