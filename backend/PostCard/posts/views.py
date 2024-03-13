@@ -154,8 +154,8 @@ def getUser(request):
 @permission_classes([AllowAny])
 def changeAvatar(request):
     user = request.user.id
-    user_info = PostsUser.objects.get_or_create(userID = user)
-    profile_name = request.Sticker.Stickersname
+    user_info,_ = PostsUser.objects.get_or_create(userID = user)
+    profile_name = request.Sticker.stickersName
 
     unlocked_avatars = user_info.unlockedAvatars
     unlocked_avatars_list = []
