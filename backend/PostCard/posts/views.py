@@ -172,6 +172,7 @@ def changeAvatar(request):
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
+# RETURNS ALL AVATARS NOT OWNED BY A USER
 def getAvatars(request):
     try:
         user = request.user
@@ -206,6 +207,23 @@ def getAvatars(request):
     except Exception as e:
         return Response({e}, status=status.HTTP_400_BAD_REQUEST)
     return Response(all_stickers_list,status=status.HTTP_200_OK)
+
+
+@api_view(['POST','GET'])
+@permission_classes([AllowAny])
+# RETURNS ALL AVATARS OWNED BY A USER
+def getAllAvatars(request):
+    user = request.user.id
+    user_info = PostsUser.objects.get(userID=user)
+
+    all_avatars = user_info.unlockedAvatars.all()
+    all_avatars_list = []
+
+    for avatars in all_avatars:
+            all_avatars_list.append({"name":avatars.stickersName,"price":avatars.stickerPrice,"path":avatars.fileName})
+    return Response(all_avatars_list,status=status.HTTP_200_OK)
+
+
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])

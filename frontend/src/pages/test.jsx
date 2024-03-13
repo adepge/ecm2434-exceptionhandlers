@@ -18,7 +18,7 @@ function Test() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/getAvatars/"
+        "http://127.0.0.1:8000/api/getAllAvatars/"
         ,
         {
           headers: {
