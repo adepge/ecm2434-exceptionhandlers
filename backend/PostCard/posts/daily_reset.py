@@ -19,10 +19,10 @@ def dailyReset():
                 x.postsSavedToday=0
                 x.save()
             
-            for y in Challenges.objects.all()[0:2]:
+            for y in Challenges.objects.all()[0:1]:
                 y.inUse=False
                 y.save()
-            z=Challenges.objects.all()[random.randint(0,2)]
+            z=Challenges.objects.all()[random.randint(0,1)]
             z.inUse=True
             z.save()
             date.dateOfLastInteraction = currentDate

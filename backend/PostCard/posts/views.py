@@ -100,7 +100,6 @@ def createObjects(request):
         #Daily
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
         y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
-        z,_ = Challenges.objects.get_or_create(savesNeeded = 2, postsNeeded = 2, coinsRewarded = 25, challengeDesc="Create 2 posts and Save 2 posts")
         #Milestone
         a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
         b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
@@ -269,11 +268,7 @@ def getChallenges(request):
     if todays_challenge.savesNeeded == 0: 
         all_challenges["Daily Post Creation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
     elif todays_challenge.postsNeeded == 0:
-        all_challenges["Daily Post Creation"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
-    else:
-        all_challenges["Daily Post Creation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
-        all_challenges["Daily Post saves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded) 
-
+        all_challenges["Daily Post saves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
     
     if milestone_1.postsNeeded == 0:
         all_challenges["Milestone 1 saves neeed"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
@@ -307,10 +302,6 @@ def checkWinner(request):
         return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
     
     if todays_challenge.postsNeeded and user_data.postsMadeToday == 5:
-        user_data.coins += todays_challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
-    
-    if todays_challenge.postsNeeded and todays_challenge.savesNeeded and user_data.postsSavedToday and user_data.postsSavedToday == 2:
         user_data.coins += todays_challenge.coinsRewarded
         return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
     
