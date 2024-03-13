@@ -51,7 +51,6 @@ function Challenge() {
                     }
                 }
             )
-            console.log(response)
             return response
         }
 
