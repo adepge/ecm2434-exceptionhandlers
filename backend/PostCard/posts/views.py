@@ -91,6 +91,36 @@ class ChallengesDetail(generics.RetrieveAPIView):
     serializer_class = ChallengesSerializer
     permission_classes = [AllowAny]
 
+@api_view(['POST','Get']) 
+@permission_classes([AllowAny])
+#CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
+def createObjects(request):
+    try:
+        # Creating all challenges 
+        #Daily
+        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
+        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
+        z,_ = Challenges.objects.get_or_create(savesNeeded = 2, postsNeeded = 2, coinsRewarded = 25, challengeDesc="Create 2 posts and Save 2 posts")
+        #Milestone
+        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
+        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
+        
+        base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
+        avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
+
+        #Loops through all the avatar files and appending it to base
+        for files in avatar_files:
+            index = files.index(".")
+
+            # Creating all the needed sticker objects
+        x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
+        if y == False: # sticker does not exist
+            x.save()
+    except Exception as e:
+        return Response({e},status=status.HTTP_404_NOT_FOUND)
+
+    return Response({"Database set up"},status=status.HTTP_201_CREATED)
+
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny])
 def createPost(request):
@@ -178,18 +208,6 @@ def getAvatars(request):
         user = request.user
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
 
-        base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
-        avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
-
-            #Loops through all the avatar files and appending it to base
-        for files in avatar_files:
-            index = files.index(".") # Splicing the extension to get name, ie. crown,hoodie etc
-
-            # Creating all the needed sticker objects to link the avatars and the sticker model for price etc
-            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
-            if y == False: # if sticker object doesnt exist yet
-                x.save()
-
         # loops and returns all avatars a user owns in a list          
         all_avatars = user_info.unlockedAvatars.all()
         all_avatars_list = []
@@ -232,20 +250,11 @@ def getChallenges(request):
         user = request.user.id
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
 
-        # checks to see if the challenge exists in DB
-        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
-        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
-        z,_ = Challenges.objects.get_or_create(savesNeeded = 2, postsNeeded = 2, coinsRewarded = 25, challengeDesc="Create 2 posts and Save 2 posts")
-
-
-        # gets list of objects that are active, loops and checks to see if postsneed and savesneeded are less than milestones
+        # gets list of objects that are active, loops and gets daily challenge
         Inuse_challenges = Challenges.objects.filter(inUse=True)
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
                 todays_challenge = i
-
-        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
-        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
 
         milestone_1 = Challenges.objects.get(postsNeeded = 35)
         milestone_2 = Challenges.objects.get(savesNeeded = 35) 
