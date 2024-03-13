@@ -19,29 +19,29 @@ function Challenge() {
         }
         CheckLogin();
 
-        
+
     }, []);
 
-    
-        
+
+
     async function purchase(StickersName) {
-        
+
         const token = cookies.get('token');
         if (token === undefined) {
             window.location.href = '/login';
         }
 
-        const response = axios.post(
-        "http://127.0.0.1:8000/api/changeAvatar/"
-        ,{
-            "Stickersname": StickersName
-        },
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Token ${token}`,
+        const response = await axios.post(
+            "http://127.0.0.1:8000/api/purchase/"
+            , {
+                "sticker": StickersName
             },
-        }
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${token}`,
+                },
+            }
         )
         console.log(response)
     }

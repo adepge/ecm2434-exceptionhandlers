@@ -46,7 +46,7 @@ function ChangeIcon() {
 
     }, []);
 
-    
+
 
 
     return (
@@ -70,7 +70,7 @@ function ChangeIcon() {
                                 // avatarsList[0]
                                 avatars.map((avatar) => (
                                     <div className='selection-item'>
-                                        <img src={avatar.image} alt='cat' width={"85px"} height={"85px"} />
+                                        <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
                                         {avatar.name}
                                     </div>
                                 ))
