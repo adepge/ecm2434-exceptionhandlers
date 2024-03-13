@@ -149,9 +149,26 @@ def getUser(request):
 
     return Response({"username":username,"coins":user_information.coins,"Profile picture": user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
 
-#TODO 
-#1 create view to return all avatars avaiable for user
-#2 modify getUser to return the img avatar they're using
+
+@api_view(['POST','GET'])
+@permission_classes([AllowAny])
+def changeAvatar(request):
+    user = request.user.id
+    user_info = PostsUser.objects.get_or_create(userID = user)
+    profile_name = request.Sticker.Stickersname
+
+    unlocked_avatars = user_info.unlockedAvatars
+    unlocked_avatars_list = []
+    for avatars in unlocked_avatars:
+        unlocked_avatars.append(avatars.stickersName)
+
+    if profile_name not in unlocked_avatars:
+        return Response({"You have not unlocked this avatar"},status=status.HTTP_401_UNAUTHORIZED)
+    else:
+        profile_pic = Stickers.objects.get(StickersName = profile_name)
+        user_info.avatarInuse = profile_name
+        user_info.save()
+        return Response({"you successfully changed your profile! Your current profile is": user_info.avatarInUse.fileName, "Avatar name is": user_info.avatarInUse.stickersName},status=status.HTTP_200_OK)
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
@@ -165,8 +182,7 @@ def getAvatars(request):
 
             #Loops through all the avatar files and appending it to base
         for files in avatar_files:
-            # Splicing the extension to get name, ie. crown,hoodie etc
-            index = files.index(".")
+            index = files.index(".") # Splicing the extension to get name, ie. crown,hoodie etc
 
             # Creating all the needed sticker objects to link the avatars and the sticker model for price etc
             x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
@@ -176,6 +192,7 @@ def getAvatars(request):
 
         # loops and returns all avatars a user owns in a list
         all_avatars = user_info.unlockedAvatars.all()
+        print(all_avatars)
         all_avatars_list = []
         for avatars in all_avatars:
             all_avatars_list.append({"name":avatars.stickersName, "price":avatars.stickerPrice, "image":avatars.fileName})
@@ -190,7 +207,6 @@ def getChallenges(request):
     try:
         user = request.user.id
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
-        print(user_info.postsMadeToday)
 
         # checks to see if the challenge exists in DB
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
@@ -245,24 +261,26 @@ def checkWinner(request):
     user = request.user
     user_data = PostsUser.objects.get_or_create(userID=user)
 
-    todays_challenge = Challenges.objects.filter(id__in=[1,2,3],inUse=True) 
-    challenge = todays_challenge.first()
+    Inuse_challenges = Challenges.objects.filter(inUse=True)
+    for i in Inuse_challenges:
+        if i.postsNeeded < 10 and i.savesNeeded < 10:
+            todays_challenge = i
 
-    milestone_1 = Challenges.objects.get(id= 4)
-    milestone_2 = Challenges.objects.get(id= 5) 
+    milestone_1 = Challenges.objects.get(coinsRewarded =250)
+    milestone_2 = Challenges.objects.get(coinsRewarded =250) 
 
     # Daily Challenges
-    if challenge.savesNeeded and user_data.postsSavedToday == 5:
-        user_data.coins += challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
+    if todays_challenge.savesNeeded and user_data.postsSavedToday == 5:
+        user_data.coins += todays_challenge.coinsRewarded
+        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
     
-    if challenge.postsNeeded and user_data.postsMadeToday == 5:
-        user_data.coins += challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
+    if todays_challenge.postsNeeded and user_data.postsMadeToday == 5:
+        user_data.coins += todays_challenge.coinsRewarded
+        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
     
-    if challenge.postsNeeded and challenge.savesNeeded and user_data.postsSavedToday and user_data.postsSavedToday == 2:
-        user_data.coins += challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
+    if todays_challenge.postsNeeded and todays_challenge.savesNeeded and user_data.postsSavedToday and user_data.postsSavedToday == 2:
+        user_data.coins += todays_challenge.coinsRewarded
+        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
     
     # Milestone Challenges
     if milestone_1.postsNeeded or milestone_1.savesNeeded == user_data.postsMade or user_data.postsSaved:
