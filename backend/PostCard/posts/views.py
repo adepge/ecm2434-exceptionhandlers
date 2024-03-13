@@ -189,17 +189,23 @@ def getAvatars(request):
             if y == False: # if sticker object doesnt exist yet
                 x.save()
 
-
-        # loops and returns all avatars a user owns in a list
+        # loops and returns all avatars a user owns in a list          
         all_avatars = user_info.unlockedAvatars.all()
-        print(all_avatars)
         all_avatars_list = []
         for avatars in all_avatars:
-            all_avatars_list.append({"name":avatars.stickersName, "price":avatars.stickerPrice, "image":avatars.fileName})
+                all_avatars_list.append(avatars.stickersName)
+        
+        #loops and returns all avatars that a user DOES NOT own
+        all_stickers = Stickers.objects.all()
+        all_stickers_list = []
+        for stickers in all_stickers:
+            if stickers.stickersName not in all_avatars_list:
+                all_stickers_list.append({"name":stickers.stickersName,"price":stickers.stickerPrice,"path":stickers.fileName})
 
-    except IntegrityError as e:
-        return Response({"Message":e}, status=status.HTTP_400_BAD_REQUEST)
-    return Response(all_avatars_list,status=status.HTTP_200_OK)
+        print(all_stickers_list)
+    except Exception as e:
+        return Response({e}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(all_stickers_list,status=status.HTTP_200_OK)
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
