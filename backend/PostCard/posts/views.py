@@ -111,11 +111,10 @@ def createObjects(request):
         #Loops through all the avatar files and appending it to base
         for files in avatar_files:
             index = files.index(".")
-
             # Creating all the needed sticker objects
-        x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
-        if y == False: # sticker does not exist
-            x.save()
+            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
+            if y == False: # sticker does not exist
+                x.save()
     except Exception as e:
         return Response({e},status=status.HTTP_404_NOT_FOUND)
 
