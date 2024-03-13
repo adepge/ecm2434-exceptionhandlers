@@ -51,11 +51,12 @@ function Challenge() {
                     }
                 }
             )
-            return response
+            return response.data
         }
 
         getChallenges().then((challenges) => {
             setChallenges(challenges);
+            console.log(challenges)
         });
     }, []);
 
@@ -68,19 +69,28 @@ function Challenge() {
             window.location.href = '/login';
         }
 
-        const response = await axios.post(
-            "http://127.0.0.1:8000/api/purchase/"
-            , {
-                "sticker": StickersName
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Token ${token}`,
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/purchase/"
+                , {
+                    "sticker": StickersName
                 },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    },
+                }
+            )
+            console.log(response)
+        } catch (error) {
+            if (error.response.data.Message) {
+                alert(error.response.data.Message)
             }
-        )
-        console.log(response)
+            else {
+                alert("Internal server error")
+            }
+        }
     }
 
 
@@ -112,6 +122,7 @@ function Challenge() {
                                 <div className='reward-amount'>
                                     25
                                     <img src={Coin} alt='coin' />
+
                                 </div>
                             </div>
                         </div>
