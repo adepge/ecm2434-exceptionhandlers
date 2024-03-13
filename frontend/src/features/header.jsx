@@ -24,7 +24,6 @@ function Header() {
 
   useEffect(() => {
     document.addEventListener("click", (e) => {
-      console.log(e.target)
       if (e.target.id !== "user-icon") {
         setShowMenu(false);
       }
@@ -49,8 +48,6 @@ function Header() {
         setUserIcon(user.profilePicture)
       }
       setCoins(user.coins)
-      console.log(user.coins)
-      console.log(userIcon)
     });
 
   }, [location.pathname]);

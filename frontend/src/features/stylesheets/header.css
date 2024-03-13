@@ -76,7 +76,7 @@ header #coin {
   display: flex;
   align-items: center;
   font-size: 12px;
-  background-color: green;
+  background-color: rgb(0, 220, 165);
   border: none;
   border-radius: 12px;
   padding: 3px 7px;
