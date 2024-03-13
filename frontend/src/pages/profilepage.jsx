@@ -5,15 +5,20 @@ import ytIcon from "../assets/profilepage/YouTube.png";
 import instaIcon from "../assets/profilepage/Instagram.png";
 import twitterIcon from "../assets/profilepage/Facebook.png";
 import CheckLogin from "../features/CheckLogin";
+import { useState, useEffect } from "react";
 
 function ProfilePage() {
 
+  const [user, setUser] = useState({});
   async function setUserName() {
     let response = await CheckLogin()
-    console.log()
+    console.log(response.data)
+    setUser(response.data)
   }
 
-  setUserName()
+  useEffect(() => {
+    setUserName();
+  }, []);
 
   return (
 
@@ -21,14 +26,12 @@ function ProfilePage() {
       <div id="profile-wrapper">
         <div id="profile">
           <div id="spacer">
-            <div id="title">Jay</div>
+            <div id="title">{user.username}</div>
             <div id="user-icon">
-              <img src='https://www.w3schools.com/howto/img_avatar.png' alt="user icon" width={"100%"} />
+              <img src={user.profilePicture} alt="user icon" width={"100%"} />
             </div>
             <div id="bio">
-              The only one that can truely understand you is
-              yourself, so why not be yourself and let the world
-              see who you really are.
+              This is what the bio will look like
               <hr></hr>
             </div>
             <div id="socials">

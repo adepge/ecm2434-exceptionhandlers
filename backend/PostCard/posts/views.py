@@ -148,7 +148,7 @@ def getUser(request):
         user_information.avatarInUse = sticker_default
         user_information.save()
 
-    return Response({"username":username,"coins":user_information.coins,"Profile picture": user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
+    return Response({"username":username,"coins":user_information.coins,"profilePicture": user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
 
 #TODO 
 #1 create view to return all avatars avaiable for user
