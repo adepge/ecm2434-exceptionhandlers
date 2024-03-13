@@ -318,6 +318,7 @@ def purchase(request):
         user_data.coins -= avatar.stickerPrice
         try:
             user_data.unlockedAvatars.add(avatar)
+            user_data.save()
         except IntegrityError:
             return Response({"Message": "You already own this avatar"}, status=status.HTTP_409_CONFLICT)
         return Response({"Message": f"Successful purchase, you have {user_data.coins}"}, status=status.HTTP_200_OK)
