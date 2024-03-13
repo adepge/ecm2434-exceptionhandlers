@@ -307,7 +307,6 @@ def purchase(request):
     try : 
         sticker = request.data['sticker']
         avatar = Stickers.objects.get(stickersName=sticker) # getting the sticker id assoicated with that avatar
-
     except:
         return Response({"Message": "Sticker does not exist"},status=status.HTTP_409_CONFLICT)
 
@@ -315,9 +314,9 @@ def purchase(request):
     if user_data.coins < avatar.stickerPrice:
         return Response({"Message": f"Insuffiecient funds, You require {avatar.stickerPrice - user_data.coins} more coins"}, status=status.HTTP_409_CONFLICT)
     else:
-        user_data.coins -= avatar.stickerPrice
         try:
             user_data.unlockedAvatars.add(avatar)
+            user_data.coins -= avatar.stickerPrice
             user_data.save()
         except IntegrityError:
             return Response({"Message": "You already own this avatar"}, status=status.HTTP_409_CONFLICT)
