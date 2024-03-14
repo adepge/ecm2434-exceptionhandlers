@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import ErrorBox from '../features/ErrorBox';
+import usericon from '../assets/header/user-icon.jpg'
 
 const cookies = new Cookies();
 
@@ -178,7 +179,7 @@ function Challenge() {
                                 <div id={"forth"} style={{ width: '85px' }} />
                                 {avatars.map((avatar) => (
                                     <div className='shop-item' key={avatar.name} onClick={() => { purchase(avatar.name) }}>
-                                        <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
+                                        <img src={avatar.path === "NULL" ? usericon : avatar.path} alt='cat' width={"85px"} height={"85px"} style={{ border: "none", borderRadius: "100%" }} />
                                         {avatar.name}
                                         <div className='cost'>
                                             {avatar.price}

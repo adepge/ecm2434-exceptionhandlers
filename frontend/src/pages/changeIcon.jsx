@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import CheckLogin from '../features/CheckLogin';
+import usericon from '../assets/header/user-icon.jpg'
 
 const cookies = new Cookies();
 
@@ -73,6 +74,7 @@ function ChangeIcon() {
             window.location.href = '/login';
         }
 
+        console.log(avatar)
         try {
             const response = await axios.post(
                 "http://127.0.0.1:8000/api/changeAvatar/",
@@ -122,7 +124,7 @@ function ChangeIcon() {
                                 // avatarsList[0]
                                 avatars.map((avatar) => (
                                     <div className='selection-item' key={avatar.name} onClick={() => { setIcon(avatar.name) }}>
-                                        <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
+                                        <img src={avatar.path === "NULL" ? usericon : avatar.path} alt='cat' width={"85px"} height={"85px"} style={{ border: "none", borderRadius: "100%" }} />
                                         {avatar.name}
                                     </div>
                                 ))

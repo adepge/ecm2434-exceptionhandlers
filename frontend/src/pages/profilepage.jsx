@@ -28,10 +28,10 @@ function ProfilePage() {
           <div id="spacer">
             <div id="title">{user.username}</div>
             <div id="user-icon">
-              <img src={user.profilePicture === "NULL"? userIcon : user.profilePicture} alt="user icon" width={"100%"} />
+              <img src={user.profilePicture === "NULL" ? userIcon : user.profilePicture} alt="user icon" width={"100%"} />
             </div>
             <div id="bio">
-              This is what the bio will look like
+              {user.Bio}
               <hr></hr>
             </div>
             <div id="socials">
