@@ -224,12 +224,12 @@ def getUser(request):
 def changeAvatar(request):
     user = request.user.id
     user_info,_ = PostsUser.objects.get_or_create(userID = user)
-    profile_name = request.Sticker.stickersName
+    profile_name = request.data['avatar']
 
-    unlocked_avatars = user_info.unlockedAvatars
-    unlocked_avatars_list = []
-    for avatars in unlocked_avatars:
-        unlocked_avatars.append(avatars.stickersName)
+    unlocked_avatars = user_info.unlockedAvatars.all()
+    # unlocked_avatars_list = []
+    # for avatars in unlocked_avatars:
+    #     unlocked_avatars_list.append(avatars.stickersName)
 
     if profile_name not in unlocked_avatars:
         return Response({"You have not unlocked this avatar"},status=status.HTTP_401_UNAUTHORIZED)
@@ -312,12 +312,12 @@ def getChallenges(request):
         all_challenges["Daily"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
     
     if milestone_1.postsNeeded == 0:
-        all_challenges["Milestone 1"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
+        all_challenges["Milestone1"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
     elif milestone_2.savesNeeded == 0:
-        all_challenges["Milestone 2"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone2"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
     else:
-        all_challenges["Milestone 1"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
-        all_challenges["Milestone 2"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
+        all_challenges["Milestone1"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone2"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
     print(all_challenges)
     return Response(all_challenges, status=status.HTTP_200_OK)
 

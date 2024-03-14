@@ -74,7 +74,7 @@ function ChangeIcon() {
         }
 
         const response = await axios.post(
-            "http://127.0.0.1:8000/api/setAvatar/",
+            "http://127.0.0.1:8000/api/changeAvatar/",
             {
                 avatar: avatar
             },
@@ -85,6 +85,7 @@ function ChangeIcon() {
                 },
             }
         );
+        console.log(response)
     }
 
 
@@ -110,7 +111,7 @@ function ChangeIcon() {
                             {
                                 // avatarsList[0]
                                 avatars.map((avatar) => (
-                                    <div className='selection-item' key={avatar.name}>
+                                    <div className='selection-item' key={avatar.name} onClick={() => { setIcon(avatar.name) }}>
                                         <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
                                         {avatar.name}
                                     </div>

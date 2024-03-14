@@ -113,9 +113,10 @@ function Challenge() {
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress'>
-                                                <div className='progress-bar-fill' style={{ width: eval(challenges.DailyPostsaves) }}></div>
+                                                {console.log(eval(challenges.Daily))}
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Daily) * 100 + "%" }}></div>
                                             </div>
-                                            <div>{challenges.DailyPostsaves}</div>
+                                            <div>{challenges.Daily}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -136,9 +137,9 @@ function Challenge() {
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress' >
-                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone1postscreation) }}></div>
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone1) * 100 + "%" }}></div>
                                             </div>
-                                            <div>{challenges.Milestone1postscreation}</div>
+                                            <div>{challenges.Milestone1}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -155,9 +156,9 @@ function Challenge() {
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress' >
-                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone2postscreation) }}></div>
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone2) * 100 + "%" }}></div>
                                             </div>
-                                            <div>{challenges.Milestone2savesneeed}</div>
+                                            <div>{challenges.Milestone2}</div>
                                         </div>
                                     </div>
                                 </div>
