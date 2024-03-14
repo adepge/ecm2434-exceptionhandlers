@@ -67,6 +67,26 @@ function ChangeIcon() {
 
     }, []);
 
+    async function setIcon(avatar) {
+        const token = cookies.get('token');
+        if (token === undefined) {
+            window.location.href = '/login';
+        }
+
+        const response = await axios.post(
+            "http://127.0.0.1:8000/api/setAvatar/",
+            {
+                avatar: avatar
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${token}`,
+                },
+            }
+        );
+    }
+
 
 
 

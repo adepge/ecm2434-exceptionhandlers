@@ -82,7 +82,7 @@ function Challenge() {
                     },
                 }
             )
-            console.log(response)
+            location.reload();
         } catch (error) {
             if (error.response.data.Message) {
                 alert(error.response.data.Message)
@@ -109,18 +109,18 @@ function Challenge() {
                                 <div className='challenge-description'>
                                     <div className='content'>
                                         <div className='content-title'>
-                                            collect 5 posts
+                                            {challenges.DailyChallenge}
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress'>
-                                                <div className='progress-bar-fill' style={{ width: '30%' }}></div>
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.DailyPostsaves) }}></div>
                                             </div>
-                                            <div>3/5</div>
+                                            <div>{challenges.DailyPostsaves}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className='reward-amount'>
-                                    25
+                                    {challenges.DailyCoinsRewarded}
                                     <img src={Coin} alt='coin' />
 
                                 </div>
@@ -132,18 +132,18 @@ function Challenge() {
                                 <div className='challenge-description'>
                                     <div className='content'>
                                         <div className='content-title'>
-                                            collect 5 posts
+                                            {challenges.Milestone1Challenge}
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress' >
-                                                <div className='progress-bar-fill' style={{ width: '30%' }}></div>
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone1postscreation) }}></div>
                                             </div>
-                                            <div>3/5</div>
+                                            <div>{challenges.Milestone1postscreation}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className='reward-amount'>
-                                    25
+                                    {challenges.Milestone1CoinsRewarded}
                                     <img src={Coin} alt='coin' />
                                 </div>
                             </div>
@@ -151,18 +151,18 @@ function Challenge() {
                                 <div className='challenge-description'>
                                     <div className='content'>
                                         <div className='content-title'>
-                                            collect 5 pieces of trash
+                                            {challenges.Milestone2Challenge}
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress' >
-                                                <div className='progress-bar-fill' style={{ width: '100%' }}></div>
+                                                <div className='progress-bar-fill' style={{ width: eval(challenges.Milestone2postscreation) }}></div>
                                             </div>
-                                            <div>3/5</div>
+                                            <div>{challenges.Milestone2savesneeed}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className='reward-amount'>
-                                    25
+                                    {challenges.Milestone2CoinsRewarded}
                                     <img src={Coin} alt='coin' />
                                 </div>
                             </div>

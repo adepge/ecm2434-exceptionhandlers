@@ -262,21 +262,21 @@ def getChallenges(request):
         return Response({"Error": error},status=status.HTTP_400_BAD_REQUEST)
 
     # dict containing all challenge related info
-    all_challenges = {"Daily Challenge":todays_challenge.challengeDesc, "Daily Coins Rewarded":25,"Milestone 1 Challenge":milestone_1.challengeDesc
-                      ,"Milestone 1 Coins Rewarded": milestone_1.coinsRewarded, "Milestone 2 Challenge": milestone_2.challengeDesc, "Milestone 2 Coins Rewarded":milestone_2.coinsRewarded}
+    all_challenges = {"DailyChallenge":todays_challenge.challengeDesc, "DailyCoinsRewarded":25,"Milestone1Challenge":milestone_1.challengeDesc
+                      ,"Milestone1CoinsRewarded": milestone_1.coinsRewarded, "Milestone2Challenge": milestone_2.challengeDesc, "Milestone2CoinsRewarded":milestone_2.coinsRewarded}
 
     if todays_challenge.savesNeeded == 0: 
-        all_challenges["Daily Post Creation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
+        all_challenges["DailyPostCreation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
     elif todays_challenge.postsNeeded == 0:
-        all_challenges["Daily Post saves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
+        all_challenges["DailyPostsaves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
     
     if milestone_1.postsNeeded == 0:
-        all_challenges["Milestone 1 saves neeed"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
+        all_challenges["Milestone1savesneeed"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
     elif milestone_2.savesNeeded == 0:
-        all_challenges["Milestone 2 posts creation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone2postscreation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
     else:
-        all_challenges["Milestone 1 posts creation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
-        all_challenges["Milestone 2 saves neeed"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
+        all_challenges["Milestone1postscreation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone2savesneeed"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
     print(all_challenges)
     return Response(all_challenges, status=status.HTTP_200_OK)
 
