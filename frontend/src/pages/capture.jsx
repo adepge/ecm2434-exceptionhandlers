@@ -8,11 +8,11 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Geolocation from "../features/Geolocation";
 import LoadingScreen from "../features/loadingScreen";
-
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
 import Polaroid from "../features/polaroid";
 
+// 
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
 
