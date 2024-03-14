@@ -96,7 +96,6 @@ class ChallengesDetail(generics.RetrieveAPIView):
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
 def createObjects(request):
     try:
-
         user = request.user.id
         user_info,_ = PostsUser.objects.get_or_create(userID = user)
         if user_info.unlockedAvatars.exists() == False:

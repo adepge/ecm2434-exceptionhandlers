@@ -12,8 +12,8 @@ const cookies = new Cookies();
 function RegisterPage() {
   const navigate = useNavigate();
 
+  // local state data
   const [isLoading, setIsLoading] = useState(false);
-
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -21,15 +21,14 @@ function RegisterPage() {
     confirmPassword: "",
     checkbox: false,
   });
-
   const [errors, setErrors] = useState({
     username: "",
     email: "",
     password: "",
   });
-
   const [isChecked, setIsChecked] = useState(false);
 
+  // get the text from the form to the 
   const handleCheckBoxChange = () => {
     setUserData({
       ...userData,
