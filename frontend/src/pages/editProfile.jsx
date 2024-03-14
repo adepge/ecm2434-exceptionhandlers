@@ -23,7 +23,17 @@ function editProfile() {
                 setProfilePicture(usericon)
             }
         });
+
+        const getProfile = async () => {
+            let response = await CheckLogin();
+            return response.data
+        }
+        getProfile().then((user) => {
+            setUser(user)
+        });
     }, []);
+
+    console.log(user)
 
 
 
@@ -42,7 +52,7 @@ function editProfile() {
                         <form>
                             <div className='field'>
                                 <label for='name'>Bio</label>
-                                <input type='text' id='username' name='username' />
+                                <input type='text' id='bio' name='bio' label="hello" />
                             </div>
                             <div className='field'>
                                 <label for='name'>Youtube</label>
