@@ -238,7 +238,10 @@ def getUser(request):
 def changeAvatar(request):
     user = request.user.id
     user_info,_ = PostsUser.objects.get_or_create(userID = user)
-    profile_name = request.data['avatar']  
+    profile_name = request.get['avatar'] # this correct? 
+
+    daisy = Stickers.objects.get(stickersName="daisy")
+    user_info.unlockedAvatars.add(daisy)
 
     unlocked_avatars = user_info.unlockedAvatars.all()
     unlocked_avatars_list = []
@@ -250,8 +253,11 @@ def changeAvatar(request):
         return Response({"You have not unlocked this avatar"},status=status.HTTP_401_UNAUTHORIZED)
     else:
         profile_pic = Stickers.objects.get(stickersName = profile_name)
-        user_info.avatarInuse = profile_name
+        user_info.avatarInUse = profile_pic
         user_info.save()
+
+        print(user_info.avatarInUse.stickersName)
+        
         return Response({"you successfully changed your profile! Your current profile is": user_info.avatarInUse.fileName, "Avatar name is": user_info.avatarInUse.stickersName},status=status.HTTP_200_OK)
 
 @api_view(['POST','GET'])
