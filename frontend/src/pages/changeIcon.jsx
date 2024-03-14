@@ -67,6 +67,37 @@ function ChangeIcon() {
 
     }, []);
 
+    async function setIcon(avatar) {
+        const token = cookies.get('token');
+        if (token === undefined) {
+            window.location.href = '/login';
+        }
+
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/changeAvatar/",
+                {
+                    avatar: avatar
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    },
+                }
+            );
+            location.reload();
+            console.log(response)
+        } catch (error) {
+            console.error("Error occurred:", error);
+            if (error.response) {
+                alert("internal server error")
+            } else {
+                alert("cannot connect to server")
+            }
+        }
+    }
+
 
 
 
@@ -90,7 +121,7 @@ function ChangeIcon() {
                             {
                                 // avatarsList[0]
                                 avatars.map((avatar) => (
-                                    <div className='selection-item' key={avatar.name}>
+                                    <div className='selection-item' key={avatar.name} onClick={() => { setIcon(avatar.name) }}>
                                         <img src={avatar.path} alt='cat' width={"85px"} height={"85px"} />
                                         {avatar.name}
                                     </div>
