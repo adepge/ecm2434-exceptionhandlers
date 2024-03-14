@@ -96,6 +96,13 @@ class ChallengesDetail(generics.RetrieveAPIView):
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
 def createObjects(request):
     try:
+
+        user = request.user.id
+        user_info,_ = PostsUser.objects.get_or_create(userID = user)
+        if user_info.unlockedAvatars.exists() == False:
+            user_info.unlockedAvatars.add(Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL"))
+            user_info.save()
+
         # Creating all challenges 
         #Daily
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
@@ -118,6 +125,40 @@ def createObjects(request):
         return Response({e},status=status.HTTP_404_NOT_FOUND)
 
     return Response({"Database set up"},status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST','Get']) 
+@permission_classes([AllowAny])
+def changeBio(request):
+    try:
+        user = request.user.id
+        bio = "Ai doom soon"  # change later
+        user_info,_ = PostsUser.objects.get_or_create(userID=user)
+        user_info.bio = bio
+        user_info.save()
+    except Exception as e:
+        return Response({e},status=status.HTTP_404_NOT_FOUND)
+    return Response({"Bio":user_info.bio},status=status.HTTP_200_OK)
+
+@api_view(['POST','Get']) 
+@permission_classes([AllowAny])
+def changeUrl(request):
+    try:
+        user = request.user.id
+        youtubeUrl = "https://"  #change later
+        twitterUrl = "https://"  #change later
+        instagramUrl = ""        #change later
+
+        user_info,_ = PostsUser.objects.get_or_create(userID=user)
+        user_info.youtubeLink = youtubeUrl
+        user_info.twitterLink = twitterUrl 
+        user_info.instagramLink = instagramUrl
+
+        user_info.save()
+
+    except Exception as e:
+        return Response({e},status=status.HTTP_400_BAD_REQUEST)
+    return Response({"youtube":youtubeUrl,"twitter":twitterUrl,"instagram":instagramUrl},status=status.HTTP_200_OK)
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny])
@@ -171,7 +212,7 @@ def getUser(request):
         return Response({"Message":"error"},status=status.HTTP_400_BAD_REQUEST)
     
     if user_information.avatarInUse == None:
-        sticker_default,_ = Stickers.objects.get_or_create(stickersName="default",stickerPrice=0,fileName="NULL")
+        sticker_default = Stickers.objects.get(stickersName="default")
         user_information.avatarInUse = sticker_default
         user_information.save()
 
@@ -266,17 +307,17 @@ def getChallenges(request):
                       ,"Milestone1CoinsRewarded": milestone_1.coinsRewarded, "Milestone2Challenge": milestone_2.challengeDesc, "Milestone2CoinsRewarded":milestone_2.coinsRewarded}
 
     if todays_challenge.savesNeeded == 0: 
-        all_challenges["DailyPostCreation"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
+        all_challenges["Daily"] = str(user_info.postsMadeToday) +"/"+ str(todays_challenge.postsNeeded)
     elif todays_challenge.postsNeeded == 0:
-        all_challenges["DailyPostsaves"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
+        all_challenges["Daily"] = str(user_info.postsSavedToday) +"/"+ str(todays_challenge.savesNeeded)
     
     if milestone_1.postsNeeded == 0:
-        all_challenges["Milestone1savesneeed"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
+        all_challenges["Milestone 1"] = str(user_info.postsSaved)+"/"+str(milestone_1.savesNeeded)
     elif milestone_2.savesNeeded == 0:
-        all_challenges["Milestone2postscreation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone 2"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
     else:
-        all_challenges["Milestone1postscreation"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
-        all_challenges["Milestone2savesneeed"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
+        all_challenges["Milestone 1"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
+        all_challenges["Milestone 2"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
     print(all_challenges)
     return Response(all_challenges, status=status.HTTP_200_OK)
 
