@@ -42,7 +42,6 @@ urlpatterns = [
     path('purchase/',purchase, name ="purchase"),
 
     path('changeBio/',changeBio,name="change-bio"),
-    path('changeUrl/',changeUrl,name="change-url"),
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),

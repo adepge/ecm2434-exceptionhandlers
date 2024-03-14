@@ -128,41 +128,16 @@ def createObjects(request):
 
 @api_view(['POST','Get']) 
 @permission_classes([AllowAny])
-def profileInformation(request):
-    try:
-        user = request.user.id
-        user_info,_= PostsUser.objects.get_or_create(userID=user)
-
-    #if user not logged in
-    except Exception as e:
-        return Response({e},status=status.HTTP_401_UNAUTHORIZED)
-    # else return all profile info 
-    return Response({"Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK)    
-
-
-@api_view(['POST','Get']) 
-@permission_classes([AllowAny])
 def changeBio(request):
     try:
         user = request.user.id
-        bio = "Ai doom soon"  # change later
+        bio = request.data['bio']
+        youtubeUrl = request.data['youtube']
+        twitterUrl = request.data['twitter']
+        instagramUrl = request.data['instagram']       
+    
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
         user_info.bio = bio
-        user_info.save()
-    except Exception as e:
-        return Response({e},status=status.HTTP_404_NOT_FOUND)
-    return Response({"Bio":user_info.bio},status=status.HTTP_200_OK)
-
-@api_view(['POST','Get']) 
-@permission_classes([AllowAny])
-def changeUrl(request):
-    try:
-        user = request.user.id
-        youtubeUrl = "https://"  #change later
-        twitterUrl = "https://"  #change later
-        instagramUrl = ""        #change later
-
-        user_info,_ = PostsUser.objects.get_or_create(userID=user)
         user_info.youtubeLink = youtubeUrl
         user_info.twitterLink = twitterUrl 
         user_info.instagramLink = instagramUrl
@@ -171,7 +146,7 @@ def changeUrl(request):
 
     except Exception as e:
         return Response({e},status=status.HTTP_400_BAD_REQUEST)
-    return Response({"youtube":youtubeUrl,"twitter":twitterUrl,"instagram":instagramUrl},status=status.HTTP_200_OK)
+    return Response({"youtube":youtubeUrl,"twitter":twitterUrl,"instagram":instagramUrl,"Bio":bio},status=status.HTTP_200_OK)
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny])
@@ -196,8 +171,19 @@ def createPost(request):
 
     try:
         userData = PostsUser.objects.get(userID = userid)
-        userData.postsMade += 1
-        userData.postsMadeToday += 1
+        milestone_1 = Challenges.objects.get(postsNeeded=35)
+        Inuse_challenges = Challenges.objects.filter(inUse=True)
+
+        for i in Inuse_challenges:
+            if i.postsNeeded < 10 and i.savesNeeded < 10:
+                todays_challenge = i        
+        
+        if userData.postsMadeToday != todays_challenge.postsNeeded:
+            userData.postsMadeToday += 1
+            
+        elif userData.postsMade != milestone_1.postsNeeded:
+            userData.postsMade += 1
+
         userData.save()
         dailyReset()
     except:
@@ -238,10 +224,7 @@ def getUser(request):
 def changeAvatar(request):
     user = request.user.id
     user_info,_ = PostsUser.objects.get_or_create(userID = user)
-    profile_name = request.get['avatar'] # this correct? 
-
-    daisy = Stickers.objects.get(stickersName="daisy")
-    user_info.unlockedAvatars.add(daisy)
+    profile_name = request.data['avatar'] # this correct? 
 
     unlocked_avatars = user_info.unlockedAvatars.all()
     unlocked_avatars_list = []
@@ -348,33 +331,37 @@ def getChallenges(request):
 def checkWinner(request):
 
     user = request.user
-    user_data = PostsUser.objects.get_or_create(userID=user)
+    user_data,_ = PostsUser.objects.get_or_create(userID=user)
 
     Inuse_challenges = Challenges.objects.filter(inUse=True)
     for i in Inuse_challenges:
         if i.postsNeeded < 10 and i.savesNeeded < 10:
             todays_challenge = i
 
-    milestone_1 = Challenges.objects.get(coinsRewarded =250)
-    milestone_2 = Challenges.objects.get(coinsRewarded =250) 
+    milestone_1 = Challenges.objects.get(postsNeeded=35)
+    milestone_2 = Challenges.objects.get(savesNeeded=35) 
 
     # Daily Challenges
+    message = {}
     if todays_challenge.savesNeeded and user_data.postsSavedToday == 5:
         user_data.coins += todays_challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
+        message["Message"] = f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"
     
     if todays_challenge.postsNeeded and user_data.postsMadeToday == 5:
         user_data.coins += todays_challenge.coinsRewarded
-        return Response({"Message": f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"}, status=status.HTTP_200_OK)
+        message["Message"] = f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"
     
     # Milestone Challenges
-    if milestone_1.postsNeeded or milestone_1.savesNeeded == user_data.postsMade or user_data.postsSaved:
+    if milestone_1.postsNeeded == user_data.postsMade:
         user_data.coins += milestone_1.coinsRewarded
-        return Response({"Message": f"You completed a Milestone! Your reward is {milestone_1.coinsRewarded}"})
-    if milestone_2.postsNeeded or milestone_2.savesNeeded == user_data.postsMade or user_data.postsSaved:
+        message["Message"] = f"You completed a Milestone challenge! Your reward is {milestone_1.coinsRewarded}"
+    if milestone_2.savesNeeded == user_data.postsSaved:
         user_data.coins += milestone_2.coinsRewarded
-        return Response({"Message": f"You completed a Milestone! Your reward is {milestone_2.coinsRewarded}"})
-
+        message["Message"] = f"You completed a Milestone challenge! Your reward is {milestone_2.coinsRewarded}"
+        
+    user_data.save()
+  
+    return Response(message,status=status.HTTP_200_OK)
     
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
@@ -474,9 +461,21 @@ def addCollection(request):
     # Add the post to the user's collection
     posts_user.postID.add(post)
     try:
-        posts_user.postsSaved += 1
-        posts_user.postsSavedToday += 1
+        
+        milestone_2 = Challenges.objects.get(savesNeeded=35)
+        Inuse_challenges = Challenges.objects.filter(inUse=True)
+        for i in Inuse_challenges:
+            if i.postsNeeded < 10 and i.savesNeeded < 10:
+                todays_challenge = i        
+        
+        if posts_user.postsSavedToday != todays_challenge.savesNeeded:
+            posts_user.postsSavedToday += 1
+
+        elif posts_user.postsSaved != milestone_2.savesNeeded:
+            posts_user.postsSaved += 1
+
         posts_user.save()
+        dailyReset()
     except:
         print("Failed to get user data")
     dailyReset()
