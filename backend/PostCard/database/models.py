@@ -48,7 +48,7 @@ class PostsUser(models.Model):
     coins = models.PositiveIntegerField(default=0)
     postID = models.ManyToManyField(Posts,blank=True)
     unlockedAvatars = models.ManyToManyField(Stickers, blank=True ,related_name="unlocked")
-    avatarInUse = models.ForeignKey(Stickers,related_name="profile_pic", on_delete = models.CASCADE, null = True)
+    avatarInUse = models.ForeignKey(Stickers,related_name="profile_pic", on_delete = models.CASCADE, null = True, default="default")
     stepsTaken = models.PositiveBigIntegerField(default=0)
     postsMade = models.PositiveIntegerField(default=0)
     postsSaved = models.PositiveIntegerField(default=0)

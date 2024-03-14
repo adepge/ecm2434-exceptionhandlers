@@ -96,12 +96,8 @@ class ChallengesDetail(generics.RetrieveAPIView):
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
 def createObjects(request):
     try:
-        user = request.user.id
-        user_info,_ = PostsUser.objects.get_or_create(userID = user)
-        if user_info.unlockedAvatars.exists() == False:
-            user_info.unlockedAvatars.add(Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL"))
-            user_info.save()
-
+        #create a null sticker
+        Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL")
         # Creating all challenges 
         #Daily
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
