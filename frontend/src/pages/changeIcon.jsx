@@ -73,19 +73,29 @@ function ChangeIcon() {
             window.location.href = '/login';
         }
 
-        const response = await axios.post(
-            "http://127.0.0.1:8000/api/changeAvatar/",
-            {
-                avatar: avatar
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Token ${token}`,
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/changeAvatar/",
+                {
+                    avatar: avatar
                 },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`,
+                    },
+                }
+            );
+            location.reload();
+            console.log(response)
+        } catch (error) {
+            console.error("Error occurred:", error);
+            if (error.response) {
+                alert("internal server error")
+            } else {
+                alert("cannot connect to server")
             }
-        );
-        console.log(response)
+        }
     }
 
 
