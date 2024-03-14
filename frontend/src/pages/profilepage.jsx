@@ -18,6 +18,8 @@ function ProfilePage() {
     setUserName();
   }, []);
 
+  console.log(user)
+
   return (
 
     <div id="displayProfile">
@@ -33,16 +35,16 @@ function ProfilePage() {
               <hr></hr>
             </div>
             <div id="socials">
-              <a id="youtube" className="social-icon" href={user.youtube}>
+              <a id="youtube" className="social-icon" href={"https://"+user.youtube}>
                 <img src={ytIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Youtube
               </a>
-              <a href={user.instagram} id="instagram" className="social-icon">
+              <a href={"https://"+user.instagram} id="instagram" className="social-icon">
                 <img src={instaIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Instagram
               </a>
               <a id="twitter" className="social-icon" href={user.twitter}>
-                <img src={twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
+                <img src={"https://"+twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Twitter
               </a>
             </div>
