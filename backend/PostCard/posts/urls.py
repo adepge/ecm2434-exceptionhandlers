@@ -38,10 +38,9 @@ urlpatterns = [
     path('changeAvatar/',changeAvatar,name="change-avatar"),
     path('getAllAvatars/',getAllAvatars,name="get-all-avatars"),
     path('createObjects/',createObjects,name="create-Objects"),
-    path('checkWinner/',checkWinner, name='get-challenges'),
     path('purchase/',purchase, name ="purchase"),
-
     path('changeBio/',changeBio,name="change-bio"),
+    path('createObjects/',createObjects,name="create-objects"),
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
