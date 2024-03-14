@@ -7,8 +7,15 @@ import usericon from "../assets/header/user-icon.jpg";
 
 function editProfile() {
 
-    const [user, setUser] = useState()
+    const [user, setUser] = useState({})
     const [profilePicture, setProfilePicture] = useState("")
+    const [profileData, setProfileData] = useState({
+        bio: '',
+        youtube: '',
+        instagram: '',
+        twitter: ''
+
+    })
 
     useEffect(() => {
         const getIcon = async () => {
@@ -30,12 +37,20 @@ function editProfile() {
         }
         getProfile().then((user) => {
             setUser(user)
+            setProfileData({
+                bio: user.Bio,
+                youtube: user.youtube,
+                instagram: user.instagram,
+                twitter: user.twitter
+            })
+
         });
     }, []);
 
-    console.log(user)
-
-
+    const handleChange = (e) => {
+        setProfileData({ ...profileData, [e.target.name]: e.target.value })
+        console.log(profileData)
+    }
 
     return (
         <div id='editProfile'>
@@ -52,15 +67,19 @@ function editProfile() {
                         <form>
                             <div className='field'>
                                 <label for='name'>Bio</label>
-                                <input type='text' id='bio' name='bio' label="hello" />
+                                <input type='text' id='bio' name='bio' value={profileData.bio} onChange={handleChange} />
                             </div>
                             <div className='field'>
                                 <label for='name'>Youtube</label>
-                                <input id='bio' name='bio' />
+                                <input id='youtube' name='youtube' value={profileData.youtube} onChange={handleChange} />
                             </div>
                             <div className='field'>
                                 <label for='name'>Instagram</label>
-                                <input type='text' id='website' name='website' />
+                                <input type='text' id='instagram' name='instagram' value={profileData.instagram} onChange={handleChange} />
+                            </div>
+                            <div className='field'>
+                                <label for='name'>Twitter</label>
+                                <input type='text' id='twitter' name='twitter' value={profileData.twitter} onChange={handleChange} />
                             </div>
                             <button type='submit'>Save</button>
                         </form>

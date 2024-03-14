@@ -238,10 +238,8 @@ def getUser(request):
 def changeAvatar(request):
     user = request.user.id
     user_info,_ = PostsUser.objects.get_or_create(userID = user)
-    profile_name = request.get['avatar'] # this correct? 
-
-    daisy = Stickers.objects.get(stickersName="daisy")
-    user_info.unlockedAvatars.add(daisy)
+    print(request.data['avatar'])
+    profile_name = request.data['avatar'] # this correct? 
 
     unlocked_avatars = user_info.unlockedAvatars.all()
     unlocked_avatars_list = []

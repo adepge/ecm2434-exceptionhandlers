@@ -74,6 +74,7 @@ function ChangeIcon() {
             window.location.href = '/login';
         }
 
+        console.log(avatar)
         try {
             const response = await axios.post(
                 "http://127.0.0.1:8000/api/changeAvatar/",
@@ -87,7 +88,7 @@ function ChangeIcon() {
                     },
                 }
             );
-            // location.reload();
+            location.reload();
             console.log(response)
         } catch (error) {
             console.error("Error occurred:", error);
