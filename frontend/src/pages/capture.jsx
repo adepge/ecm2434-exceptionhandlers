@@ -8,15 +8,18 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Geolocation from "../features/Geolocation";
 import LoadingScreen from "../features/loadingScreen";
-
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
 import Polaroid from "../features/polaroid";
 
+// function for set cookies
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
 
+// the page
 function Capture() {
+
+  // check if the user have logged in if so capture
   useEffect(() => {
     async function check() {
       await CheckLogin();
@@ -25,13 +28,17 @@ function Capture() {
     check();
   }, []);
 
+  // Hook to redirect user programmatically.
   const navigate = useNavigate();
 
+  // State management for geolocation and location tags using zustand stores.
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
 
+
+  // Local state management for UI interactions and data handling.
   const [lastPosition, setLastPosition] = useState({ lat: 0, lng: 0 });
   const inputRef = useRef(null);
   const [previewImg, setPreviewImg] = useState("");
@@ -40,6 +47,7 @@ function Capture() {
   const [caption, setCaption] = useState("");
   const [captionError, setCaptionError] = useState("");
 
+  // Handle caption input changes and enforce character limit.
   const handleChange = (e) => {
     const value = e.target.value;
     if (value.length > 255) {
@@ -52,6 +60,7 @@ function Capture() {
     setCaption(value);
   };
 
+  // On component mount, check login status and initialize capture functionality.
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition((position) => {
@@ -60,6 +69,7 @@ function Capture() {
     }
   }, []);
 
+  // Update location tag based on position change with a certain threshold.
   useEffect(() => {
     if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
       Geolocation(position.lat, position.lng, setLocationTag);
@@ -67,13 +77,17 @@ function Capture() {
     }
   }, [position]);
 
+  // Handle form submission for creating a new post.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // The caption should not be more than 255 charaters
     if (caption.length > 255) {
       return;
     }
     setIsLoading(true);
 
+    // post the geolocation data
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/geolocations/",
@@ -97,6 +111,7 @@ function Capture() {
       formData.append("caption", caption);
       formData.append("geolocID", geolocID);
 
+      // post the post data
       try {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/createPost/",
@@ -120,6 +135,7 @@ function Capture() {
     setIsLoading(false);
   };
 
+  // called when there's a network error
   const handleNetworkError = (error) => {
     console.error("Error occurred:", error);
     if (error.response) {
@@ -136,10 +152,12 @@ function Capture() {
   };
 
 
+  // open the user's camera
   const capture = () => {
     inputRef.current.click();
   };
 
+  // get the captured file
   const handleCapture = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -150,6 +168,7 @@ function Capture() {
 
   return (
     <>
+    {/* the loading screen for posting */}
       <LoadingScreen active={isLoading} />
       <div id="capturePage" className="page active">
         <input
@@ -167,11 +186,6 @@ function Capture() {
               <div id="spacer">
                 <div id="contents">
                   {previewImg ? (
-                    // <img
-                    //   src={previewImg}
-                    //   alt="Preview Image"
-                    //   style={{ maxWidth: "100%", height: "auto" }}
-                    // />
                     <Polaroid
                       src={previewImg}
                       caption={caption}

@@ -8,17 +8,20 @@ const cookies = new Cookies();
 
 function LoginPage() {
   const navigate = useNavigate();
-
+  
+  // the returned errors
   const [errors, setErrors] = useState({
     username: "",
     password: "",
   });
 
+  // the user details
   const [userData, setUserData] = useState({
     username: "",
     password: "",
   });
 
+  // get text from the forms to the data
   const handleChange = (e) => {
     setUserData({
       ...userData,
@@ -26,9 +29,9 @@ function LoginPage() {
     });
   };
 
+  // submit the form
   const hansleSubmit = async (e) => {
     e.preventDefault();
-    console.log(userData);
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login/",
@@ -41,7 +44,6 @@ function LoginPage() {
     catch (error) {
       // Display the error message from the server
       if (error.response) {
-        console.log(error.response.data.username)
         if (error.response.data.username) {
           setErrors({
             ...errors,

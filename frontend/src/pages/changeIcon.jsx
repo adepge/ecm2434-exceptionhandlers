@@ -33,13 +33,11 @@ function ChangeIcon() {
 
     useEffect(() => {
         const token = cookies.get('token');
-        if (token === undefined) {
-            window.location.href = '/login';
-        }
 
+        // get all the unlocked avatars
         const getIcons = async () => {
+            // get all the locked avatar and set them
             try {
-                // Update the API URL as per your configuration
                 const response = await axios.get(
                     "http://127.0.0.1:8000/api/getAllAvatars/"
                     ,
@@ -55,26 +53,18 @@ function ChangeIcon() {
                 console.error("Error occurred:", error);
                 if (error.response) {
                     alert("internal server error")
-                    console.log("Response data:", error.response.data);
-                    console.log("Response status:", error.response.status);
-                    console.log("Response headers:", error.response.headers);
                 }
             }
         }
-
         getIcons().then((data) => {
             setAvatars(data);
         });
 
     }, []);
 
+    // set the user's icon
     async function setIcon(avatar) {
         const token = cookies.get('token');
-        if (token === undefined) {
-            window.location.href = '/login';
-        }
-
-        console.log(avatar)
         try {
             const response = await axios.post(
                 "http://127.0.0.1:8000/api/changeAvatar/",
@@ -89,7 +79,6 @@ function ChangeIcon() {
                 }
             );
             location.reload();
-            console.log(response)
         } catch (error) {
             console.error("Error occurred:", error);
             if (error.response) {
@@ -99,9 +88,6 @@ function ChangeIcon() {
             }
         }
     }
-
-
-
 
     return (
         <div id="changeIcon">
@@ -121,7 +107,6 @@ function ChangeIcon() {
                             <div style={{ width: '85px' }} />
                             <div id={"forth"} style={{ width: '85px' }} />
                             {
-                                // avatarsList[0]
                                 avatars.map((avatar) => (
                                     <div className='selection-item' key={avatar.name} onClick={() => { setIcon(avatar.name) }}>
                                         <img src={avatar.path === "NULL" ? usericon : avatar.path} alt='cat' width={"85px"} height={"85px"} style={{ border: "none", borderRadius: "100%" }} />

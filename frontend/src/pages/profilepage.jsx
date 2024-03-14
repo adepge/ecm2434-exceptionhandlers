@@ -12,13 +12,13 @@ function ProfilePage() {
   const [user, setUser] = useState({});
   async function setUserName() {
     let response = await CheckLogin()
-    console.log(response.data)
     setUser(response.data)
   }
-
   useEffect(() => {
     setUserName();
   }, []);
+
+  console.log(user)
 
   return (
 
@@ -35,16 +35,16 @@ function ProfilePage() {
               <hr></hr>
             </div>
             <div id="socials">
-              <a id="youtube" className="social-icon" href="https://www.youtube.com/channel/UCFbNIlppjAuEX4v1zgC7LzQ">
+              <a id="youtube" className="social-icon" href={"https://"+user.youtube}>
                 <img src={ytIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Youtube
               </a>
-              <a href="https://www.instagram.com/" id="instagram" className="social-icon">
+              <a href={"https://"+user.instagram} id="instagram" className="social-icon">
                 <img src={instaIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Instagram
               </a>
-              <a id="twitter" className="social-icon" >
-                <img src={twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
+              <a id="twitter" className="social-icon" href={user.twitter}>
+                <img src={"https://"+twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Twitter
               </a>
             </div>

@@ -4,9 +4,14 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CheckLogin from '../features/CheckLogin';
 import usericon from "../assets/header/user-icon.jpg";
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies()
 
 function editProfile() {
 
+    // the local variables
     const [user, setUser] = useState({})
     const [profilePicture, setProfilePicture] = useState("")
     const [profileData, setProfileData] = useState({
@@ -14,9 +19,9 @@ function editProfile() {
         youtube: '',
         instagram: '',
         twitter: ''
-
     })
 
+    // get the user's icon and get their profile
     useEffect(() => {
         const getIcon = async () => {
             let response = await CheckLogin();
@@ -29,21 +34,12 @@ function editProfile() {
             } else {
                 setProfilePicture(usericon)
             }
-        });
-
-        const getProfile = async () => {
-            let response = await CheckLogin();
-            return response.data
-        }
-        getProfile().then((user) => {
-            setUser(user)
             setProfileData({
                 bio: user.Bio,
                 youtube: user.youtube,
                 instagram: user.instagram,
                 twitter: user.twitter
             })
-
         });
     }, []);
 
@@ -51,6 +47,34 @@ function editProfile() {
         setProfileData({ ...profileData, [e.target.name]: e.target.value })
         console.log(profileData)
     }
+
+    
+
+  const handleSubmit = async (e) => {
+    const token = cookies.get('token');
+    e.preventDefault();
+    try {
+      // Update the API URL as per your configuration
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/changeBio/"
+        , profileData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${token}`,
+          },
+        }
+      );
+      location.reload()
+    } catch (error) {
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        console.log("Response status:", error.response.status);
+        console.log("Response headers:", error.response.headers);
+      }
+    }
+  };
 
     return (
         <div id='editProfile'>
@@ -81,7 +105,7 @@ function editProfile() {
                                 <label for='name'>Twitter</label>
                                 <input type='text' id='twitter' name='twitter' value={profileData.twitter} onChange={handleChange} />
                             </div>
-                            <button type='submit'>Save</button>
+                            <button onClick={handleSubmit} type='submit'>Save</button>
                         </form>
                     </div>
                 </div>

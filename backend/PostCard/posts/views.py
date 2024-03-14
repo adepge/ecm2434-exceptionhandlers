@@ -96,8 +96,9 @@ class ChallengesDetail(generics.RetrieveAPIView):
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
 def createObjects(request):
     try:
-        #Creating all challenges 
-            
+        #create a null sticker
+        Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL")
+        # Creating all challenges 
         #Daily
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
         y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
