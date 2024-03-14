@@ -55,10 +55,10 @@ class PostsUser(models.Model):
     stepsTakenToday = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(30000)])
     postsMadeToday = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(48)])
     postsSavedToday = models.PositiveSmallIntegerField(default=0)
-    youtubeLink = models.CharField(max_length = 255, null = True)
-    twitterLink = models.CharField(max_length = 255, null = True)
-    instagramLink = models.CharField(max_length = 255, null = True)
-    bio = models.CharField(max_length = 255, null = True)
+    youtubeLink = models.CharField(max_length = 255, default="",blank = True)
+    twitterLink = models.CharField(max_length = 255, default="",blank = True)
+    instagramLink = models.CharField(max_length = 255,default="", blank = True)
+    bio = models.CharField(max_length = 255, default="",blank = True)
 
 
 class Challenges(models.Model):
