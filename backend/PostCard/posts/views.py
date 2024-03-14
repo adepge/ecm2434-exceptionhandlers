@@ -126,6 +126,19 @@ def createObjects(request):
 
     return Response({"Database set up"},status=status.HTTP_201_CREATED)
 
+@api_view(['POST','Get']) 
+@permission_classes([AllowAny])
+def profileInformation(request):
+    try:
+        user = request.user.id
+        user_info,_= PostsUser.objects.get_or_create(userID=user)
+
+    #if user not logged in
+    except Exception as e:
+        return Response({e},status=status.HTTP_401_UNAUTHORIZED)
+    # else return all profile info 
+    return Response({"Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK)    
+
 
 @api_view(['POST','Get']) 
 @permission_classes([AllowAny])
@@ -216,7 +229,8 @@ def getUser(request):
         user_information.avatarInUse = sticker_default
         user_information.save()
 
-    return Response({"username":username,"coins":user_information.coins,"profilePicture": user_information.avatarInUse.fileName},status=status.HTTP_200_OK)  # Successful user creation
+    return Response({"username":username,"coins":user_information.coins,"profilePicture": user_information.avatarInUse.fileName,
+                     "Bio":user_information.bio,"youtube":user_information.youtubeLink,"instagram":user_information.instagramLink,"twitter":user_information.twitterLink},status=status.HTTP_200_OK) 
 
 
 @api_view(['POST','GET'])
