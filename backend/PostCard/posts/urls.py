@@ -41,7 +41,7 @@ urlpatterns = [
     path('purchase/',purchase, name ="purchase"),
     path('changeBio/',changeBio,name="change-bio"),
     path('createObjects/',createObjects,name="create-objects"),
-
+    
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -170,14 +170,19 @@ def createPost(request):
 
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
-                todays_challenge = i        
-        
+                todays_challenge = i 
+        print(milestone_1.postsNeeded)
+        print(milestone_1.savesNeeded)
+        print("--------------------------")
+        print(userData.postsMadeToday)
+        print(todays_challenge.postsNeeded)
+
         if userData.postsMadeToday != todays_challenge.postsNeeded:
             userData.postsMadeToday += 1
             userData.save()
             checkWinner(userData,todays_challenge)
 
-        elif userData.postsMade != milestone_1.postsNeeded:
+        if userData.postsMade != milestone_1.postsNeeded:
             userData.postsMade += 1
             userData.save()
             checkWinner(userData,milestone_1)
@@ -203,7 +208,7 @@ def getUser(request):
         user = User.objects.get(id=request.user.id)
         user_info, _ = PostsUser.objects.get_or_create(userID=user)
         username = user.username
-       
+
         if user_info.unlockedAvatars.exists() == False:
             user_info.unlockedAvatars.add(Stickers.objects.get(stickersName="default"))
             user_info.avatarInUse = user_info.unlockedAvatars.get(stickersName="default")
