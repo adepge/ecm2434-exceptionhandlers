@@ -1,0 +1,31 @@
+.terms-conditions {
+    color: black;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    padding: 20px 8vw;
+}
+
+.terms-conditions h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.terms-conditions h2 {
+    font-size: 1.2rem;
+}
+
+.terms-conditions a {
+    color: black;
+}
+
+.terms-conditions .go-back {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.terms-conditions .go-back img {
+    margin-right: 2px;
+}
+
