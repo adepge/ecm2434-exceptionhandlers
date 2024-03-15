@@ -18,10 +18,10 @@ function Test() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/changeProfile/"
+        "http://127.0.0.1:8000/api/getUser/"
         , {
-          bio: "changedBio",
-          youtube: "changedYoutube",
+          bio: "I love django :3",
+          youtube: "https://www.youtube.com/",
           twitter: "changedTwitter",
           instagram: "changedInstagram",
         },

@@ -13,6 +13,8 @@ import Test from "./pages/test";
 import Challenge from "./pages/challenge";
 import EditProfile from "./pages/editProfile";
 import ChangeIcon from "./pages/changeIcon";
+import TermsConditions from "./pages/terms-pages/termsConditions";
+import PrivacyPolicy from "./pages/terms-pages/privacyPolicy";
 
 function App() {
 
@@ -32,7 +34,8 @@ function App() {
         <Route path="/challenge" element={<Challenge />} />
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/changeIcon" element={<ChangeIcon />} />
-
+        <Route path="/terms-and-conditions" element={<TermsConditions/>} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
       </Routes>
       <Footer />
     </>

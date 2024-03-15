@@ -11,6 +11,7 @@ const cookies = new Cookies()
 
 function editProfile() {
 
+    // the local variables
     const [user, setUser] = useState({})
     const [profilePicture, setProfilePicture] = useState("")
     const [profileData, setProfileData] = useState({
@@ -20,6 +21,7 @@ function editProfile() {
         twitter: ''
     })
 
+    // get the user's icon and get their profile
     useEffect(() => {
         const getIcon = async () => {
             let response = await CheckLogin();
@@ -32,21 +34,12 @@ function editProfile() {
             } else {
                 setProfilePicture(usericon)
             }
-        });
-
-        const getProfile = async () => {
-            let response = await CheckLogin();
-            return response.data
-        }
-        getProfile().then((user) => {
-            setUser(user)
             setProfileData({
                 bio: user.Bio,
                 youtube: user.youtube,
                 instagram: user.instagram,
                 twitter: user.twitter
             })
-
         });
     }, []);
 
@@ -72,7 +65,7 @@ function editProfile() {
           },
         }
       );
-      console.log(response.data); // Assuming response.data contains the username
+      location.reload()
     } catch (error) {
       console.error("Error occurred:", error);
       if (error.response) {
@@ -112,7 +105,7 @@ function editProfile() {
                                 <label for='name'>Twitter</label>
                                 <input type='text' id='twitter' name='twitter' value={profileData.twitter} onChange={handleChange} />
                             </div>
-                            <button onClick={handleSubmit}>Save</button>
+                            <button onClick={handleSubmit} type='submit'>Save</button>
                         </form>
                     </div>
                 </div>

@@ -13,19 +13,19 @@ const cookies = new Cookies();
 
 function Challenge() {
 
+    // Local state management for UI interactions and data handling.
     const [avatars, setAvatars] = useState([]);
     const [challenges, setChallenges] = useState([]);
+    const [token, setToken] = useState(cookies.get('token'))
 
+    // check if the user have logged in and setup everyting
     useEffect(() => {
-        const token = cookies.get('token');
-        if (token === undefined) {
-            window.location.href = '/login';
-        }
+
+        // check if the user has logged in and get the token
         CheckLogin();
 
+        // get all the avatars
         const getAvatars = async () => {
-
-
             const response = await axios.get(
                 "http://127.0.0.1:8000/api/getAvatars/"
                 , {
@@ -37,11 +37,11 @@ function Challenge() {
             )
             return response.data
         }
-
         getAvatars().then((avatars) => {
             setAvatars(avatars);
         });
 
+        // get all the challenges
         const getChallenges = async () => {
             const response = await axios.get(
                 "http://127.0.0.1:8000/api/getChallenges/"
@@ -54,21 +54,13 @@ function Challenge() {
             )
             return response.data
         }
-
         getChallenges().then((challenges) => {
             setChallenges(challenges);
-            console.log(challenges)
         });
     }, []);
 
-
-
+    // function to purchase a avatar given the avatar name
     async function purchase(StickersName) {
-
-        const token = cookies.get('token');
-        if (token === undefined) {
-            window.location.href = '/login';
-        }
 
         try {
             const response = await axios.post(
@@ -83,6 +75,8 @@ function Challenge() {
                     },
                 }
             )
+
+            // reload the page after puchase
             location.reload();
         } catch (error) {
             if (error.response.data.Message) {
@@ -97,6 +91,7 @@ function Challenge() {
 
     return (
         <>
+            {/* display if theres an error(unused) */}
             <ErrorBox />
             <div id='challenge'>
                 <div id='spacer'>
@@ -114,7 +109,6 @@ function Challenge() {
                                         </div>
                                         <div className='progress-bar'>
                                             <div className='progress'>
-                                                {console.log(eval(challenges.Daily))}
                                                 <div className='progress-bar-fill' style={{ width: eval(challenges.Daily) * 100 + "%" }}></div>
                                             </div>
                                             <div>{challenges.Daily}</div>

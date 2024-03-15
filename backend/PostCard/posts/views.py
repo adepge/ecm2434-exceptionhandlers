@@ -12,7 +12,8 @@ from django.conf import settings
 from django.urls import path
 import os
 from django.db import IntegrityError
-
+from .checkWinner import checkWinner
+from django.contrib.auth.models import User
 
 
 
@@ -96,20 +97,15 @@ class ChallengesDetail(generics.RetrieveAPIView):
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
 def createObjects(request):
     try:
-
-        user = request.user.id
-        user_info,_ = PostsUser.objects.get_or_create(userID = user)
-        if user_info.unlockedAvatars.exists() == False:
-            user_info.unlockedAvatars.add(Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL"))
-            user_info.save()
-
+        #create a null sticker
+        Stickers.objects.get_or_create(stickersName="default",stickerPrice =0,fileName="NULL")
         # Creating all challenges 
         #Daily
-        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
-        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
+        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts",type="daily")
+        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts",type="daily")
         #Milestone
-        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
-        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
+        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts",type="milestone")
+        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts",type="milestone")
         
         base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
         avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
@@ -121,6 +117,7 @@ def createObjects(request):
             x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
             if y == False: # sticker does not exist
                 x.save()
+
     except Exception as e:
         return Response({e},status=status.HTTP_404_NOT_FOUND)
 
@@ -134,8 +131,8 @@ def changeBio(request):
         bio = request.data['bio']
         youtubeUrl = request.data['youtube']
         twitterUrl = request.data['twitter']
-        instagramUrl = request.data['instagram']       
-    
+        instagramUrl = request.data['instagram']  
+
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
         user_info.bio = bio
         user_info.youtubeLink = youtubeUrl
@@ -164,9 +161,6 @@ def createPost(request):
     #If its larger than 100 than get upload the last 30 chars to avoid errors
     if filename_length > 100:
         request.FILES['image'].name = filename[-30:] 
-
-    # Create a mutable copy of request.data
-    #data = request.data.copy()
     request.data['userid'] = userid  # Add 'userid' key
 
     try:
@@ -176,15 +170,23 @@ def createPost(request):
 
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
-                todays_challenge = i        
-        
+                todays_challenge = i 
+        print(milestone_1.postsNeeded)
+        print(milestone_1.savesNeeded)
+        print("--------------------------")
+        print(userData.postsMadeToday)
+        print(todays_challenge.postsNeeded)
+
         if userData.postsMadeToday != todays_challenge.postsNeeded:
             userData.postsMadeToday += 1
-            
-        elif userData.postsMade != milestone_1.postsNeeded:
-            userData.postsMade += 1
+            userData.save()
+            checkWinner(userData,todays_challenge)
 
-        userData.save()
+        if userData.postsMade != milestone_1.postsNeeded:
+            userData.postsMade += 1
+            userData.save()
+            checkWinner(userData,milestone_1)
+
         dailyReset()
     except:
         print("Failed to get user data")
@@ -203,21 +205,22 @@ def createPost(request):
 def getUser(request):
     try:
         dailyReset()
-        user = request.user
-        user_information,_ = PostsUser.objects.get_or_create(userID=user)
-        username = request.user.username
+        user = User.objects.get(id=request.user.id)
+        user_info, _ = PostsUser.objects.get_or_create(userID=user)
+        username = user.username
+
+        if user_info.unlockedAvatars.exists() == False:
+            user_info.unlockedAvatars.add(Stickers.objects.get(stickersName="default"))
+            user_info.avatarInUse = user_info.unlockedAvatars.get(stickersName="default")
+            user_info.save()
+
     except Exception as e:
+        print(e)
         # if user is not logged in, then raise an error
-        return Response({"Message":"error"},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Message"},status=status.HTTP_400_BAD_REQUEST)
     
-    if user_information.avatarInUse == None:
-        sticker_default = Stickers.objects.get(stickersName="default")
-        user_information.avatarInUse = sticker_default
-        user_information.save()
-
-    return Response({"username":username,"coins":user_information.coins,"profilePicture": user_information.avatarInUse.fileName,
-                     "Bio":user_information.bio,"youtube":user_information.youtubeLink,"instagram":user_information.instagramLink,"twitter":user_information.twitterLink},status=status.HTTP_200_OK) 
-
+    return Response({"username":username,"coins":user_info.coins,"profilePicture": user_info.avatarInUse.fileName,
+                     "Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK) 
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
@@ -230,7 +233,6 @@ def changeAvatar(request):
     unlocked_avatars_list = []
     for avatars in unlocked_avatars:
         unlocked_avatars_list.append(avatars.stickersName)
-    print(unlocked_avatars_list)
 
     if profile_name not in unlocked_avatars_list:
         return Response({"You have not unlocked this avatar"},status=status.HTTP_401_UNAUTHORIZED)
@@ -239,7 +241,6 @@ def changeAvatar(request):
         user_info.avatarInUse = profile_pic
         user_info.save()
 
-        print(user_info.avatarInUse.stickersName)
         
         return Response({"you successfully changed your profile! Your current profile is": user_info.avatarInUse.fileName, "Avatar name is": user_info.avatarInUse.stickersName},status=status.HTTP_200_OK)
 
@@ -264,7 +265,6 @@ def getAvatars(request):
             if stickers.stickersName not in all_avatars_list:
                 all_stickers_list.append({"name":stickers.stickersName,"price":stickers.stickerPrice,"path":stickers.fileName})
 
-        print(all_stickers_list)
     except Exception as e:
         return Response({e}, status=status.HTTP_400_BAD_REQUEST)
     return Response(all_stickers_list,status=status.HTTP_200_OK)
@@ -322,46 +322,8 @@ def getChallenges(request):
     else:
         all_challenges["Milestone1"] = str(user_info.postsMade)+"/"+str(milestone_1.postsNeeded)
         all_challenges["Milestone2"] = str(user_info.postsSaved)+"/"+str(milestone_2.savesNeeded)
-    print(all_challenges)
     return Response(all_challenges, status=status.HTTP_200_OK)
 
-
-@api_view(['POST' ,'Get']) 
-@permission_classes([AllowAny])
-def checkWinner(request):
-
-    user = request.user
-    user_data,_ = PostsUser.objects.get_or_create(userID=user)
-
-    Inuse_challenges = Challenges.objects.filter(inUse=True)
-    for i in Inuse_challenges:
-        if i.postsNeeded < 10 and i.savesNeeded < 10:
-            todays_challenge = i
-
-    milestone_1 = Challenges.objects.get(postsNeeded=35)
-    milestone_2 = Challenges.objects.get(savesNeeded=35) 
-
-    # Daily Challenges
-    message = {}
-    if todays_challenge.savesNeeded and user_data.postsSavedToday == 5:
-        user_data.coins += todays_challenge.coinsRewarded
-        message["Message"] = f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"
-    
-    if todays_challenge.postsNeeded and user_data.postsMadeToday == 5:
-        user_data.coins += todays_challenge.coinsRewarded
-        message["Message"] = f"You completed today's challenge! Your reward is {todays_challenge.coinsRewarded}"
-    
-    # Milestone Challenges
-    if milestone_1.postsNeeded == user_data.postsMade:
-        user_data.coins += milestone_1.coinsRewarded
-        message["Message"] = f"You completed a Milestone challenge! Your reward is {milestone_1.coinsRewarded}"
-    if milestone_2.savesNeeded == user_data.postsSaved:
-        user_data.coins += milestone_2.coinsRewarded
-        message["Message"] = f"You completed a Milestone challenge! Your reward is {milestone_2.coinsRewarded}"
-        
-    user_data.save()
-  
-    return Response(message,status=status.HTTP_200_OK)
     
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
@@ -387,11 +349,6 @@ def purchase(request):
         except IntegrityError:
             return Response({"Message": "You already own this avatar"}, status=status.HTTP_409_CONFLICT)
         return Response({"Message": f"Successful purchase, you have {user_data.coins}"}, status=status.HTTP_200_OK)
-
-
-
-
-
 
 from django.utils import timezone
 from datetime import timedelta
@@ -457,11 +414,11 @@ def addCollection(request):
 
     # Get or create a PostsUser instance for the user
     posts_user, created = PostsUser.objects.get_or_create(userID=user)
-    
+
     # Add the post to the user's collection
     posts_user.postID.add(post)
     try:
-        
+                
         milestone_2 = Challenges.objects.get(savesNeeded=35)
         Inuse_challenges = Challenges.objects.filter(inUse=True)
         for i in Inuse_challenges:
@@ -470,20 +427,23 @@ def addCollection(request):
         
         if posts_user.postsSavedToday != todays_challenge.savesNeeded:
             posts_user.postsSavedToday += 1
+            posts_user.save()
+            checkWinner(posts_user,todays_challenge)
 
-        elif posts_user.postsSaved != milestone_2.savesNeeded:
+        if posts_user.postsSaved != milestone_2.savesNeeded:
             posts_user.postsSaved += 1
+            posts_user.save()
+            checkWinner(posts_user,milestone_2)
 
-        posts_user.save()
         dailyReset()
     except:
         print("Failed to get user data")
     dailyReset()
     return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
-
 #returns the collection of posts saved by a user
 def getCollections(request):
     try:
@@ -503,3 +463,28 @@ def getCollections(request):
     serializer = PostsSerializer(posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def deletePost(request, pk):
+    try:
+        post = Posts.objects.get(pk=pk)
+        post.delete()
+        return Response({"message": "Post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except Posts.DoesNotExist:
+        return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def deleteUser(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+        # Optionally, delete related data if necessary
+        # Posts.objects.filter(userid=user).delete()
+        # PostsUser.objects.filter(userID=user).delete()
+        # And any other related deletions
+        user.delete()
+        return Response({"message": "User and all related data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)

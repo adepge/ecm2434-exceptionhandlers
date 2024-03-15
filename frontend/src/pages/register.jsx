@@ -1,6 +1,6 @@
 import "./stylesheets/register.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 import Cookies from "universal-cookie";
@@ -12,8 +12,8 @@ const cookies = new Cookies();
 function RegisterPage() {
   const navigate = useNavigate();
 
+  // local state data
   const [isLoading, setIsLoading] = useState(false);
-
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -21,15 +21,14 @@ function RegisterPage() {
     confirmPassword: "",
     checkbox: false,
   });
-
   const [errors, setErrors] = useState({
     username: "",
     email: "",
     password: "",
   });
-
   const [isChecked, setIsChecked] = useState(false);
 
+  // get the text from the form to the 
   const handleCheckBoxChange = () => {
     setUserData({
       ...userData,
@@ -202,9 +201,13 @@ function RegisterPage() {
                         onChange={handleCheckBoxChange}
                         checked={isChecked}
                       />
-                      <span className="checkmark"></span>I agree to Postpal’s
-                      Terms & Conditions and Privacy Policy
+                      <span className="checkmark"></span>
+                      <div className="checkmark-label">
+                      I agree to Postpal’s{' '}
+                      <Link to={"/terms-and-conditions"} className="inline-link">Terms & Conditions</Link>{' '} and {' '}
+                      <Link to={"/privacy-policy"} className="inline-link">Privacy Policy</Link>
                       <br />
+                      </div>
                     </label>
                     {errors.checkbox &&
                       <label className="error">{errors.checkbox}</label>}
