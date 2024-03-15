@@ -35,11 +35,11 @@ function ProfilePage() {
               <hr></hr>
             </div>
             <div id="socials">
-              <a id="youtube" className="social-icon" href={"https://"+user.youtube}>
+              <a id="youtube" className="social-icon" href={user.youtube}>
                 <img src={ytIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Youtube
               </a>
-              <a href={"https://"+user.instagram} id="instagram" className="social-icon">
+              <a href={user.instagram} id="instagram" className="social-icon">
                 <img src={instaIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Instagram
               </a>
