@@ -41,7 +41,10 @@ urlpatterns = [
     path('purchase/',purchase, name ="purchase"),
     path('changeBio/',changeBio,name="change-bio"),
     path('createObjects/',createObjects,name="create-objects"),
-    
+
+    path('deletePost/<int:pk>/', deletePost, name='deletePost'),
+    path('deleteUser/<int:pk>/', deleteUser, name='deleteUser'),
+
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
