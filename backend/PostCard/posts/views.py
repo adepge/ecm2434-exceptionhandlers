@@ -458,3 +458,28 @@ def getCollections(request):
     serializer = PostsSerializer(posts, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def deletePost(request, pk):
+    try:
+        post = Posts.objects.get(pk=pk)
+        post.delete()
+        return Response({"message": "Post deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except Posts.DoesNotExist:
+        return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def deleteUser(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+        # Optionally, delete related data if necessary
+        # Posts.objects.filter(userid=user).delete()
+        # PostsUser.objects.filter(userID=user).delete()
+        # And any other related deletions
+        user.delete()
+        return Response({"message": "User and all related data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
