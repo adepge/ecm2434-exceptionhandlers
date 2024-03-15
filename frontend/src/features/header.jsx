@@ -68,6 +68,7 @@ function Header() {
           },
         }
       );
+     
       cookies.remove('token');
       location.reload();
     } catch (error) {

@@ -14,6 +14,7 @@ import os
 from django.db import IntegrityError
 from .checkWinner import checkWinner
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -200,7 +201,7 @@ def createPost(request):
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed post creation  
 
-@api_view(['POST' ,'Get']) 
+@api_view(['POST' ,'Get'])
 @permission_classes([AllowAny])
 def getUser(request):
     try:
@@ -440,6 +441,7 @@ def addCollection(request):
         print("Failed to get user data")
     dailyReset()
     return Response({"message": "Post added to collection"}, status=status.HTTP_201_CREATED)
+
 
 
 @api_view(['POST'])

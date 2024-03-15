@@ -81,7 +81,7 @@ def UserLoginAuthentication(request):
         # if user does not exist
         return Response({"username": "Invalid credentials"}, status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST']) 
+@api_view(['POST',"GET"]) 
 @permission_classes([AllowAny])
 def UserLogout(request):
     try:
