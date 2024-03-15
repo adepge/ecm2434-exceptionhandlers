@@ -9,6 +9,10 @@ import { Link } from "react-router-dom";
 import CheckLogin from "./CheckLogin";
 import { useLocation } from "react-router-dom";
 import Coin from '../assets/challenge/coin.png';
+import axios from "axios";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function Header() {
   const location = useLocation();
@@ -52,6 +56,31 @@ function Header() {
 
   }, [location.pathname]);
 
+  const logout = async () => {
+    let token = cookies.get('token')
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/logout/",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${cookies.get('token')}`,
+          },
+        }
+      );
+      cookies.remove('token');
+      location.reload();
+    } catch (error) {
+      console.error("Error occurred:", error);
+      if (error.response) {
+        console.log(error.response)
+        alert("internal server error, please try again later")
+      } else {
+        alert("cannot connect to the server")
+      }
+    }
+  }
+
   return (
     <header>
       <div id="header-wrapper">
@@ -81,6 +110,7 @@ function Header() {
             <Link to="/editProfile">
               <li id="menu" ><img src={settings} width={"16px"} height={"16px"} style={{ marginRight: "5px" }} /><div >settings</div></li>
             </Link>
+            <li id="logout" onClick={logout}><img src={settings} width={"16px"} height={"16px"} style={{ marginRight: "5px" }} /><div >logout</div></li>
           </ul></div>
       </div>
     </header >

@@ -86,3 +86,7 @@ header #coin {
 header #coin :first-child {
   margin-right: 2px;
 }
+#logout {
+  display: flex;
+  align-items: center;
+}
