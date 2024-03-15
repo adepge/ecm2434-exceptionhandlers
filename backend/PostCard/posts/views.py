@@ -13,6 +13,7 @@ from django.urls import path
 import os
 from django.db import IntegrityError
 from .checkWinner import checkWinner
+from django.contrib.auth.models import User
 
 
 
@@ -97,7 +98,7 @@ class ChallengesDetail(generics.RetrieveAPIView):
 def createObjects(request):
     try:
         #create a null sticker
-        Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL")
+        Stickers.objects.get_or_create(stickersName="default",stickerPrice =0,fileName="NULL")
         # Creating all challenges 
         #Daily
         x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
@@ -199,17 +200,19 @@ def createPost(request):
 def getUser(request):
     try:
         dailyReset()
-        user = request.user
-        user_info,_ = PostsUser.objects.get_or_create(userID=user)
-        username = request.user.username
+        user = User.objects.get(id=request.user.id)
+        user_info, _ = PostsUser.objects.get_or_create(userID=user)
+        username = user.username
        
         if user_info.unlockedAvatars.exists() == False:
-            user_info.unlockedAvatars.add(Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL"))
+            user_info.unlockedAvatars.add(Stickers.objects.get(stickersName="default"))
             user_info.avatarInUse = user_info.unlockedAvatars.get(stickersName="default")
             user_info.save()
+
     except Exception as e:
+        print(e)
         # if user is not logged in, then raise an error
-        return Response({"Message":e},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Message"},status=status.HTTP_400_BAD_REQUEST)
     
     return Response({"username":username,"coins":user_info.coins,"profilePicture": user_info.avatarInUse.fileName,
                      "Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK) 
