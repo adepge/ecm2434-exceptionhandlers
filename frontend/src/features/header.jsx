@@ -70,7 +70,7 @@ function Header() {
       );
      
       cookies.remove('token');
-      location.reload();
+      window.reload();
     } catch (error) {
       console.error("Error occurred:", error);
       if (error.response) {

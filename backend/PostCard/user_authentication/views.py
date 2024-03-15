@@ -87,7 +87,6 @@ def UserLogout(request):
     try:
         user = request.user
         user_token = Token.objects.get(user=user)
-
         user_token.delete() # Token for given user deleted 
     except:
         return Response({"Message": "User does not exist"}, status=status.HTTP_400_BAD_REQUEST)
