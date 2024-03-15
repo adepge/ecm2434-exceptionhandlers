@@ -101,11 +101,11 @@ def createObjects(request):
         Stickers.objects.get_or_create(stickersName="default",stickerPrice =0,fileName="NULL")
         # Creating all challenges 
         #Daily
-        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts")
-        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts")
+        x,_ = Challenges.objects.get_or_create(postsNeeded = 5, coinsRewarded = 25, challengeDesc="Create 5 posts",type="daily")
+        y,_ = Challenges.objects.get_or_create(savesNeeded = 5, coinsRewarded = 25, challengeDesc ="Save 5 posts",type="daily")
         #Milestone
-        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts")
-        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts")
+        a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts",type="milestone")
+        b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts",type="milestone")
         
         base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
         avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))

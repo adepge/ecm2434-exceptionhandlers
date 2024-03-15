@@ -68,6 +68,7 @@ class Challenges(models.Model):
     postsNeeded = models.PositiveSmallIntegerField(default=0)
     savesNeeded = models.PositiveSmallIntegerField(default=0)
     inUse = models.BooleanField(default=False)
+    type = models.CharField(max_length=20, blank = True, default="noneType")
     coinsRewarded = models.PositiveIntegerField(default=0)
 
 class CurrentDay(models.Model):
