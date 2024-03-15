@@ -200,6 +200,8 @@ def getUser(request):
     try:
         dailyReset()
         user = request.user
+        print(user)
+        print(User.objects.get(username="asdasd"))
         user_info,_ = PostsUser.objects.get_or_create(userID=user)
         username = request.user.username
        
@@ -207,9 +209,10 @@ def getUser(request):
             user_info.unlockedAvatars.add(Stickers.objects.create(stickersName="default",stickerPrice =0,fileName="NULL"))
             user_info.avatarInUse = user_info.unlockedAvatars.get(stickersName="default")
             user_info.save()
+
     except Exception as e:
         # if user is not logged in, then raise an error
-        return Response({"Message":e},status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Message"},status=status.HTTP_400_BAD_REQUEST)
     
     return Response({"username":username,"coins":user_info.coins,"profilePicture": user_info.avatarInUse.fileName,
                      "Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK) 
