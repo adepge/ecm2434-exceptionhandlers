@@ -142,7 +142,7 @@ function FeedPage() {
       />
 
       {/* prompt the user to collect some posts if there is no post */}
-      {!fetchedPosts || noPost && (
+      {(!fetchedPosts || noPost) && (
         <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
           <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
             <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
