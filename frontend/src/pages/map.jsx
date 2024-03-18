@@ -262,10 +262,6 @@ function MapPage() {
     const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
   
     const discoverPins = pins.filter((pin) => {
-      // Exclude any pins that are already in filterPins
-      if (filterPins.includes(pin)) {
-        return false;
-      }
   
       const dLat = deg2rad(pin.position.lat - lat);
       const dLng = deg2rad(pin.position.lng - lng);
@@ -277,7 +273,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance < maxRadius;
+      return distance > minRadius && distance < maxRadius;
     });
     return discoverPins;
   }
