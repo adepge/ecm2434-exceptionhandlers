@@ -86,8 +86,8 @@ function FeedPage() {
       const postList = await getPosts();
       if (postList.length === 0) {
         setNoPost(true);
-        setFetchedPosts(true);
       }
+      setFetchedPosts(true);
 
       let heightDifference = 0;
       const rightPosts = [];
