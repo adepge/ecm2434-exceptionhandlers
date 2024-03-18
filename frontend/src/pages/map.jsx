@@ -258,7 +258,7 @@ function MapPage() {
   }
 
   const discoverPins = (lat, lng, filterPins) => {
-    const minRadius = 0.0010; // Minimum radius of discovery (about 35m from the position)
+    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
     const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
   
     const discoverPins = pins.filter((pin) => {
