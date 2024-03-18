@@ -67,13 +67,14 @@ const Admin = () => {
 
     const deletePost = async (id) => {
         try {
-            const response = await axios.get(
+            const response = await axios.delete(
               `https://api.post-i-tivity.me/api/deletePost/${id}`, {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
               });
             alert(response.data);
+            window.location.reload();
           } catch (error) {
             console.error(error);
           }
@@ -81,13 +82,14 @@ const Admin = () => {
 
     const banAuthor = async (id) => {
         try {
-            const response = await axios.get(
+            const response = await axios.delete(
               `https://api.post-i-tivity.me/api/deleteUser/${id}`, {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
               });
             alert(response.data);
+            window.location.reload();
           } catch (error) {
             console.error(error);
           }
