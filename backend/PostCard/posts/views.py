@@ -153,6 +153,7 @@ def changeBio(request):
 def createPost(request):
     try:
         userid = request.user.id
+        
     except:
         # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
@@ -160,7 +161,7 @@ def createPost(request):
     #Getting the length of image name
     filename = request.FILES['image'].name
     filename_length = len(filename)
-
+    
     #If its larger than 100 than get upload the last 30 chars to avoid errors
     if filename_length > 100:
         request.FILES['image'].name = filename[-30:] 
@@ -196,7 +197,7 @@ def createPost(request):
    
     # Create a serializer instance with the mutable copy of request.data
     serialized = PostsSerializer(data=request.data)
-    
+
     if serialized.is_valid():
         serialized.save()
         return Response({"message":"Post made"},status=status.HTTP_201_CREATED) # Successful post creation
