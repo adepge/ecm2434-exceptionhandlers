@@ -67,7 +67,8 @@
 }
 
 #feed {
-  background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg");
+  background-color: rgb(229, 201, 169);
+  /* background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg"); */
   background-size: 100% auto;
   background-repeat: repeat;
   min-height: 100vh;
