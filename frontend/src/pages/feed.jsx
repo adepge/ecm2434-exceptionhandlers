@@ -170,7 +170,7 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {loadingImage || noPost ? (
+              {noPost ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
