@@ -112,7 +112,7 @@ def createObjects(request):
         b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts",type="milestone")
         
 
-        s3 = boto3.resource(
+        client = boto3.client(
             's3',
             region_name='ams3',
             endpoint_url='https://ams3.digitaloceanspaces.com',
@@ -120,16 +120,19 @@ def createObjects(request):
             aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
         )
 
-        bucket = s3.Bucket('post-i-tivity')
+        # Get bucket
+        bucket = 'post-i-tivity'
 
-        avatar_files = [obj.key for obj in bucket.objects.filter(Prefix='avatars/')]
+        # Get objects in the /avatar folder
+        avatars = client.list_objects(Bucket=bucket, Prefix='avatar/')
 
-        #Loops through all the avatar files and appending it to base
-        for files in avatar_files:
-            index = files.index(".")
+        # Iterate over each object
+        for obj in avatars['Contents']:
+            file_name = obj['Key']
+            index = file_name.index(".")
             # Creating all the needed sticker objects
-            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = files, stickerPrice = 25)
-            if y == False: # sticker does not exist
+            x, y = Stickers.objects.get_or_create(stickersName=file_name[:index], fileName=file_name, stickerPrice=25)
+            if not y:  # sticker does not exist
                 x.save()
 
     except Exception as e:
