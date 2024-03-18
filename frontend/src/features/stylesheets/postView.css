@@ -16,7 +16,7 @@
 
   /* prevent the display from being clipped */
   overflow-y: auto;
-  z-index: 11;
+  z-index: 9;
 
   /* center the wrapper */
   display: flex;
@@ -82,4 +82,5 @@
 
 .post-wrapper .spacer {
   padding: 70px 0;
+  padding-top: 50px;
 }
