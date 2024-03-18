@@ -35,3 +35,10 @@
   max-height: 100%;
   width: auto;
 }
+
+@keyframes shine {
+  to {
+    /* // Move shine from left to right, with offset on the right based on the width of the shine - see background-size */
+    background-position: right -150px top 0;
+  }
+}
