@@ -25,7 +25,6 @@ function FeedPage() {
   const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
 
-  const [loadingImage, setLoadingImage] = useState(true);
   const [progress, setProgress] = useState(0);
 
   // get all the post from database
@@ -115,9 +114,6 @@ function FeedPage() {
 
 
       }
-
-      setLoadingImage(false);
-
     };
 
     processImages();
@@ -172,7 +168,7 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {loadingImage || noPost ? (
+              {noPost ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
@@ -208,7 +204,7 @@ function FeedPage() {
                     {/* map each posts in the column */}
                     {column.map((post) => (
                       <div className={post["id"]} key={post["id"]}>
-                        {!loadingImage && <Polaroid
+                        {<Polaroid
                           src={post["image"]}
                           func={() => {
                             setActive(post);
