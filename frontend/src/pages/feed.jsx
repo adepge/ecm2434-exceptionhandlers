@@ -28,6 +28,8 @@ function FeedPage() {
   const [loadingImage, setLoadingImage] = useState(true);
   const [progress, setProgress] = useState(0);
 
+  const [fetchedPosts, setFetchedPosts] = useState(false);
+
   // get all the post from database
   const getPosts = async () => {
 
@@ -84,6 +86,7 @@ function FeedPage() {
       const postList = await getPosts();
       if (postList.length === 0) {
         setNoPost(true);
+        setFetchedPosts(true);
       }
 
       let heightDifference = 0;
@@ -139,7 +142,7 @@ function FeedPage() {
       />
 
       {/* prompt the user to collect some posts if there is no post */}
-      {noPost && (
+      {!fetchedPosts || noPost && (
         <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
           <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
             <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
