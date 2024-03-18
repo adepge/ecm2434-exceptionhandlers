@@ -27,7 +27,7 @@ function Challenge() {
         // get all the avatars
         const getAvatars = async () => {
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/getAvatars/"
+                "https://api.post-i-tivity.me/api/getAvatars/"
                 , {
                     headers: {
                         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ function Challenge() {
         // get all the challenges
         const getChallenges = async () => {
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/getChallenges/"
+                "https://api.post-i-tivity.me/api/getChallenges/"
                 , {
                     headers: {
                         "Content-Type": "application/json",
@@ -64,7 +64,7 @@ function Challenge() {
 
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/purchase/"
+                "https://api.post-i-tivity.me/api/purchase/"
                 , {
                     "sticker": StickersName
                 },

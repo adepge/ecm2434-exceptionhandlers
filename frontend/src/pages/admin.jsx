@@ -22,7 +22,7 @@ const Admin = () => {
 
     const checkSuperUser = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/isSuperUser/', {
+            const response = await axios.get('https://api.post-i-tivity.me/api/isSuperUser/', {
                 headers: {
                     'Authorization': `Token ${token}`
                 }
@@ -36,7 +36,7 @@ const Admin = () => {
     const getPosts = async () => {
         try {
           const response = await axios.get(
-            "http://127.0.0.1:8000/api/getAllPosts/", {
+            "https://api.post-i-tivity.me/api/getAllPosts/", {
                 headers: {
                     'Authorization': `Token ${token}`
                 }
@@ -52,7 +52,7 @@ const Admin = () => {
     const getUsers = async () => {
         try {
           const response = await axios.get(
-            "http://127.0.0.1:8000/api/getAllUsers/", {
+            "https://api.post-i-tivity.me/api/getAllUsers/", {
                 headers: {
                     'Authorization': `Token ${token}`
                 }
@@ -68,7 +68,7 @@ const Admin = () => {
     const deletePost = async (id) => {
         try {
             const response = await axios.get(
-              `http://127.0.0.1:8000/api/deletePost/${id}`, {
+              `https://api.post-i-tivity.me/api/deletePost/${id}`, {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
@@ -82,7 +82,7 @@ const Admin = () => {
     const banAuthor = async (id) => {
         try {
             const response = await axios.get(
-              `http://127.0.0.1:8000/api/deleteUser/${id}`, {
+              `https://api.post-i-tivity.me/api/deleteUser/${id}`, {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
@@ -154,7 +154,7 @@ const Admin = () => {
                             {!loading && posts.map((post) => {
                                 return (
                                     <div className="dashboard-post" key={post.id} onClick={() => handleDashboardPost(post.id)}>
-                                        <img className="dashboard-post-image" src={"http://127.0.0.1:8000" + post.image} alt={post.caption} />
+                                        <img className="dashboard-post-image" src={post.image} alt={post.caption} />
                                         <div className="dashboard-post-date">
                                             {formatDate(post.datetime)}
                                         </div>

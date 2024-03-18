@@ -15,6 +15,7 @@ from django.db import IntegrityError
 from .checkWinner import checkWinner
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+import boto3
 
 # Custom permission class to check if the user is a superuser
 class IsSuperUser(IsAdminUser):
@@ -110,14 +111,24 @@ def createObjects(request):
         a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts",type="milestone")
         b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts",type="milestone")
         
-        base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
-        avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
+
+        s3 = boto3.resource(
+            's3',
+            region_name='ams3',
+            endpoint_url='https://ams3.digitaloceanspaces.com',
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+        )
+
+        bucket = s3.Bucket('post-i-tivity')
+
+        avatar_files = [obj.key for obj in bucket.objects.filter(Prefix='avatars/')]
 
         #Loops through all the avatar files and appending it to base
         for files in avatar_files:
             index = files.index(".")
             # Creating all the needed sticker objects
-            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
+            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = files, stickerPrice = 25)
             if y == False: # sticker does not exist
                 x.save()
 
