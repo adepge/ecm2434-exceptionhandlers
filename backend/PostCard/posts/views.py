@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from database.models import Geolocation, Posts, Stickers, PostsUser, Challenges
 from PostCard.serializers import PostsSerializer, GeolocationSerializer, StickersSerializer,StickersUser, StickersUserSerializer, PostsUserSerializer, ChallengesSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,10 +16,12 @@ from .checkWinner import checkWinner
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-
+# Custom permission class to check if the user is a superuser
+class IsSuperUser(IsAdminUser):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)
 
 # creating the views based on the models, should be able to list and view the data
-
 
 #Returns All posts objects
 class PostsList(generics.ListCreateAPIView):
@@ -200,6 +202,12 @@ def createPost(request):
         return Response({"message":"Post made"},status=status.HTTP_201_CREATED) # Successful post creation
     else: 
         return Response(status=status.HTTP_400_BAD_REQUEST) # Failed post creation  
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkSuperuser(request):
+    is_superuser = request.user.is_superuser
+    return Response({"is_superuser": is_superuser}, status=status.HTTP_200_OK)
 
 @api_view(['POST' ,'Get'])
 @permission_classes([AllowAny])
@@ -222,6 +230,34 @@ def getUser(request):
     
     return Response({"username":username,"coins":user_info.coins,"profilePicture": user_info.avatarInUse.fileName,
                      "Bio":user_info.bio,"youtube":user_info.youtubeLink,"instagram":user_info.instagramLink,"twitter":user_info.twitterLink},status=status.HTTP_200_OK) 
+
+@api_view(['GET'])
+@permission_classes([IsSuperUser])
+def getAllUsers(request):
+    try:
+        data = []
+
+        # Prepare the data to return
+        for user in User.objects.all():
+            user_info, _ = PostsUser.objects.get_or_create(userID=user)
+
+            profilePicture = user_info.avatarInUse.fileName if user_info.avatarInUse else 'default.jpg'
+
+            data.append({
+            'id': user.id,
+            'username': user.username,
+            'profilePicture': profilePicture,
+            'bio': user_info.bio,
+            'youtube':user_info.youtubeLink,
+            'instagram':user_info.instagramLink,
+            'twitter':user_info.twitterLink,
+            }
+            )
+            # Return the data as JSON
+        return Response(data, status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
@@ -390,8 +426,33 @@ def getPostsLast24Hours(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
-
+@api_view(['POST','GET'])
+@permission_classes([IsSuperUser])
+def getPosts(request):
+    try:
+        data = []
+        # Prepare the data to return
+        for post in Posts.objects.select_related('geolocID'):
+            data.append({
+            'id': post.id,
+            'image': post.image.url,
+            'caption': post.caption,
+            'datetime': post.datetime,
+            'open': False,
+            'position': {
+                'location': post.geolocID.location,
+                'lat': post.geolocID.latitude,
+                'lng': post.geolocID.longitude,
+                }
+            }
+            )
+            # Return the data as JSON
+        return Response(data, status=status.HTTP_200_OK)
     
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def addCollection(request):

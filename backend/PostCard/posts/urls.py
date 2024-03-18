@@ -19,6 +19,7 @@ urlpatterns = [
     path('geolocations/', GeolocationList.as_view(), name='geolocation-list'),
     path('geolocations/<int:pk>/', GeolocationDetail.as_view(), name='geolocation-detail'),
     path('getRecentPosts/', getPostsLast24Hours, name='get-recent-posts'),
+    path('getAllPosts/', getPosts, name='get-posts'),
     #----
     path('posts/recent/', getPostsLast24Hours, name='posts-recent'),
     # STICKER API ENDPOINT
@@ -47,6 +48,8 @@ urlpatterns = [
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
+    path('getAllUsers/', getAllUsers, name='all-users'),
+    path('isSuperUser/', checkSuperuser, name='is-superuser'), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
