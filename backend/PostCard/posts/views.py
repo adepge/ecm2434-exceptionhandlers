@@ -175,12 +175,7 @@ def createPost(request):
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
                 todays_challenge = i 
-        print(milestone_1.postsNeeded)
-        print(milestone_1.savesNeeded)
-        print("--------------------------")
-        print(userData.postsMadeToday)
-        print(todays_challenge.postsNeeded)
-
+        
         if userData.postsMadeToday != todays_challenge.postsNeeded:
             userData.postsMadeToday += 1
             userData.save()
