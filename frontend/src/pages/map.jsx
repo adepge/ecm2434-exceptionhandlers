@@ -281,8 +281,6 @@ function MapPage() {
     });
     return discoverPins;
   }
-    return discoverPins;
-  }
 
 
   // Converts degrees to radians
