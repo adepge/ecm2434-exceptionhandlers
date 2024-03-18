@@ -27,7 +27,7 @@ import question from "../assets/map/question.svg";
 const cookies = new Cookies();
 
 // Debugging options
-const seeAllPins = true;
+const seeAllPins = false;
 const spoofLocation = false;
 
 // Overlay constructor component (from deck.gl documentation)
@@ -257,11 +257,16 @@ function MapPage() {
     return seeAllPins ? pins : closePins;
   }
 
-  const discoverPins = (lat, lng) => {
-    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
+  const discoverPins = (lat, lng, filterPins) => {
+    const minRadius = 0.0010; // Minimum radius of discovery (about 35m from the position)
     const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
-
+  
     const discoverPins = pins.filter((pin) => {
+      // Exclude any pins that are already in filterPins
+      if (filterPins.includes(pin)) {
+        return false;
+      }
+  
       const dLat = deg2rad(pin.position.lat - lat);
       const dLng = deg2rad(pin.position.lng - lng);
       const a =
@@ -272,8 +277,10 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance > minRadius && distance < maxRadius;
+      return distance < maxRadius;
     });
+    return discoverPins;
+  }
     return discoverPins;
   }
 
