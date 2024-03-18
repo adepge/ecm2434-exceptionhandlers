@@ -24,7 +24,7 @@
 }
 
 /* the spacer for header and footer */
-#spacer {
+#register #spacer {
   padding: 70px 0;
   overflow: scroll;
 
@@ -54,7 +54,7 @@
   justify-content: center;
 
   /* margin from the title */
-  margin-top: 40px;
+  margin-top: calc(21px + 25px);
 }
 
 /* each input field */
@@ -85,7 +85,7 @@
 }
 
 /* error message */
-label.error {
+#register label.error {
   color: red;
   font-size: 14px;
   margin-top: 5px;
@@ -94,7 +94,7 @@ label.error {
   display: flex;
 }
 
-#form .checkbox {
+#register #form .checkbox {
   /* make the checkbox center */
   color: black;
   display: flex;
@@ -102,14 +102,14 @@ label.error {
   line-height: 1.3;
 }
 
-#form input[type="checkbox"] {
+#register #form input[type="checkbox"] {
   width: 21px;
   height: 21px;
   margin: 11px;
   border-radius: 12px;
 }
 
-#form button {
+#register #form button {
   width: 100%;
 
   /* styles */
@@ -123,6 +123,15 @@ label.error {
   font-family: "Outfit";
 }
 
-#form .text {
+#register #form .text {
   color: black;
+}
+
+#register #form .inline-link{
+  font-weight: 500;
+  display: inline-block;
+}
+
+#register #form .checkmark-label{
+  display: inline;
 }

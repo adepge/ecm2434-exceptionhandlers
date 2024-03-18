@@ -18,6 +18,8 @@ footer {
   font-weight: 700;
   color: black;
   text-decoration: none;
+
+  z-index: 10;
 }
 
 footer a {

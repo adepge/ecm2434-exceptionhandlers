@@ -6,16 +6,22 @@ import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
-async function CheckLogin() {
+async function CheckLogin(redirect = true) {
+
+    // cookies.remove('token');
 
     if (cookies.get('token') === undefined) {
-        window.location.href = "/login";
-        return false;
+        console.log("redirecting")
+        console.log(redirect);
+        if (redirect) {
+            window.location.href = "/login";
+            return false;
+        }
     }
 
     try {
         const response = await axios.get(
-            "https://api.post-i-tivity.me/api/getUser/"
+            "http://127.0.0.1:8000/api/getUser/"
             ,
             {
                 headers: {
@@ -24,20 +30,28 @@ async function CheckLogin() {
                 },
             }
         );
-        return true;
+        return response;
     } catch (error) {
         if (error.response) {
             if (error.response.data.detail === "Invalid token.") {
                 cookies.remove('token');
                 console.log("not logged in");
-                window.location.href = "/login";
-                return false
+                if (redirect) {
+                    console.log("redirecting")
+                    window.location.href = "/login";
+                    return false
+                }
             } else {
                 console.log("Response data:", error.response.data);
                 console.log("Response status:", error.response.status);
                 console.log("Response headers:", error.response.headers);
+                alert("Internal server error");
             }
+        } else {
+            console.log(error)
+            alert("Cannot connect to the server");
         }
+        return false
     }
 
 }

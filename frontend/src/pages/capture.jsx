@@ -8,61 +8,59 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Geolocation from "../features/Geolocation";
 import LoadingScreen from "../features/loadingScreen";
-
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
+import Polaroid from "../features/polaroid";
 
+// function for set cookies
 const cookies = new Cookies();
 axios.defaults.withCredentials = true;
 
+// the page
 function Capture() {
 
-  // check if the user is logged in
+  // check if the user have logged in if so capture
   useEffect(() => {
     async function check() {
-      const res = await CheckLogin();
+      await CheckLogin();
       capture();
     }
     check();
   }, []);
 
-  // the navigate function
+  // Hook to redirect user programmatically.
   const navigate = useNavigate();
 
-  // Simple mobile detection
-  // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-  //     // Trigger file input on mobile devices
-  //     document.getElementById('fileInput').click();
-  // } else {
-  //     alert('Camera capture is optimized for mobile devices.');
-  // }
-
-  // the user's position
+  // State management for geolocation and location tags using zustand stores.
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
 
+
+  // Local state management for UI interactions and data handling.
   const [lastPosition, setLastPosition] = useState({ lat: 0, lng: 0 });
-
-  // the file input
   const inputRef = useRef(null);
-
-  // the preview image
   const [previewImg, setPreviewImg] = useState("");
   const [file, setFile] = useState(null);
-
-  // if the page is loading
   const [isLoading, setIsLoading] = useState(false);
-
   const [caption, setCaption] = useState("");
+  const [captionError, setCaptionError] = useState("");
 
-  // when the form is changed, set the state in post data
+  // Handle caption input changes and enforce character limit.
   const handleChange = (e) => {
-    setCaption(e.target.value);
+    const value = e.target.value;
+    if (value.length > 255) {
+      setCaptionError("Caption cannot exceed 255 characters.");
+    } else if (value.length >= 200) {
+      setCaptionError(`Approaching limit (${value.length}/255)`);
+    } else {
+      setCaptionError("");
+    }
+    setCaption(value);
   };
 
-  // get the user's position
+  // On component mount, check login status and initialize capture functionality.
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition((position) => {
@@ -71,7 +69,7 @@ function Capture() {
     }
   }, []);
 
-  // set the location tag
+  // Update location tag based on position change with a certain threshold.
   useEffect(() => {
     if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
       Geolocation(position.lat, position.lng, setLocationTag);
@@ -79,14 +77,20 @@ function Capture() {
     }
   }, [position]);
 
-  // on submit
+  // Handle form submission for creating a new post.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // The caption should not be more than 255 charaters
+    if (caption.length > 255) {
+      return;
+    }
     setIsLoading(true);
 
+    // post the geolocation data
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/geolocations/",
+        "http://127.0.0.1:8000/api/geolocations/",
         {
           latitude: position.lat,
           longitude: position.lng,
@@ -95,83 +99,78 @@ function Capture() {
       );
       const geolocID = response.data.id;
       const formData = new FormData();
-      // Ensure 'fileInput' is the correct ID for your file input field
       const imageFile = document.getElementById("fileInput").files[0];
       if (imageFile) {
         formData.append("image", imageFile);
       } else {
         alert("No image file selected");
         setIsLoading(false);
-        return; // Exit the function if no file is selected
+        return;
       }
 
-      // Append other postData fields to formData
-      // formData.append("userid", 1);
       formData.append("caption", caption);
-      formData.append("geolocID", geolocID); // Append geolocID as a number
+      formData.append("geolocID", geolocID);
 
+      // post the post data
       try {
-        // Update the API URL as per your configuration
         const response = await axios.post(
-          "https://api.post-i-tivity.me/api/createPost/",
+          "http://127.0.0.1:8000/api/createPost/",
           formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": `Token ${cookies.get('token')}`, // Assuming postData.username is the token
+              "Authorization": `Token ${cookies.get('token')}`,
             },
           }
         );
 
-        // Redirect to the home page after successful post creation
         navigate("/");
       } catch (error) {
-        console.error("Error occurred:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          console.log("Response headers:", error.response.headers);
-
-          alert("An error occurred while creating the post");
-        }
+        handleNetworkError(error);
       }
     } catch (error) {
-      console.error("Error occurred:", error);
-      if (error.response) {
-        console.log("Response data:", error.response.data);
-        console.log("Response status:", error.response.status);
-        console.log("Response headers:", error.response.headers);
-      }
-
-      alert("An error occurred while creating the post");
+      handleNetworkError(error);
     }
 
     setIsLoading(false);
   };
 
-  // triggered when the user clicks the capture button
+  // called when there's a network error
+  const handleNetworkError = (error) => {
+    console.error("Error occurred:", error);
+    if (error.response) {
+      console.log("Response data:", error.response.data);
+      console.log("Response status:", error.response.status);
+      console.log("Response headers:", error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received, likely a network error
+      alert("Cannot access the backend. Please check your network connection.");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      alert("An error occurred while creating the post");
+    }
+  };
+
+
+  // open the user's camera
   const capture = () => {
-    // Trigger file input
     inputRef.current.click();
   };
 
-  // handle the capture
+  // get the captured file
   const handleCapture = (e) => {
-    setPreviewImg(URL.createObjectURL(e.target.files[0]));
-    console.log(previewImg);
-
+    const file = e.target.files[0];
     if (file) {
       setPreviewImg(URL.createObjectURL(file));
-      setFile(file); // store the file object
+      setFile(file);
     }
   };
 
   return (
     <>
-
+    {/* the loading screen for posting */}
       <LoadingScreen active={isLoading} />
       <div id="capturePage" className="page active">
-        {/* the invisible file input element */}
         <input
           type="file"
           accept="image/*"
@@ -186,60 +185,55 @@ function Capture() {
             <div id="preview">
               <div id="spacer">
                 <div id="contents">
-                  {/* the preview image */}
                   {previewImg ? (
-                    <img
+                    <Polaroid
                       src={previewImg}
-                      alt="Preview Image"
-                      style={{ maxWidth: "100%", height: "auto" }}
+                      caption={caption}
                     />
                   ) : (
                     <div
                       id="previewPlaceholder"
-                      onClick={() => {
-                        capture();
-                      }}
+                      onClick={
+                        () => {
+                          capture();
+                        }
+                      }
                     >
                       <p>Tap to take a picture</p>
                     </div>
                   )}
-
-                  {/* the form 70px margin for the footer*/}
                   <form onSubmit={handleSubmit}>
-                    {/* the caption */}
                     <div id="form">
                       <input
                         name="caption"
                         type="caption"
-                        placeholder="post"
+                        placeholder="Post caption"
+                        value={caption}
                         onChange={handleChange}
                       />
+                      {captionError &&
+                        <div style={{ width: "100%", textAlign: "right" }}>
+                          <div style={{ color: caption.length >= 250 ? "red" : "orange" }}>{captionError}</div></div>}
                     </div>
-
-                    {/* the buttons on the bottom */}
                     <div id="previewButtons">
-                      {/* the retake button */}
                       <div className="retake element">
                         <img
                           src={Reset}
                           width={"15px"}
                           height={"15px"}
-                          onClick={() => {
-                            capture();
-                          }}
+                          onClick={
+                            () => {
+                              capture();
+                            }
+                          }
                         />
                       </div>
-
-                      {/* the location button */}
                       <div className="location element">
                         <img src={Location} />
                         {locationTag}
                       </div>
-
-                      {/* the submit button */}
                       <button
                         className="share element"
-                        // type="submit"
                         style={{ height: "100%" }}
                       >
                         <img src={Send} />
@@ -250,8 +244,8 @@ function Capture() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }

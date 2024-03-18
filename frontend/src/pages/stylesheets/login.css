@@ -24,7 +24,7 @@
 }
 
 /* the spacer for header and footer */
-#spacer {
+#login #spacer {
   padding: 70px 0;
   overflow: scroll;
 
@@ -37,14 +37,14 @@
 
 /* The title of the page */
 #login #title {
-  font-size: 50px;
+  font-size: 36px;
   font-weight: 700;
   color: black;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  margin-bottom: 30px;
+  margin-bottom: 22px;
 }
 
 /* text input field's spacing */
@@ -62,6 +62,7 @@
   justify-content: center;
 
   width: 100%;
+  margin-top: 25px;
 }
 
 /* each input field */
@@ -101,7 +102,7 @@
   font-family: "Outfit";
 }
 
-#form #message {
+#login #form #message {
   color: black;
   margin-bottom: 20px;
   font-size: 16px;
@@ -110,4 +111,9 @@
 
 #login #message {
   width: 100%;
+}
+
+label.error {
+  color: red;
+  margin-left: 5px;
 }

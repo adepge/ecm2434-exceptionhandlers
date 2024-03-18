@@ -22,6 +22,7 @@ import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
+import question from "../assets/map/question.svg";
 
 const cookies = new Cookies();
 
@@ -44,7 +45,7 @@ export const DeckGlOverlay = ({ layers }) => {
 const getPosts = async () => {
   try {
     const response = await axios.get(
-      "https://api.post-i-tivity.me/api/getRecentPosts/"
+      "http://127.0.0.1:8000/api/getRecentPosts/"
     );
     return response.data;
   } catch (error) {
@@ -56,7 +57,7 @@ const getPosts = async () => {
 const getCollectedPosts = async (token) => {
   try {
     const response = await axios.post(
-      "https://api.post-i-tivity.me/api/collectedPosts/",
+      "http://127.0.0.1:8000/api/collectedPosts/",
       {},
       {
         headers: {
@@ -74,7 +75,9 @@ const getCollectedPosts = async (token) => {
 function MapPage() {
 
   // check if the user is logged in
-  CheckLogin()
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
@@ -213,7 +216,7 @@ function MapPage() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectPost/",
+        "http://127.0.0.1:8000/api/collectPost/",
         form,
         {
           headers: {
@@ -254,6 +257,27 @@ function MapPage() {
     return seeAllPins ? pins : closePins;
   }
 
+  const discoverPins = (lat, lng) => {
+    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
+    const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
+
+    const discoverPins = pins.filter((pin) => {
+      const dLat = deg2rad(pin.position.lat - lat);
+      const dLng = deg2rad(pin.position.lng - lng);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(pin.position.lat)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        ;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = c * 6371.1; // Distance of the Earth's radius (km)
+
+      return distance > minRadius && distance < maxRadius;
+    });
+    return discoverPins;
+  }
+
+
   // Converts degrees to radians
   function deg2rad(deg) {
     return deg * (Math.PI / 180)
@@ -288,7 +312,7 @@ function MapPage() {
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={activePost['image']}
+        image={"http://127.0.0.1:8000/" + activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -296,51 +320,50 @@ function MapPage() {
         // perform a null check or ensure that activePost["position"]["location"] exists before accessing its location property.
         location={activePost["position"] && activePost["position"]["location"]}
       />
-
-      {loading && <InitMap progress={progress} />}
-      <DrawerDown
-        id={form.postid}
-        image={drawerPost?.image}
-        caption={drawerPost?.caption}
-        drawerVisible={drawerTopVisible}
-        setDrawerVisible={setDrawerTopVisible}
-        handleSubmit={handleSubmit}
-        handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
-      />
-      {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <div
-          className={
-            showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
-          }
-        >
-          <Map
-            id="map"
-            defaultCenter={position}
-            defaultZoom={17}
-            gestureHandling={"greedy"}
-            disableDefaultUI={true}
-            mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+      <div className={Object.keys(activePost).length !== 0 ? "blur" : ""} id="map-content">
+        {loading && <InitMap progress={progress} />}
+        <DrawerDown
+          id={form.postid}
+          image={"http://127.0.0.1:8000/" + drawerPost?.image}
+          caption={drawerPost?.caption}
+          drawerVisible={drawerTopVisible}
+          setDrawerVisible={setDrawerTopVisible}
+          handleSubmit={handleSubmit}
+          handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
+        />
+        {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+          <div
+            className={
+              showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
+            }
           >
-            <DeckGlOverlay layers={layer} />
-            <AdvancedMarker key="current-position" position={position}>
-              <div
-                style={{
-                  width: 16,
-                  height: 16,
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  background: "#4185f5",
-                  border: "2px solid #ffffff",
-                  borderRadius: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              ></div>
-            </AdvancedMarker>
-            {filterPins(position.lat, position.lng).map((pin) => {
-              const color = `var(--${mood})`;
-              return (
-                <>
+            <Map
+              id="map"
+              defaultCenter={position}
+              defaultZoom={17}
+              gestureHandling={"greedy"}
+              disableDefaultUI={true}
+              mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+            >
+              <DeckGlOverlay layers={layer} />
+              <AdvancedMarker key="current-position" position={position}>
+                <div
+                  style={{
+                    width: 16,
+                    height: 16,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    background: "#4185f5",
+                    border: "2px solid #ffffff",
+                    borderRadius: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                ></div>
+              </AdvancedMarker>
+              {filterPins(position.lat, position.lng).map((pin) => {
+                const color = `var(--${mood})`;
+                return (
                   <AdvancedMarker
                     key={pin.id}
                     position={pin.position}
@@ -353,18 +376,30 @@ function MapPage() {
                       scale={0.8}
                     ></Pin>
                   </AdvancedMarker>
-                </>
-              );
-            })}
-          </Map>
-        </div>
-      </APIProvider>}
-      {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-      <div className="bottom-prompt">
-        <div className="bottom-prompt-wrapper">
-          <img src={Location} />{locationTag}
+                );
+              })}
+              {discoverPins(position.lat, position.lng).map((pin) => {
+                const color = `var(--${mood})`;
+                return (
+                  <AdvancedMarker
+                    key={pin.id}
+                    position={pin.position}
+                  >
+                    <img src={question}/>
+                  </AdvancedMarker>
+                );
+              })}
+            </Map>
+          </div>
+        </APIProvider>}
+        {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
+        <div className="bottom-prompt">
+          <div className="bottom-prompt-wrapper">
+            <img src={Location} />{locationTag}
+          </div>
         </div>
       </div>
+
     </>
   );
 }

@@ -10,6 +10,7 @@ urlpatterns = [
     #USER AUTHENTICATION API ENDPOINT
     path('register/', UserRegisterAuthentication, name="register"),
     path('login/',UserLoginAuthentication, name='login'),
+    path('logout/',UserLogout, name="logout"),
     #-----
     #POSTS API ENDPOINT
     path('posts/', PostsList.as_view(), name='posts-list'),
@@ -31,10 +32,30 @@ urlpatterns = [
     path('collectPost/', addCollection, name='postuser-list'),
     path('collectedPosts/', getCollections, name='collected-posts'),
 
+    #CHALLENGES API ENDPOINT
+    path('getChallenges/',getChallenges, name='get-challenges'),
+    path('getAvatars/',getAvatars,name="get-avatars"),
+    path('changeAvatar/',changeAvatar,name="change-avatar"),
+    path('getAllAvatars/',getAllAvatars,name="get-all-avatars"),
+    path('createObjects/',createObjects,name="create-Objects"),
+    path('purchase/',purchase, name ="purchase"),
+    path('changeBio/',changeBio,name="change-bio"),
+    path('createObjects/',createObjects,name="create-objects"),
+
+    path('deletePost/<int:pk>/', deletePost, name='deletePost'),
+    path('deleteUser/<int:pk>/', deleteUser, name='deleteUser'),
+
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('isSuperUser/', checkSuperuser, name='is-superuser'), 
 
+    #ADMIN API ENDPOINT
+    path('getAllPosts/', getPosts, name='get-posts'),
+    path('getAllUsers/', getAllUsers, name='all-users'),
+    path('deletePost/<int:pk>/', deletePost, name='deletePost'),
+    path('deleteUser/<int:pk>/', deleteUser, name='deleteUser'),
+    path('checkSuperUserId/<int:user_id>/', checkSuperuserById, name='check-superuser-id'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,8 +1,12 @@
 #feed {
-  padding: 80px 20px;
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
+  transition: filter 0.3s ease-in-out;
+}
+
+#feed.blur {
+  filter: blur(5px);
 }
 
 #top {
@@ -70,7 +74,7 @@
 }
 
 #feed .polaroid {
-  animation: polaroidFadeIn 0.8s ease-out;
+  animation: polaroidFadeIn 0.5s ease-out;
 }
 
 /* Animation css classes */
@@ -79,12 +83,54 @@
     margin-top: 70%;
     opacity: 0.5;
     scale: 0.7;
-    transform: rotateY(30deg);
   }
   to {
     opacity: 1;
     margin-top: 0%;
     scale: 1;
-    transform: rotateY(0deg);
+  }
+}
+
+#feed #padding {
+  padding: 80px 20px;
+}
+
+#feed .polaroid.skeleton {
+  width: 100%;
+  background-color: white;
+  animation: none;
+}
+
+.polaroid.skeleton .padding.skeleton {
+  padding: 5% 3%;
+  padding-bottom: 30%;
+  background-color: white;
+}
+
+.polaroid.skeleton .image.skeleton {
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+/* THE LOADING EFFECT */
+.skeleton {
+  background-color: #e5e5e5;
+  /* The shine that's going to move across the skeleton: */
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0)
+  );
+  background-size: 150px 100%; /* width of the shine */
+  background-repeat: no-repeat; /* No need to repeat the shine effect */
+  background-position: left -150px top 0; /* Place shine on the left side, with offset on the left based on the width of the shine - see background-size */
+  animation: shine 2s ease infinite; /* increase animation time to see effect in 'slow-mo' */
+}
+
+@keyframes shine {
+  to {
+    /* // Move shine from left to right, with offset on the right based on the width of the shine - see background-size */
+    background-position: right -150px top 0;
   }
 }

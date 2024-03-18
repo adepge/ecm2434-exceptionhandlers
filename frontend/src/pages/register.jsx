@@ -1,6 +1,6 @@
 import "./stylesheets/register.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 import Cookies from "universal-cookie";
@@ -12,8 +12,8 @@ const cookies = new Cookies();
 function RegisterPage() {
   const navigate = useNavigate();
 
+  // local state data
   const [isLoading, setIsLoading] = useState(false);
-
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -21,15 +21,14 @@ function RegisterPage() {
     confirmPassword: "",
     checkbox: false,
   });
-
   const [errors, setErrors] = useState({
     username: "",
     email: "",
     password: "",
   });
-
   const [isChecked, setIsChecked] = useState(false);
 
+  // get the text from the form to the 
   const handleCheckBoxChange = () => {
     setUserData({
       ...userData,
@@ -90,7 +89,7 @@ function RegisterPage() {
     // submit the form data to the server
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/register/",
+        "http://127.0.0.1:8000/api/register/",
         userData
       );
       cookies.set("token", response.data.token, { path: "/" });
@@ -106,18 +105,31 @@ function RegisterPage() {
             username: error.response.data.username,
           });
         }
+        console.log(error.response.data);
+        if (error.response.data["error messages"]) {
+          e = error.response.data["error messages"]
+          setErrors({
+            ...errors,
+            username: error.response.data.username,
+          });
+        }
         if (error.response.data.email) {
           setErrors({
             ...errors,
             email: error.response.data.email,
           });
         }
+        if (error.response.data["Password error"]) {
+          setErrors({
+            ...errors,
+            password: error.response.data["Password error"],
+          });
+        }
       } else {
         // The request was made but no response was received or other errors occurred
         console.error("Error:", error.message);
+        alert("Cannot connect to the server");
       }
-
-      alert("An error occurred.")
       // remove the loading screen
       setIsLoading(false);
       return;
@@ -145,7 +157,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.username}</label>
+                    {errors.username && <label className="error">{errors.username}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -157,7 +169,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.email}</label>
+                    {errors.email && <label className="error">{errors.email}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -169,7 +181,7 @@ function RegisterPage() {
                       required
                       className="text input"
                     />
-                    <label className="error">{errors.password}</label>
+                    {errors.password && <label className="error">{errors.password}</label>}
                   </div>
                   <div className="field">
                     <input
@@ -180,7 +192,7 @@ function RegisterPage() {
                       onChange={handleChange}
                       required
                     />
-                    <label className="error">{errors.confirmPassword}</label>
+                    {errors.confirmPassword && <label className="error">{errors.confirmPassword}</label>}
                   </div>
                   <div className="field">
                     <label className="checkbox">
@@ -189,11 +201,16 @@ function RegisterPage() {
                         onChange={handleCheckBoxChange}
                         checked={isChecked}
                       />
-                      <span className="checkmark"></span>I agree to Postpal’s
-                      Terms & Conditions and Privacy Policy
+                      <span className="checkmark"></span>
+                      <div className="checkmark-label">
+                      I agree to Postpal’s{' '}
+                      <Link to={"/terms-and-conditions"} className="inline-link">Terms & Conditions</Link>{' '} and {' '}
+                      <Link to={"/privacy-policy"} className="inline-link">Privacy Policy</Link>
                       <br />
+                      </div>
                     </label>
-                    <label className="error">{errors.checkbox}</label>
+                    {errors.checkbox &&
+                      <label className="error">{errors.checkbox}</label>}
                   </div>
                   <button type="submit">Register</button>
                 </form>

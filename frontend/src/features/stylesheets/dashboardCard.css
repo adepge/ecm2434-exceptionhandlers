@@ -1,0 +1,52 @@
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 1em;
+    border: 1px solid #e0e0e0;
+    color: black;
+}
+
+.dashboard-card .exit-button {
+    background-color: transparent;
+    border: none;
+    align-self: flex-end;
+    margin-right:  -0.5em;
+    margin-top:  -0.2em;
+    cursor: pointer;
+}
+
+.dashboard-card img {
+    margin-bottom: 1em;
+}
+
+.dashboard-card p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.dashboard-card #button-shelf {
+    margin-top: 1em;
+    display: flex;
+    gap: 5px;
+}
+
+.dashboard-card .delete-button {
+    background: rgb(248, 70, 70);
+    font-family: Outfit, sans-serif;
+    font-weight: 500;
+    border: none;
+    padding: 0.2em 1em;
+    border-radius: 50px;
+}
+
+.dashboard-card .delete-button:hover {
+    background: rgb(255, 0, 0);
+    cursor: pointer;
+}
+
+.dashboard-card .delete-button:disabled {
+    background: rgb(238, 128, 128);
+    cursor: none;
+}

@@ -8,17 +8,20 @@ const cookies = new Cookies();
 
 function LoginPage() {
   const navigate = useNavigate();
-
+  
+  // the returned errors
   const [errors, setErrors] = useState({
     username: "",
     password: "",
   });
 
+  // the user details
   const [userData, setUserData] = useState({
     username: "",
     password: "",
   });
 
+  // get text from the forms to the data
   const handleChange = (e) => {
     setUserData({
       ...userData,
@@ -26,12 +29,12 @@ function LoginPage() {
     });
   };
 
+  // submit the form
   const hansleSubmit = async (e) => {
     e.preventDefault();
-    console.log(userData);
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/login/",
+        "http://127.0.0.1:8000/api/login/",
         userData
       );
       cookies.set("token", response.data.token, { path: "/" });
@@ -49,12 +52,15 @@ function LoginPage() {
           return
         } else {
           console.log(error);
-          alert("An error occured. Please try again later.");
+          alert("Internal server error. Please try again later.");
         }
+      } else {
+        console.log(errors);
+        alert("Cannot connect to the server");
       }
     }
-    console.log(errors);
-    alert("An error occured. Please try again later.");
+
+
   }
 
   return (

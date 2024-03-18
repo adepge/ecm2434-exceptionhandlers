@@ -3,10 +3,11 @@ import "./stylesheets/feed.css";
 import { useState, useEffect } from "react";
 import PostView from "../features/PostView";
 import Polaroid from "../features/polaroid";
-import { set } from "date-fns";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
+import InitMap from "../features/InitMap";
+import { Link } from "react-router-dom";
 
 
 
@@ -16,10 +17,16 @@ const cookies = new Cookies();
 function FeedPage() {
 
   // check if the user is logged in
-  CheckLogin();
+  useEffect(() => {
+    CheckLogin();
+  }, []);
 
   const [activePost, setActive] = useState({});
+  const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
+
+  const [loadingImage, setLoadingImage] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   // get all the post from database
   const getPosts = async () => {
@@ -28,14 +35,13 @@ function FeedPage() {
     const token = cookies.get('token');
 
     try {
-      // Update the API URL as per your configuration
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectedPosts/",
+        "http://127.0.0.1:8000/api/collectedPosts/",
         {},
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": `Token ${token}`, // Assuming postData.username is the token
+            "Authorization": `Token ${token}`,
           },
         }
       );
@@ -47,12 +53,13 @@ function FeedPage() {
         console.log("Response status:", error.response.status);
         console.log("Response headers:", error.response.headers);
       }
+      alert("Cannot connect to the server");
     }
   };
 
   useEffect(() => {
     // Function to load an image and update its height in the state
-    function getImageHeight(url) {
+    function getImageRatio(url) {
       // wait for the image to load
       return new Promise((resolve, reject) => {
         // create a new image
@@ -60,7 +67,7 @@ function FeedPage() {
 
         // when the image loads, resolve with the height
         img.onload = () => {
-          resolve(img.height);
+          resolve(img.height / img.width);
         };
 
         // if there is an error, reject with the error
@@ -75,6 +82,9 @@ function FeedPage() {
     const processImages = async (e) => {
 
       const postList = await getPosts();
+      if (postList.length === 0) {
+        setNoPost(true);
+      }
 
       let heightDifference = 0;
       const rightPosts = [];
@@ -82,23 +92,31 @@ function FeedPage() {
 
       for (let i = 0; i < postList.length; i++) {
 
-        const image = postList[i]["image"];
+        postList[i]["image"] = "http://127.0.0.1:8000/" + postList[i]["image"];
+
+        const image = postList[i]["image"]
+
 
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        const imageHeight = await getImageHeight(image);
+        const imageRatio = await getImageRatio(image);
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
-          heightDifference += imageHeight + 10; //10 for the margin
+          heightDifference += imageRatio * 1.1; // 1.1% for the padding of the polaroid
         } else {
           leftPosts[i] = postList[i];
-          heightDifference -= imageHeight + 10; //10 for the margin
+          heightDifference -= imageRatio * 1.1; // 1.1% for the padding of the polaroid
         }
         setColumns([leftPosts, rightPosts]);
+        setProgress((i / postList.length) * 100);
+
+
       }
+
+      setLoadingImage(false);
 
     };
 
@@ -108,6 +126,8 @@ function FeedPage() {
 
   return (
     <>
+      {/* the loading screen */}
+      {/* {loadingImage && <InitMap progress={progress} />} */}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -120,31 +140,91 @@ function FeedPage() {
         showBottomBar={false}
       />
 
-      {/* the feed */}
-      <div id="feed">
-        <div id="daily-feed">
-          <div id="grid-wrapper">
-            {/* map each columns */}
-            {columns.map((column, index) => (
-              <div key={index} className={"image-grid " + index}>
-                {/* map each posts in the column */}
-                {column.map((post) => (
-                  <div className={post["id"]} key={post["id"]}>
-                    <Polaroid
-                      src={post["image"]}
-                      func={() => {
-                        setActive(post);
-                      }}
-                      caption={post["caption"]}
-                      rotation={post["rotation"]}
-                    />
-                  </div>
-                ))}
+      {/* prompt the user to collect some posts if there is no post */}
+      {noPost && (
+        <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
+          <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
+            <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
+              <div style={{ marginBottom: "10px" }}>You have no collected post yet
               </div>
-            ))}
+              <Link to="/">
+                <button id="button" style={{
+                  width: "100%",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "100px",
+                  background: "var(--primary)",
+                  fontWeight: "700",
+                  fontSize: "16px",
+                  fontFamily: "Outfit",
+                }}>Go to collect</button>
+              </Link>
+            </div>
+
+          </div >
+        </div >
+      )
+      }
+
+      {/* the feed */}
+      {/* if there is no post or the post view is active, blur the feed */}
+      <div id="feed" className={Object.keys(activePost).length !== 0 || noPost ? "blur" : "none"}>
+        <div id="padding">
+          <div id="daily-feed">
+            <div id="grid-wrapper">
+              {loadingImage || noPost ? (
+                <>
+                  <div className={"image-grid "}>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton" style={{ aspectRatio: 4 / 5 }}></div>
+                      </div>
+                    </div>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={"image-grid "}>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton"></div>
+                      </div>
+                    </div>
+                    <div className="polaroid skeleton shadow">
+                      <div className="padding skeleton">
+                        <div className="image skeleton" style={{ aspectRatio: 4 / 5 }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+
+              ) : (
+                // map the columns
+                (columns.map((column, index) => (
+                  <div key={index} className={"image-grid " + index}>
+                    {/* map each posts in the column */}
+                    {column.map((post) => (
+                      <div className={post["id"]} key={post["id"]}>
+                        {!loadingImage && <Polaroid
+                          src={post["image"]}
+                          func={() => {
+                            setActive(post);
+                          }}
+                          caption={post["caption"]}
+                          rotation={post["rotation"]}
+                        />}
+                      </div>
+                    ))}
+                  </div>
+                )))
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }
