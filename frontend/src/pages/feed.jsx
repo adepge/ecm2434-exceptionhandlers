@@ -214,16 +214,17 @@ function FeedPage() {
                           caption={post["caption"]}
                           rotation={post["rotation"]}
                         />
-                        {
-                          loadingImage &&
-                          <div className="polaroid skeleton shadow">
-                            <div className="padding skeleton">
-                              <div className="image skeleton"></div>
-                            </div>
-                          </div>
-                        }
                       </div>
+
                     ))}
+                    {
+                      loadingImage &&
+                      <div className="polaroid skeleton shadow">
+                        <div className="padding skeleton">
+                          <div className="image skeleton"></div>
+                        </div>
+                      </div>
+                    }
                   </div>
                 )))
               )}
