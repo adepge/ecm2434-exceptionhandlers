@@ -239,7 +239,7 @@ function MapPage() {
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
-    const radius = 0.0005; // Radius of tolerance (about 35m from the position)
+    const radius = 0.05; // Radius of tolerance (about 35m from the position)
 
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
@@ -258,8 +258,8 @@ function MapPage() {
   }
 
   const discoverPins = (lat, lng, filterPins) => {
-    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
-    const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
+    const minRadius = 0.05; // Minimum radius of discovery (about 35m from the position)
+    const maxRadius = 0.25; // Maximum radius of discovery (about 175m from the position)
   
     const discoverPins = pins.filter((pin) => {
   
