@@ -1,7 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import Header from "./features/header";
 import Footer from "./features/footer";
-
 import MapPage from "./pages/map";
 import FeedPage from "./pages/feed";
 import Capture from "./pages/capture";
@@ -15,6 +14,7 @@ import EditProfile from "./pages/editProfile";
 import ChangeIcon from "./pages/changeIcon";
 import TermsConditions from "./pages/terms-pages/termsConditions";
 import PrivacyPolicy from "./pages/terms-pages/privacyPolicy";
+import Admin from "./pages/admin";
 
 function App() {
 
@@ -22,7 +22,6 @@ function App() {
     <>
       <Header />
       <Routes>
-
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<MapPage />} />
@@ -36,6 +35,7 @@ function App() {
         <Route path="/changeIcon" element={<ChangeIcon />} />
         <Route path="/terms-and-conditions" element={<TermsConditions/>} />
         <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
       <Footer />
     </>

@@ -47,8 +47,15 @@ urlpatterns = [
 
     #USER API ENDPOINT
     path('getUser/', getUser, name='user-list'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('isSuperUser/', checkSuperuser, name='is-superuser'), 
 
+    #ADMIN API ENDPOINT
+    path('getAllPosts/', getPosts, name='get-posts'),
+    path('getAllUsers/', getAllUsers, name='all-users'),
+    path('deletePost/<int:pk>/', deletePost, name='deletePost'),
+    path('deleteUser/<int:pk>/', deleteUser, name='deleteUser'),
+    path('checkSuperUserId/<int:user_id>/', checkSuperuserById, name='check-superuser-id'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

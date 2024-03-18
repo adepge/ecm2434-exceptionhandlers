@@ -22,6 +22,7 @@ import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
+import question from "../assets/map/question.svg";
 
 const cookies = new Cookies();
 
@@ -256,6 +257,27 @@ function MapPage() {
     return seeAllPins ? pins : closePins;
   }
 
+  const discoverPins = (lat, lng) => {
+    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
+    const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
+
+    const discoverPins = pins.filter((pin) => {
+      const dLat = deg2rad(pin.position.lat - lat);
+      const dLng = deg2rad(pin.position.lng - lng);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat)) * Math.cos(deg2rad(pin.position.lat)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        ;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = c * 6371.1; // Distance of the Earth's radius (km)
+
+      return distance > minRadius && distance < maxRadius;
+    });
+    return discoverPins;
+  }
+
+
   // Converts degrees to radians
   function deg2rad(deg) {
     return deg * (Math.PI / 180)
@@ -353,6 +375,17 @@ function MapPage() {
                       glyphColor="white"
                       scale={0.8}
                     ></Pin>
+                  </AdvancedMarker>
+                );
+              })}
+              {discoverPins(position.lat, position.lng).map((pin) => {
+                const color = `var(--${mood})`;
+                return (
+                  <AdvancedMarker
+                    key={pin.id}
+                    position={pin.position}
+                  >
+                    <img src={question}/>
                   </AdvancedMarker>
                 );
               })}

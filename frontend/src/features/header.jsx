@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import Coin from '../assets/challenge/coin.png';
 import axios from "axios";
 import Cookies from "universal-cookie";
+import Logout from "../assets/header/logout.svg";
 
 const cookies = new Cookies();
 
@@ -68,7 +69,7 @@ function Header() {
           },
         }
       );
-     
+
       cookies.remove('token');
       window.location.reload();
     } catch (error) {
@@ -111,7 +112,7 @@ function Header() {
             <Link to="/editProfile">
               <li id="menu" ><img src={settings} width={"16px"} height={"16px"} style={{ marginRight: "5px" }} /><div >settings</div></li>
             </Link>
-            <li id="logout" onClick={logout}><img src={settings} width={"16px"} height={"16px"} style={{ marginRight: "5px" }} /><div >logout</div></li>
+            <li id="logout" onClick={logout}><img src={Logout} width={"16px"} height={"16px"} style={{ marginRight: "5px" }} /><div >logout</div></li>
           </ul></div>
       </div>
     </header >
