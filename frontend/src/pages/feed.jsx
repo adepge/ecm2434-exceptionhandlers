@@ -92,8 +92,6 @@ function FeedPage() {
 
       for (let i = 0; i < postList.length; i++) {
 
-        postList[i]["image"] = "https://api.post-i-tivity.me" + postList[i]["image"];
-
         const image = postList[i]["image"]
 
 
