@@ -257,8 +257,8 @@ function MapPage() {
     return seeAllPins ? pins : closePins;
   }
 
-  const discoverPins = (lat, lng, filterPins) => {
-    const minRadius = 0.05; // Minimum radius of discovery (about 35m from the position)
+  const discoverPins = (lat, lng) => {
+    const minRadius = 0.05; // Minimum radius of discovery (about 50m from the position)
     const maxRadius = 0.25; // Maximum radius of discovery (about 175m from the position)
   
     const discoverPins = pins.filter((pin) => {
@@ -273,7 +273,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance > minRadius && distance < maxRadius;
+      return distance > minRadius;
     });
     return discoverPins;
   }
