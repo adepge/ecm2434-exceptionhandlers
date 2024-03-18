@@ -101,18 +101,22 @@ function FeedPage() {
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        const imageRatio = await getImageRatio(image);
+        // const imageRatio = await getImageRatio(image);
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
+          setColumns([leftPosts, rightPosts]);
+          const imageRatio = await getImageRatio(image);
           heightDifference += imageRatio * 1.1; // 1.1% for the padding of the polaroid
         } else {
           leftPosts[i] = postList[i];
+          setColumns([leftPosts, rightPosts]);
+          const imageRatio = await getImageRatio(image);
           heightDifference -= imageRatio * 1.1; // 1.1% for the padding of the polaroid
         }
         setColumns([leftPosts, rightPosts]);
-        setProgress((i / postList.length) * 100);
+        // setProgress((i / postList.length) * 100);
 
 
       }
@@ -173,7 +177,7 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {(!fetchedPosts || noPost) ? (
+              {((!fetchedPosts) || noPost) ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
