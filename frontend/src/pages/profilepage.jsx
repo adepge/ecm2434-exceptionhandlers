@@ -1,9 +1,9 @@
 import "./stylesheets/profilepage.css";
 
 import userIcon from "../assets/header/user-icon.jpg";
-import ytIcon from "../assets/profilepage/YouTube.png";
-import instaIcon from "../assets/profilepage/Instagram.png";
-import twitterIcon from "../assets/profilepage/Facebook.png";
+import ytIcon from "../assets/profilepage/YouTube.svg";
+import instaIcon from "../assets/profilepage/Instagram.svg";
+import twitterIcon from "../assets/profilepage/twitter.svg";
 import CheckLogin from "../features/CheckLogin";
 import { useState, useEffect } from "react";
 
@@ -44,7 +44,7 @@ function ProfilePage() {
                 Instagram
               </a>
               <a id="twitter" className="social-icon" href={user.twitter}>
-                <img src={"https://"+twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
+                <img src={twitterIcon} alt="YouTube" width={"17px"} height={"17px"} />
                 Twitter
               </a>
             </div>
