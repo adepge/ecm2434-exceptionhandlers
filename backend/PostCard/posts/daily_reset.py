@@ -17,7 +17,6 @@ def dailyReset():
             random.seed()
             # reseting user info for daily challenges
             for x in PostsUser.objects.all():
-                x.stepsTakenToday=0
                 x.postsMadeToday=0
                 x.postsSavedToday=0
                 x.save()
