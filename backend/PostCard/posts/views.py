@@ -176,11 +176,17 @@ def createPost(request):
     filename = request.FILES['image'].name
     filename_length = len(filename)
     
-    #If its larger than 100 than get upload the last 30 chars to avoid errors
+     #If its larger than 100 than get upload the last 30 chars to avoid errors
+     # Appends geolocID in between filenames to prevent any images from overriding each other
     if filename_length > 100:
         request.FILES['image'].name = filename[-30:] 
-    request.data['userid'] = userid  # Add 'userid' key
+        request.FILES['image'].name = request.FILES['image'].name[:5] + request.data['geolocID'] + request.FILES['image'].name[5:]
+    else:
+        newfilename = request.FILES['image'].name
+        request.FILES['image'].name =  newfilename[:5] + request.data['geolocID'] + newfilename[5:] 
 
+
+    request.data['userid'] = userid  # Add 'userid' key
     try:
         userData = PostsUser.objects.get(userID = userid)
         milestone_1 = Challenges.objects.get(postsNeeded=35)
@@ -189,11 +195,7 @@ def createPost(request):
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
                 todays_challenge = i 
-        print(milestone_1.postsNeeded)
-        print(milestone_1.savesNeeded)
-        print("--------------------------")
-        print(userData.postsMadeToday)
-        print(todays_challenge.postsNeeded)
+        
 
         if userData.postsMadeToday != todays_challenge.postsNeeded:
             userData.postsMadeToday += 1
