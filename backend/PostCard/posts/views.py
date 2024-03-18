@@ -209,6 +209,16 @@ def checkSuperuser(request):
     is_superuser = request.user.is_superuser
     return Response({"is_superuser": is_superuser}, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsSuperUser])
+def checkSuperuserById(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        is_superuser = user.is_superuser
+        return Response({"is_superuser": is_superuser}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['POST' ,'Get'])
 @permission_classes([AllowAny])
 def getUser(request):
@@ -241,7 +251,7 @@ def getAllUsers(request):
         for user in User.objects.all():
             user_info, _ = PostsUser.objects.get_or_create(userID=user)
 
-            profilePicture = user_info.avatarInUse.fileName if user_info.avatarInUse else 'default.jpg'
+            profilePicture = user_info.avatarInUse.fileName if user_info.avatarInUse and user_info.avatarInUse.fileName else 'default.jpg'
 
             data.append({
             'id': user.id,
@@ -251,6 +261,7 @@ def getAllUsers(request):
             'youtube':user_info.youtubeLink,
             'instagram':user_info.instagramLink,
             'twitter':user_info.twitterLink,
+            'is_superuser': user.is_superuser,
             }
             )
             # Return the data as JSON
@@ -433,8 +444,12 @@ def getPosts(request):
         data = []
         # Prepare the data to return
         for post in Posts.objects.select_related('geolocID'):
+
             data.append({
             'id': post.id,
+            'userid': post.userid.id,
+            'username': post.userid.username,
+            'is_superuser': post.userid.is_superuser,
             'image': post.image.url,
             'caption': post.caption,
             'datetime': post.datetime,
@@ -529,7 +544,7 @@ def getCollections(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsSuperUser])
 def deletePost(request, pk):
     try:
         post = Posts.objects.get(pk=pk)
@@ -539,7 +554,7 @@ def deletePost(request, pk):
         return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])
+@permission_classes([IsSuperUser])
 def deleteUser(request, pk):
     try:
         user = User.objects.get(pk=pk)
