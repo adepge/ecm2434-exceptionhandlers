@@ -123,8 +123,8 @@ def createObjects(request):
         # Get bucket
         bucket = 'post-i-tivity'
 
-        # Get objects in the /avatar folder
-        avatars = client.list_objects(Bucket=bucket, Prefix='avatar/')
+        # Get objects in the /post-i-tivity/avatars/ folder
+        avatars = client.list_objects(Bucket=bucket, Prefix='post-i-tivity/avatars/')
 
         # Iterate over each object
         for obj in avatars['Contents']:
