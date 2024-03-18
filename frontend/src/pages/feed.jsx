@@ -25,6 +25,7 @@ function FeedPage() {
   const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
 
+  const [loadingImage, setLoadingImage] = useState(true);
   const [progress, setProgress] = useState(0);
 
   // get all the post from database
@@ -35,7 +36,7 @@ function FeedPage() {
 
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectedPosts/",
+        "http://127.0.0.1:8000/api/collectedPosts/",
         {},
         {
           headers: {
@@ -91,6 +92,8 @@ function FeedPage() {
 
       for (let i = 0; i < postList.length; i++) {
 
+        postList[i]["image"] = "http://127.0.0.1:8000/" + postList[i]["image"];
+
         const image = postList[i]["image"]
 
 
@@ -113,6 +116,7 @@ function FeedPage() {
 
       }
 
+      setLoadingImage(false);
 
     };
 
@@ -168,7 +172,7 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {noPost ? (
+              {loadingImage || noPost ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
@@ -204,7 +208,7 @@ function FeedPage() {
                     {/* map each posts in the column */}
                     {column.map((post) => (
                       <div className={post["id"]} key={post["id"]}>
-                        {<Polaroid
+                        {!loadingImage && <Polaroid
                           src={post["image"]}
                           func={() => {
                             setActive(post);
