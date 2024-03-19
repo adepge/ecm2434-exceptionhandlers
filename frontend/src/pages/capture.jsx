@@ -35,7 +35,7 @@ function Capture() {
   const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
-  const lastPosition = useLastPositionStore(state => state.lastPosition);
+  const lastPosition = useLastPositionStore(state => state.position);
   const setLastPosition = useLastPositionStore(state => state.setPosition);
 
 
