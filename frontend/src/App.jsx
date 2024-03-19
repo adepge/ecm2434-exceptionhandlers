@@ -19,6 +19,8 @@ import Admin from "./pages/admin";
 
 // Send cookies automatically with every request
 axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 function App() {
 
