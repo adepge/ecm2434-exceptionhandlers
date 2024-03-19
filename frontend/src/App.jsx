@@ -1,4 +1,5 @@
 import { Navigate, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import axios from "axios";
 import Header from "./features/header";
 import Footer from "./features/footer";
@@ -23,7 +24,6 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 function App() {
-
   useEffect(() => {
     axios.get('https://api.post-i-tivity.me/api/set-csrf-cookie/');
   }, []);
