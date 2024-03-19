@@ -2,23 +2,17 @@ import {
   APIProvider,
   Map,
   AdvancedMarker,
-  Marker,
   Pin,
   useMap,
 } from "@vis.gl/react-google-maps";
-import { useState, useEffect, useMemo } from "react";
-import { differenceInDays, format, set } from "date-fns";
-import { PathLayer } from "@deck.gl/layers";
+import { useState, useEffect, useMemo } from "react";;
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
-import { usePositionStore, useGeoTagStore, useLastPositionStore } from "../stores/geolocationStore";
+import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
-import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
-import Location from "../assets/location.svg";
 import axios from "axios";
 import InitMap from "../features/InitMap";
-import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
@@ -28,7 +22,6 @@ const cookies = new Cookies();
 
 // Debugging options
 const seeAllPins = false;
-const spoofLocation = false;
 
 // Overlay constructor component (from deck.gl documentation)
 export const DeckGlOverlay = ({ layers }) => {
@@ -85,20 +78,14 @@ function MapPage() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
 
-  // State for mood prompt
-  const [showMoodPrompt, setShowMoodPrompt] = useState(false);
-  const [mood, setMood] = useState("unselected");
-
   // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerPost, setDrawerPost] = useState(null);
 
-  // State for walking and tracking path coordinates and map position
-  const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(false);
-  const [watchId, setWatchId] = useState(null);
-  const lastPosition = useLastPositionStore(state => state.position);
-  const setLastPosition = useLastPositionStore(state => state.setPosition);
+  // State for walking and tracking path coordinates and map position (feature has now been disabled)
+  // const [path, setPath] = useState([]);
+  // const [walking, setWalking] = useState(false);
+  // const [watchId, setWatchId] = useState(null);
 
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
@@ -106,54 +93,24 @@ function MapPage() {
   // Global state for current position, location tag and pins
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
-  const locationTag = useGeoTagStore(state => state.geoTag);
-  const setLocationTag = useGeoTagStore(state => state.setGeoTag);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
 
   // Global state for collected pins
   const collectedPins = useCollectedPinStore(state => state.pinIds);
-  const setCollectedPins = useCollectedPinStore(state => state.setPinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
 
-  // Sample data for path layer (to be replaced as well)
-  const path2 = [
-    {
-      path: [
-        [-3.532736, 50.733763],
-        [-3.532653, 50.733856],
-        [-3.532582, 50.734025],
-        [-3.532538, 50.734098],
-        [-3.532489, 50.734238],
-        [-3.532412, 50.734407],
-        [-3.532396, 50.734417],
-        [-3.532224, 50.734756],
-        [-3.532171, 50.734879],
-        [-3.531977, 50.735076],
-        [-3.531859, 50.735137],
-        [-3.531945, 50.735259],
-        [-3.532063, 50.735374],
-        [-3.532138, 50.735442],
-        [-3.532407, 50.735619],
-        [-3.532825, 50.735802],
-        [-3.532825, 50.735802],
-        [-3.533136, 50.735856],
-        [-3.533415, 50.73585],
-      ],
-    },
-  ];
-
-  // Layer constructor for path layer (from deck.gl documentation)
-  const layer = new PathLayer({
-    id: "path-layer",
-    data: path,
-    getPath: (d) => d.path,
-    getColor: [73, 146, 255],
-    getWidth: 7,
-    widthMinPixels: 2,
-  });
+  // Layer constructor for path layer (from deck.gl documentation) (feature has now been disabled)
+  // const layer = new PathLayer({
+  //   id: "path-layer",
+  //   data: path,
+  //   getPath: (d) => d.path,
+  //   getColor: [73, 146, 255],
+  //   getWidth: 7,
+  //   widthMinPixels: 2,
+  // });
 
   useEffect(() => {
     if (progress >= 100) {
@@ -175,20 +132,11 @@ function MapPage() {
       resolve();
     })
       .then(() => {
-        // Checks if mood has been set before, if not call mood prompt;
-        if (sessionStorage.mood === undefined) {
-          setShowMoodPrompt(true);
-        } else {
-          setMood(sessionStorage.mood);
-        }
-        setProgress(oldProgress => oldProgress + 30);
-      })
-      .then(() => {
         cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
           setPins(data);
-          setProgress(oldProgress => oldProgress + 20);
+          setProgress(oldProgress => oldProgress + 50);
         });
       });
   }, []);
@@ -204,16 +152,6 @@ function MapPage() {
   //     navigator.geolocation.clearWatch(watchId);
   //   }
   // }, [walking]);
-
-  useEffect(() => {
-    if (lastPosition.lat == 0 && lastPosition.lng == 0) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    } else if (Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    }
-  }, [position]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -306,12 +244,6 @@ function MapPage() {
     );
   };
 
-  const handleMoodPrompt = (mood) => {
-    setMood(mood);
-    sessionStorage.mood = mood;
-    setShowMoodPrompt(false);
-  };
-
   return (
     <>
       {/* the absolute position post view */}
@@ -337,11 +269,7 @@ function MapPage() {
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
         {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-          <div
-            className={
-              showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
-            }
-          >
+          <div className="mapContainer">
             <Map
               id="map"
               defaultCenter={position}
@@ -384,7 +312,6 @@ function MapPage() {
                 );
               })}
               {discoverPins(position.lat, position.lng).map((pin) => {
-                const color = `var(--${mood})`;
                 return (
                   <AdvancedMarker
                     key={pin.id}
@@ -397,14 +324,7 @@ function MapPage() {
             </Map>
           </div>
         </APIProvider>}
-        {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-        <div className="bottom-prompt">
-          <div className="bottom-prompt-wrapper">
-            <img src={Location} />{locationTag}
-          </div>
-        </div>
       </div>
-
     </>
   );
 }

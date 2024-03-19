@@ -35,8 +35,7 @@ function Capture() {
   const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
-  const lastPosition = useLastPositionStore(state => state.position);
-  const setLastPosition = useLastPositionStore(state => state.setPosition);
+  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
 
 
   // Local state management for UI interactions and data handling.
@@ -71,10 +70,7 @@ function Capture() {
 
   // Update location tag based on position change with a certain threshold.
   useEffect(() => {
-    if (lastPosition.lat == 0 && lastPosition.lng == 0) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    } else if (Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
+    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
       Geolocation(position.lat, position.lng, setLocationTag);
       setLastPosition({ lat: position.lat, lng: position.lng });
     }
