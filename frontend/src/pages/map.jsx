@@ -10,7 +10,7 @@ import { useState, useEffect, useMemo } from "react";
 import { differenceInDays, format, set } from "date-fns";
 import { PathLayer } from "@deck.gl/layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
-import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { usePositionStore, useGeoTagStore, useLastPositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import MoodPrompt from "../features/MoodPrompt";
@@ -97,7 +97,8 @@ function MapPage() {
   const [path, setPath] = useState([]);
   const [walking, setWalking] = useState(false);
   const [watchId, setWatchId] = useState(null);
-  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
+  const lastPosition = useLastPositionStore(state => state.lastPosition);
+  const setLastPosition = useLastPositionStore(state => state.setPosition);
 
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
@@ -205,7 +206,10 @@ function MapPage() {
   // }, [walking]);
 
   useEffect(() => {
-    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
+    if (lastPosition.lat == 0 && lastPosition.lng == 0) {
+      Geolocation(position.lat, position.lng, setLocationTag);
+      setLastPosition({ lat: position.lat, lng: position.lng });
+    } else if (Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
       Geolocation(position.lat, position.lng, setLocationTag);
       setLastPosition({ lat: position.lat, lng: position.lng });
     }
