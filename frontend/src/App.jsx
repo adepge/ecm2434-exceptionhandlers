@@ -1,4 +1,5 @@
 import { Navigate, Routes, Route } from "react-router-dom";
+import axios from "axios";
 import Header from "./features/header";
 import Footer from "./features/footer";
 import MapPage from "./pages/map";
@@ -15,6 +16,9 @@ import ChangeIcon from "./pages/changeIcon";
 import TermsConditions from "./pages/terms-pages/termsConditions";
 import PrivacyPolicy from "./pages/terms-pages/privacyPolicy";
 import Admin from "./pages/admin";
+
+// Send cookies automatically with every request
+axios.defaults.withCredentials = true;
 
 function App() {
 

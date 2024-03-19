@@ -14,7 +14,6 @@ import Polaroid from "../features/polaroid";
 
 // function for set cookies
 const cookies = new Cookies();
-axios.defaults.withCredentials = true;
 
 // the page
 function Capture() {
