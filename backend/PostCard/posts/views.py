@@ -16,6 +16,8 @@ from .checkWinner import checkWinner
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import boto3
+from django.http import HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Custom permission class to check if the user is a superuser
 class IsSuperUser(IsAdminUser):
@@ -95,6 +97,10 @@ class ChallengesDetail(generics.RetrieveAPIView):
     queryset = Challenges.objects.all()
     serializer_class = ChallengesSerializer
     permission_classes = [AllowAny]
+
+@ensure_csrf_cookie
+def set_csrf_cookie(request):
+    return HttpResponse(status=200)
 
 @api_view(['POST','Get']) 
 @permission_classes([AllowAny])

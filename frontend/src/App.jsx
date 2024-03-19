@@ -24,6 +24,10 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 function App() {
 
+  useEffect(() => {
+    axios.get('https://api.post-i-tivity.me/api/set-csrf-cookie/');
+  }, []);
+
   return (
     <>
       <Header />
