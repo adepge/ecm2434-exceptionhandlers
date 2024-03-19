@@ -23,16 +23,16 @@ const cookies = new Cookies();
 // Debugging options
 const seeAllPins = false;
 
-// Overlay constructor component (from deck.gl documentation)
-export const DeckGlOverlay = ({ layers }) => {
-  const deck = useMemo(() => new GoogleMapsOverlay({ interleaved: true }), []);
+// Overlay constructor component (from deck.gl documentation) (feature has been disabled)
+// export const DeckGlOverlay = ({ layers }) => {
+//   const deck = useMemo(() => new GoogleMapsOverlay({ interleaved: true }), []);
 
-  const map = useMap();
-  useEffect(() => deck.setMap(map), [map]);
-  useEffect(() => deck.setProps({ layers }), [layers]);
+//   const map = useMap();
+//   useEffect(() => deck.setMap(map), [map]);
+//   useEffect(() => deck.setProps({ layers }), [layers]);
 
-  return null;
-};
+//   return null;
+// };
 
 // get all the post from database 
 const getPosts = async () => {
@@ -278,7 +278,6 @@ function MapPage() {
               disableDefaultUI={true}
               mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
             >
-              <DeckGlOverlay layers={layer} />
               <AdvancedMarker key="current-position" position={position}>
                 <div
                   style={{
