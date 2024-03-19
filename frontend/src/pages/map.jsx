@@ -206,12 +206,14 @@ function MapPage() {
   // }, [walking]);
 
   useEffect(() => {
-    if (lastPosition.lat == 0 && lastPosition.lng == 0) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    } else if (Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
+    if (lastPosition) {
+      if (lastPosition.lat == 0 && lastPosition.lng == 0) {
+        Geolocation(position.lat, position.lng, setLocationTag);
+        setLastPosition({ lat: position.lat, lng: position.lng });
+      } else if (Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
+        Geolocation(position.lat, position.lng, setLocationTag);
+        setLastPosition({ lat: position.lat, lng: position.lng });
+      }
     }
   }, [position]);
 
