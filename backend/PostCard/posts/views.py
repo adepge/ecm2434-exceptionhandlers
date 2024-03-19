@@ -516,7 +516,7 @@ def addCollection(request):
 
 
 
-@api_view(['POST'])
+@api_view(['POST','GET'])
 @permission_classes([AllowAny])
 #returns the collection of posts saved by a user
 def getCollections(request):
