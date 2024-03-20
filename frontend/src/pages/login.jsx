@@ -34,7 +34,7 @@ function LoginPage() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/login/",
+        "http://127.0.0.1:8000/api/login/",
         userData
       );
       cookies.set("token", response.data.token, { path: "/" });

@@ -56,7 +56,7 @@ function editProfile() {
     try {
       // Update the API URL as per your configuration
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/changeBio/"
+        "http://127.0.0.1:8000/api/changeBio/"
         , profileData,
         {
           headers: {

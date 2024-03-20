@@ -28,9 +28,6 @@ function FeedPage() {
   const [loadingImage, setLoadingImage] = useState(true);
   const [progress, setProgress] = useState(0);
 
-
-  const [fetchedPosts, setFetchedPosts] = useState(false);
-
   // get all the post from database
   const getPosts = async () => {
 
@@ -39,7 +36,7 @@ function FeedPage() {
 
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/collectedPosts/",
+        "http://127.0.0.1:8000/api/collectedPosts/",
         {},
         {
           headers: {
@@ -88,7 +85,6 @@ function FeedPage() {
       if (postList.length === 0) {
         setNoPost(true);
       }
-      setFetchedPosts(true);
 
       let heightDifference = 0;
       const rightPosts = [];
@@ -96,28 +92,26 @@ function FeedPage() {
 
       for (let i = 0; i < postList.length; i++) {
 
+        postList[i]["image"] = "http://127.0.0.1:8000/" + postList[i]["image"];
+
         const image = postList[i]["image"]
 
 
         // add rotation
         postList[i]["rotation"] = -2 + Math.random() * (2 + 2);
 
-        // const imageRatio = await getImageRatio(image);
+        const imageRatio = await getImageRatio(image);
 
         // if the right column is shorter, add the image to the right column
         if (heightDifference < 0) {
           rightPosts[i] = postList[i];
-          setColumns([leftPosts, rightPosts]);
-          const imageRatio = await getImageRatio(image);
           heightDifference += imageRatio * 1.1; // 1.1% for the padding of the polaroid
         } else {
           leftPosts[i] = postList[i];
-          setColumns([leftPosts, rightPosts]);
-          const imageRatio = await getImageRatio(image);
           heightDifference -= imageRatio * 1.1; // 1.1% for the padding of the polaroid
         }
         setColumns([leftPosts, rightPosts]);
-        // setProgress((i / postList.length) * 100);
+        setProgress((i / postList.length) * 100);
 
 
       }
@@ -147,7 +141,7 @@ function FeedPage() {
       />
 
       {/* prompt the user to collect some posts if there is no post */}
-      {(noPost) && (
+      {noPost && (
         <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
           <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
             <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
@@ -178,7 +172,7 @@ function FeedPage() {
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
-              {((!fetchedPosts) || noPost) ? (
+              {noPost ? (
                 <>
                   <div className={"image-grid "}>
                     <div className="polaroid skeleton shadow">
@@ -214,25 +208,16 @@ function FeedPage() {
                     {/* map each posts in the column */}
                     {column.map((post) => (
                       <div className={post["id"]} key={post["id"]}>
-                        <Polaroid
+                        {<Polaroid
                           src={post["image"]}
                           func={() => {
                             setActive(post);
                           }}
                           caption={post["caption"]}
                           rotation={post["rotation"]}
-                        />
+                        />}
                       </div>
-
                     ))}
-                    {
-                      loadingImage &&
-                      <div className="polaroid skeleton shadow">
-                        <div className="padding skeleton">
-                          <div className="image skeleton"></div>
-                        </div>
-                      </div>
-                    }
                   </div>
                 )))
               )}

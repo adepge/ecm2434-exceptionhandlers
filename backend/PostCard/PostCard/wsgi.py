@@ -9,14 +9,8 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 
 import os
 
-from django.conf import settings
-from django.contrib.staticfiles.handlers import StaticFilesHandler
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'PostCard.settings')
 
-if settings.DEBUG:
-    application = StaticFilesHandler(get_wsgi_application())
-else:
-    application = get_wsgi_application()
-
+application = get_wsgi_application()

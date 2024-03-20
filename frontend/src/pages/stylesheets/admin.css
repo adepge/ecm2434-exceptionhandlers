@@ -13,7 +13,6 @@
   margin-top: 2em;
   margin-left: 1em;
   margin-right: 1em;
-  padding-bottom: 70px;
   background-color: white;
   display: flex;
   gap: 2px;
@@ -90,7 +89,6 @@
 #dashboard-user-list{
   display: flex;
   justify-content: center;
-  padding-bottom: 70px;
 }
 
 #dashboard-user-list table{
