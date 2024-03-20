@@ -56,7 +56,7 @@ function FeedPage() {
         console.log("Response status:", error.response.status);
         console.log("Response headers:", error.response.headers);
       }
-      alert("Cannot connect to the server");
+      alert("Cannot connect to the server(feed)");
     }
   };
 
