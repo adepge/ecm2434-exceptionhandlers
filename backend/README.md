@@ -69,6 +69,13 @@ What it returns if successful: Status 200 and token assigned to existsing user <
 What it returns if unsuccessful : status 400 and the error message: "Invalid credentials" <br>
 Permissions : Any <br>
 
+URL : http://127.0.0.1:8000/api/logout/ <br>
+What requests it accepts : "POST" <br>
+What it returns if successful: Status 200 and token assigned to existsing user <br>
+What it returns if unsuccessful : status 400 and the error message: "Invalid credentials" <br>
+Permissions : Any <br>
+
+
 URL : http://127.0.0.1:8000/api/posts/ <br>
 What requests it accepts : Any <br>
 What it returns if successful : All posts made <br>
@@ -138,3 +145,92 @@ What requests it accepts : "POST" , "GET" <br>
 What it returns if successful : Status 200 and user details : userID and username <br>
 What it returns if unsuccessful : Status 400 and the error message : "User not logged in" <br>
 Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/posts/recent/ <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID geolocationID and username <br>
+What it returns if unsuccessful : Status 400 and the error message : "error: No recent posts" <br>
+Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/getAvatars <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID avatar and username <br>
+What it returns if unsuccessful : Status 400 and the error message : "error: No avatars" <br>
+Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/changeAvatar <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID avatar and username <br>
+What it returns if unsuccessful : Status 400 and the error message : "error: No avatars" <br>
+Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/getAllAvatars <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID avatar and username <br>
+What it returns if unsuccessful : Status 400 and the error message : "error: No avatars" <br>
+Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/createObjects <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID and username : "Database set up" <br>
+What it returns if unsuccessful : Status 404 and the error message : "404 not found" <br>
+Permissions : Any <br>
+
+URL : http://127.0.0.1:8000/api/purchase <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID avatar and username : Message": "You already own this avatar <br>
+What it returns if unsuccessful : Status 404 and the error message : "409 Conflict" <br>
+Permissions : Any <br>
+
+
+URL : http://127.0.0.1:8000/api/changeBio <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID and username : "youtube,instgram,twitter,Bio" <br>
+What it returns if unsuccessful : Status 400 and the error message : "400 bad request" <br>
+Permissions : Any <br>
+
+
+URL : http://127.0.0.1:8000/api/deletePost/  <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "post deleted succesfully" <br>
+What it returns if unsuccessful : Status 404 and the error message : "Post not found" <br>
+Permissions : IsSuperUser <br>
+
+
+URL : http://127.0.0.1:8000/api/deletePost/ <int:pk> / <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "post deleted succesfully" <br>
+What it returns if unsuccessful : Status 404 and the error message : "Post not found" <br>
+Permissions : IsSuperUser <br>
+
+URL : http://127.0.0.1:8000/api/deleteUser/  <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "User and all related data deleted successfully" <br>
+What it returns if unsuccessful : Status 404 and the error message : "User not found" <br>
+Permissions : IsSuperUser <br>
+
+URL : http://127.0.0.1:8000/api/deleteUser/ <int:pk> / <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "User and all related data deleted successfully" <br>
+What it returns if unsuccessful : Status 404 and the error message : "User not found" <br>
+Permissions : IsSuperUser <br>
+
+URL : http://127.0.0.1:8000/api/getAllPosts/ <int:pk> / <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  <br>
+What it returns if unsuccessful : Status 400 and the error message : "400 bad request" <br>
+Permissions : IsSuperUser <br>
+
+
+URL : http://127.0.0.1:8000/api/getAllUsers/ <int:pk> / <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "all user data" <br>
+What it returns if unsuccessful : Status 404 and the error message : "400 bad request" <br>
+Permissions : IsSuperUser <br>
+
+
+URL : http://127.0.0.1:8000/api/checkSuperUserId/ <int:user_id>// <br>
+What requests it accepts : "POST" , "GET" <br>
+What it returns if successful : Status 200 and user details : userID  : "User is superuser" <br>
+What it returns if unsuccessful : Status 404 and the error message : "User not found" <br>
+Permissions : IsSuperUser <br>
