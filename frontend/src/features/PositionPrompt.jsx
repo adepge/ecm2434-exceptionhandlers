@@ -2,9 +2,7 @@ import './stylesheets/positionPrompt.css'
 import Navation from '../assets/navigation.svg'
 import { useState, useEffect } from 'react';
 
-export default function PositionPrompt() {
-
-    const [show, setShowPrompt] = useState(false);
+export default function PositionPrompt({ setLocationGranted }) {
 
     onclick = () => {
         if (navigator.geolocation) {
@@ -16,17 +14,8 @@ export default function PositionPrompt() {
         }
     };
 
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            // do nothing if the position is already set
-        }, (error) => {
-            // show the position prompt if the location is not set
-            setShowPrompt(true);
-        });
-    }, [navigator.geolocation])
-
     return (
-        <div className="position-prompt" style={{ display: show ? "" : "none" }}>
+        <div className="position-prompt">
             <div className="position-prompt-content">
                 <div className='prompt'>
                     <div className='icon'>
