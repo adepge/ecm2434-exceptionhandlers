@@ -1,12 +1,13 @@
 
 function Geolocation(latitude, longitude, setLocation) {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`)
+  const apiKey = process.env.REACT_APP_MAPBOX_API_KEY;
+  fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`)
   .then(response => response.json())
   .then(data => {
-    if (data.results && data.results.length > 0) {
-      const placeName = data.results[0].formatted_address;
-      setLocation(placeName.split(',')[0]);
+    console.log(data);
+    if (data.features && data.features.length > 0) {
+      const placeName = data.features[0].text;
+      setLocation(placeName);
     } else {
       setLocation('Unknown Location');
     }
@@ -15,5 +16,5 @@ function Geolocation(latitude, longitude, setLocation) {
     console.error(error);
   });
 }
- 
+
 export default Geolocation;

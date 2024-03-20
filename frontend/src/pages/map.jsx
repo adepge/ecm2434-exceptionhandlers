@@ -1,38 +1,22 @@
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-  useMap,
-} from "@vis.gl/react-google-maps";
-import { useState, useEffect, useMemo } from "react";;
-import { GoogleMapsOverlay } from "@deck.gl/google-maps";
-import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { useState, useEffect, useMemo } from "react";
+import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
 import axios from "axios";
 import InitMap from "../features/InitMap";
+import Geolocation from "../features/Geolocation";
 import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
 import question from "../assets/map/question.svg";
+import pinimg from "../assets/map/pin.svg";
+import Map, {Marker} from 'react-map-gl';
 
 const cookies = new Cookies();
 
 // Debugging options
 const seeAllPins = false;
-
-// Overlay constructor component (from deck.gl documentation) (feature has been disabled)
-// export const DeckGlOverlay = ({ layers }) => {
-//   const deck = useMemo(() => new GoogleMapsOverlay({ interleaved: true }), []);
-
-//   const map = useMap();
-//   useEffect(() => deck.setMap(map), [map]);
-//   useEffect(() => deck.setProps({ layers }), [layers]);
-
-//   return null;
-// };
 
 // get all the post from database 
 const getPosts = async () => {
@@ -69,6 +53,7 @@ function MapPage() {
 
   // check if the user is logged in
   useEffect(() => {
+    console.log(process.env.REACT_APP_MAPBOX_API_KEY)
     CheckLogin();
   }, []);
 
@@ -82,11 +67,6 @@ function MapPage() {
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerPost, setDrawerPost] = useState(null);
 
-  // State for walking and tracking path coordinates and map position (feature has now been disabled)
-  // const [path, setPath] = useState([]);
-  // const [walking, setWalking] = useState(false);
-  // const [watchId, setWatchId] = useState(null);
-
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
 
@@ -95,22 +75,13 @@ function MapPage() {
   const setPosition = usePositionStore(state => state.setPosition);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
+  const [heading, setHeading] = useState(null);
 
   // Global state for collected pins
   const collectedPins = useCollectedPinStore(state => state.pinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
-
-  // Layer constructor for path layer (from deck.gl documentation) (feature has now been disabled)
-  // const layer = new PathLayer({
-  //   id: "path-layer",
-  //   data: path,
-  //   getPath: (d) => d.path,
-  //   getColor: [73, 146, 255],
-  //   getWidth: 7,
-  //   widthMinPixels: 2,
-  // });
 
   useEffect(() => {
     if (progress >= 100) {
@@ -140,18 +111,6 @@ function MapPage() {
         });
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (navigator.geolocation && walking) {
-  //     const watchId = navigator.geolocation.watchPosition((position) => {
-  //       setPosition(position.coords.latitude, position.coords.longitude);
-  //       setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-  //       setWatchId(watchId);
-  //     });
-  //   } else if (!walking) {
-  //     navigator.geolocation.clearWatch(watchId);
-  //   }
-  // }, [walking]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -226,10 +185,7 @@ function MapPage() {
     return deg * (Math.PI / 180)
   }
 
-  const handleOpen = (e, id) => {
-    // prevent the user from clicking into the outsite area and the map icon
-    e.domEvent.preventDefault();
-
+  const handleOpen = (id) => {
     setPins(
       pins.map((pin) => {
         if (pin.id === id) {
@@ -243,6 +199,40 @@ function MapPage() {
       })
     );
   };
+
+  const closeRenderPins = useMemo(() => {
+    return filterPins(position.lat, position.lng).map((pin) => {
+      return (
+        <Marker
+          key={pin.id}
+          longitude={pin.position.lng}
+          latitude={pin.position.lat}
+          anchor="bottom"
+          onClick={e => {
+            e.originalEvent.stopPropagation();
+            handleOpen(pin.id);
+          }}
+        >
+          <img src={pinimg} />
+        </Marker>
+      );
+    });
+  }, [position.lat, position.lng, filterPins]);
+
+  const questionRenderPins = useMemo(() => {
+    return discoverPins(position.lat, position.lng).map((pin) => {
+      return (
+        <Marker
+          key={pin.id}
+          longitude={pin.position.lng}
+          latitude={pin.position.lat}
+          anchor="bottom"
+        >
+          <img src={question} />
+        </Marker>
+      );
+    });
+  }, [position.lat, position.lng, discoverPins]);
 
   return (
     <>
@@ -268,21 +258,23 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-          <div className="mapContainer">
+        {(position.lat && position.lng) && 
+          <div className= "mapContainer">
             <Map
-              id="map"
-              defaultCenter={position}
-              defaultZoom={17}
-              gestureHandling={"greedy"}
-              disableDefaultUI={true}
-              mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+              id = "map"
+              mapboxAccessToken={process.env.REACT_APP_MAPBOX_API_KEY}
+              initialViewState={{
+                longitude: position.lng,
+                latitude: position.lat,
+                zoom: 17
+              }}
+              mapStyle="mapbox://styles/mapbox/streets-v12"
             >
-              <AdvancedMarker key="current-position" position={position}>
+              <Marker longitude={position.lng} latitude={position.lat} anchor="center">
                 <div
                   style={{
-                    width: 16,
-                    height: 16,
+                    width: 14,
+                    height: 14,
                     position: "absolute",
                     top: 0,
                     left: 0,
@@ -292,37 +284,27 @@ function MapPage() {
                     transform: "translate(-50%, -50%)",
                   }}
                 ></div>
-              </AdvancedMarker>
-              {filterPins(position.lat, position.lng).map((pin) => {
-                const color = `var(--grateful)`;
-                return (
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                    onClick={(e) => handleOpen(e, pin.id)}
-                  >
-                    <Pin
-                      background={color}
-                      borderColor={color}
-                      glyphColor="white"
-                      scale={0.8}
-                    ></Pin>
-                  </AdvancedMarker>
-                );
-              })}
-              {discoverPins(position.lat, position.lng).map((pin) => {
-                return (
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                  >
-                    <img src={question} />
-                  </AdvancedMarker>
-                );
-              })}
+                {heading !== null && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      width: 0,
+                      height: 0,
+                      borderTop: "10px solid transparent",
+                      borderBottom: "10px solid #4185f5",
+                      borderLeft: "10px solid transparent",
+                      borderRight: "10px solid transparent",
+                      transform: `rotate(${heading}deg)`,
+                    }}
+                  ></div>
+                )}
+              </Marker>
+              {closeRenderPins}
+              {questionRenderPins}
             </Map>
-          </div>
-        </APIProvider>}
+          </div>}
       </div>
     </>
   );
