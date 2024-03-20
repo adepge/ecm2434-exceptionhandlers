@@ -72,7 +72,7 @@ function MapPage() {
   const [form, setForm] = useState({ "postid": 0 })
 
   // Global state for current position, location tag and pins
-  const [locationGranted, setLocationGranted] = useState(false);
+  const [promptShown, setPromptShown] = useState(false);
   const [heading, setHeading] = useState(null);
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
@@ -97,17 +97,12 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation) {
+      if (navigator.geolocation && promptShown) {
         navigator.geolocation.watchPosition(
           (position) => {
             setPosition(position.coords.latitude, position.coords.longitude);
             setHeading(position.coords.heading);
             setLocationGranted(true);
-          },
-          (error) => {
-            if (error.code === error.PERMISSION_DENIED) {
-              setLocationGranted(false);
-            }
           }
         );
       }
@@ -248,7 +243,7 @@ function MapPage() {
 
   return (
     <>
-      {!locationGranted && <PositionPrompt setLocationGranted={setLocationGranted} />}
+      {<PositionPrompt promptShown={() => { setPromptShown(true) }} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}

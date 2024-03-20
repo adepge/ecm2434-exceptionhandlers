@@ -2,7 +2,9 @@ import './stylesheets/positionPrompt.css'
 import Navation from '../assets/navigation.svg'
 import { useState, useEffect } from 'react';
 
-export default function PositionPrompt({ setLocationGranted }) {
+export default function PositionPrompt({ promptShown }) {
+
+    const [show, setShowPrompt] = useState(false);
 
     onclick = () => {
         if (navigator.geolocation) {
@@ -10,12 +12,26 @@ export default function PositionPrompt({ setLocationGranted }) {
             navigator.geolocation.getCurrentPosition((position) => {
                 // reload the page to get the new location
                 // window.location.reload();
+                promptShown();
             });
         }
     };
 
+    useEffect(() => {
+        async function check() {
+            const permission = await navigator.permissions.query({ name: "geolocation" });
+            if (permission.state === "granted") {
+                setShowPrompt(false);
+                promptShown();
+            } else {
+                setShowPrompt(true);
+            }
+        }
+        check();
+    }, [navigator.permissions.query({ name: "geolocation" })])
+
     return (
-        <div className="position-prompt">
+        <div className="position-prompt" style={{ display: show ? "" : "none" }}>
             <div className="position-prompt-content">
                 <div className='prompt'>
                     <div className='icon'>
