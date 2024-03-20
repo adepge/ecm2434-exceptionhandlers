@@ -100,7 +100,7 @@ function MapPage() {
     new Promise((resolve, reject) => {
       // Get the user's current position
       console.log(promptShown);
-      if (navigator.geolocation) {
+      if (navigator.geolocation && promptShown) {
         navigator.geolocation.watchPosition(
           (position) => {
             setPosition(position.coords.latitude, position.coords.longitude);
@@ -120,7 +120,7 @@ function MapPage() {
           setProgress(oldProgress => oldProgress + 50);
         });
       });
-  }, []);
+  }, [promptShown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
