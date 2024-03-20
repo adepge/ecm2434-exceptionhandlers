@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
 import axios from "axios";
