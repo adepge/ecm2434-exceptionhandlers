@@ -99,7 +99,8 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation && promptShown) {
+      console.log(promptShown);
+      if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
           (position) => {
             setPosition(position.coords.latitude, position.coords.longitude);

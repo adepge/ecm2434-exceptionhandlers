@@ -13,6 +13,7 @@ export default function PositionPrompt({ promptShown }) {
                 // reload the page to get the new location
                 // window.location.reload();
                 promptShown();
+                setShowPrompt(false);
             });
         }
     };
