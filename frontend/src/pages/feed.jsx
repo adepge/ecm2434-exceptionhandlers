@@ -20,10 +20,6 @@ function FeedPage() {
   // check if the user is logged in
   const navigate = useNavigate();
 
-  useEffect(() => {
-    CheckLogin(true, navigate);
-  }, []);
-
   const [activePost, setActive] = useState({});
   const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
@@ -60,6 +56,7 @@ function FeedPage() {
   };
 
   useEffect(() => {
+
     // Function to load an image and update its height in the state
     function getImageRatio(url) {
       // wait for the image to load
@@ -118,8 +115,13 @@ function FeedPage() {
 
       }
     };
-
-    processImages();
+    CheckLogin(true, navigate).then((response) => {
+      if (response === false) {
+        navigate("/login");
+      } else {
+        processImages();
+      } 
+    });
 
   }, []);
 
@@ -167,7 +169,7 @@ function FeedPage() {
 
       {/* the feed */}
       {/* if there is no post or the post view is active, blur the feed */}
-      <div id="feed" className={noPost ? "blur" : none}>
+      <div id="feed" className={noPost ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">

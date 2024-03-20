@@ -14,6 +14,8 @@ const cookies = new Cookies();
 
 function Challenge() {
 
+    const navigate = useNavigate();
+    
     // Local state management for UI interactions and data handling.
     const [avatars, setAvatars] = useState([]);
     const [challenges, setChallenges] = useState([]);
@@ -22,14 +24,8 @@ function Challenge() {
     // check if the user have logged in and setup everyting
     useEffect(() => {
 
-        // check if the user has logged in and get the token
-        const navigate = useNavigate();
-
-        useEffect(() => {
-          CheckLogin(true, navigate);
-        }, []);
+        CheckLogin(true, navigate);
       
-
         // get all the avatars
         const getAvatars = async () => {
             const response = await axios.get(
