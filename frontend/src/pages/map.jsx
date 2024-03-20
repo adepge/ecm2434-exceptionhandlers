@@ -1,13 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { differenceInDays, format, set } from "date-fns";
-import { PathLayer } from "@deck.gl/layers";
-import { GoogleMapsOverlay } from "@deck.gl/google-maps";
+import { useState, useEffect, useMemo } from "react";
 import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
-import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
-import Location from "../assets/location.svg";
 import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
@@ -22,7 +17,6 @@ const cookies = new Cookies();
 
 // Debugging options
 const seeAllPins = true;
-const spoofLocation = false;
 
 // get all the post from database 
 const getPosts = async () => {
@@ -68,19 +62,10 @@ function MapPage() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
 
-  // State for mood prompt
-  const [showMoodPrompt, setShowMoodPrompt] = useState(false);
-  const [mood, setMood] = useState("unselected");
-
   // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerPost, setDrawerPost] = useState(null);
 
-  // State for walking and tracking path coordinates and map position
-  const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(false);
-  const [watchId, setWatchId] = useState(null);
-  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
 
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
@@ -88,15 +73,11 @@ function MapPage() {
   // Global state for current position, location tag and pins
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
-  const locationTag = useGeoTagStore(state => state.geoTag);
-  const setLocationTag = useGeoTagStore(state => state.setGeoTag);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
   const [heading, setHeading] = useState(null);
 
   // Global state for collected pins
-  const collectedPins = useCollectedPinStore(state => state.pinIds);
-  const setCollectedPins = useCollectedPinStore(state => state.setPinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
@@ -133,25 +114,6 @@ function MapPage() {
         });
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (navigator.geolocation && walking) {
-  //     const watchId = navigator.geolocation.watchPosition((position) => {
-  //       setPosition(position.coords.latitude, position.coords.longitude);
-  //       setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-  //       setWatchId(watchId);
-  //     });
-  //   } else if (!walking) {
-  //     navigator.geolocation.clearWatch(watchId);
-  //   }
-  // }, [walking]);
-
-  useEffect(() => {
-    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    }
-  }, [position]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
