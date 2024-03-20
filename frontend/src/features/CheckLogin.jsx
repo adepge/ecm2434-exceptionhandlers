@@ -45,7 +45,7 @@ function CheckLogin(redirect = true) {
                 }
             } else {
                 console.log(error)
-                alert("Cannot connect to the server(CheckLogin)", error);
+                // alert("Cannot connect to the server(CheckLogin)", error);
             }
             return false
         }
