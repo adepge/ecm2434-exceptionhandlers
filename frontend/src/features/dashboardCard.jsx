@@ -16,7 +16,7 @@ const DashboardCard = ({id, username, isSuperUser, image, caption, datetime, loc
     return ( 
         <div className="dashboard-card">
             <button className="exit-button" onClick={() => setPostView(false)}><img src={exitimg}></img></button>
-            <img src={"http://127.0.0.1:8000" + image}></img>
+            <img src={image}></img>
             <p>Caption: {caption}</p>
             <p>Location: {location}</p>
             <p>Author: {username}</p>

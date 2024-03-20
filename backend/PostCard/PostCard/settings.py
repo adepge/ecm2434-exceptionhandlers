@@ -12,31 +12,55 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import sys
+import dj_database_url
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
+from storages.backends.s3boto3 import S3Boto3Storage
 
 
 # settings.py
 
+class MediaStorage(S3Boto3Storage):
+    bucket_name = "post-i-tivity"
+
+
+DEFAULT_FILE_STORAGE = "post-i-tivity.settings.MediaStorage"
+
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+
+AWS_STORAGE_BUCKET_NAME = "post-i-tivity"
+AWS_S3_REGION_NAME = "ams3"
+AWS_S3_ENDPOINT_URL = "https://post-i-tivity.ams3.digitaloceanspaces.com"
+
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+
+AWS_MEDIA_LOCATION = 'media'
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = '%s%s/' % (AWS_S3_ENDPOINT_URL, AWS_MEDIA_LOCATION)
+DEFAULT_FILE_STORAGE = 'PostCard.settings.MediaStorage'
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$p9fq!f87crk&+doder0*xttbfp^-tn7nsw-ao#@umqe4fm&51'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # Application definition
 # Included all the apps we add , and other dependiences
@@ -53,7 +77,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'PostCard',
-    'rest_framework.authtoken' 
+    'rest_framework.authtoken', 
+    'storages',
 ]
 
 # configured the settings to allow us to use the restframe
@@ -70,19 +95,23 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+# Allows root domain to communicate with api subdomain
+CSRF_TRUSTED_ORIGINS = ['https://*.post-i-tivity.me','https://*.127.0.0.1']
+
 #Allows frontend to connect to our server
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", "http://localhost:5174", "http://localhost:5175",
+    "https://post-i-tivity.me"
     # 'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.common.CommonMiddleware',
 ]
@@ -113,13 +142,21 @@ WSGI_APPLICATION = 'PostCard.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
+if DEVELOPMENT_MODE is True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
     }
-}
+elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if os.getenv("DATABASE_URL", None) is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+    DATABASES = {
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    }
 
 
 # Password validation
@@ -156,7 +193,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -24,3 +24,8 @@ export const useGeoTagStore = create<geoTagStore>((set) => ({
     geoTag: "Unknown Location",
     setGeoTag: (tag) => set({geoTag: tag})
 }));
+
+export const useLastPositionStore = create<positionStore>((set) => ({
+    position: {lat: 0, lng: 0},
+    setPosition: (lat, lng) => set({position: {lat, lng}})
+}));
