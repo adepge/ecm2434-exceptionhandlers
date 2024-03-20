@@ -260,9 +260,9 @@ function MapPage() {
   const discoverPins = (lat, lng) => {
     const minRadius = 0.05; // Minimum radius of discovery (about 50m from the position)
     const maxRadius = 0.25; // Maximum radius of discovery (about 175m from the position)
-  
+
     const discoverPins = pins.filter((pin) => {
-  
+
       const dLat = deg2rad(pin.position.lat - lat);
       const dLng = deg2rad(pin.position.lng - lng);
       const a =
@@ -321,7 +321,7 @@ function MapPage() {
         // perform a null check or ensure that activePost["position"]["location"] exists before accessing its location property.
         location={activePost["position"] && activePost["position"]["location"]}
       />
-      <div className={Object.keys(activePost).length !== 0 ? "blur" : ""} id="map-content">
+      <div id="map-content">
         {loading && <InitMap progress={progress} />}
         <DrawerDown
           id={form.postid}
@@ -386,7 +386,7 @@ function MapPage() {
                     key={pin.id}
                     position={pin.position}
                   >
-                    <img src={question}/>
+                    <img src={question} />
                   </AdvancedMarker>
                 );
               })}

@@ -16,7 +16,8 @@
 
   /* prevent the display from being clipped */
   overflow-y: auto;
-  z-index: 9;
+  z-index: 11;
+  backdrop-filter: blur(5px);
 
   /* center the wrapper */
   display: flex;
