@@ -16,3 +16,5 @@ function Geolocation(latitude, longitude, setLocation) {
     console.error(error);
   });
 }
+
+export default Geolocation;
