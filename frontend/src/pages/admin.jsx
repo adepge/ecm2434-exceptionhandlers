@@ -184,7 +184,7 @@ const Admin = () => {
                                     users.map((user) => (
                                         <tr key={user.id}>
                                             <td>{user.id}</td>
-                                            <td>{user.profilePicture == 'NULL' ? "None set" : <img src={user.profilePicture} style={{height: "20px"}}></img>}</td>
+                                            <td>{user.profilePicture == 'NULL' ? "None set" : <img src={user.profilePicture} style={{height: "40px", borderRadius: "50px"}}></img>}</td>
                                             <td>{user.username}</td>
                                             <td>{user.bio}</td>
                                             <td>{user.twitter}</td>
