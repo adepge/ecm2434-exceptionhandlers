@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
+import { useNavigate } from "@reach/router";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
 import axios from "axios";
@@ -13,7 +14,6 @@ import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
 import Map, { Marker } from 'react-map-gl';
 import PositionPrompt from "../features/PositionPrompt";
-import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -53,11 +53,11 @@ const getCollectedPosts = async (token) => {
 
 function MapPage() {
 
-  // check if the user is logged in
   const navigate = useNavigate();
 
+  // check if the user is logged in
   useEffect(() => {
-    CheckLogin(true, navigate);
+    CheckLogin(true, navigate)
   }, []);
 
   // State for active post in the view
@@ -74,7 +74,7 @@ function MapPage() {
   const [form, setForm] = useState({ "postid": 0 })
 
   // Global state for current position, location tag and pins
-  const [promptShown, setPromptShown] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(false);
   const [heading, setHeading] = useState(null);
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
@@ -99,12 +99,17 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      console.log(promptShown);
-      if (navigator.geolocation && promptShown) {
+      if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
           (position) => {
             setPosition(position.coords.latitude, position.coords.longitude);
             setHeading(position.coords.heading);
+            setLocationGranted(true);
+          },
+          (error) => {
+            if (error.code === error.PERMISSION_DENIED) {
+              setLocationGranted(false);
+            }
           }
         );
       }
@@ -119,7 +124,7 @@ function MapPage() {
           setProgress(oldProgress => oldProgress + 50);
         });
       });
-  }, [promptShown]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -245,7 +250,7 @@ function MapPage() {
 
   return (
     <>
-      <PositionPrompt promptShown={() => { setPromptShown(true) }} />
+      {!locationGranted && <PositionPrompt setLocationGranted={setLocationGranted} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
