@@ -72,11 +72,13 @@ function MapPage() {
   const [form, setForm] = useState({ "postid": 0 })
 
   // Global state for current position, location tag and pins
+  const [promptShown, setPromptShown] = useState(false);
+  const [heading, setHeading] = useState(null);
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
-  const [heading, setHeading] = useState(null);
+
 
   // Global state for collected pins
   const collectedPins = useCollectedPinStore(state => state.pinIds);
@@ -95,10 +97,14 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((position) => {
-          setPosition(position.coords.latitude, position.coords.longitude);
-        });
+      if (navigator.geolocation && promptShown) {
+        navigator.geolocation.watchPosition(
+          (position) => {
+            setPosition(position.coords.latitude, position.coords.longitude);
+            setHeading(position.coords.heading);
+            setLocationGranted(true);
+          }
+        );
       }
       setProgress(oldProgress => oldProgress + 30);
       resolve();
@@ -237,7 +243,7 @@ function MapPage() {
 
   return (
     <>
-      <PositionPrompt />
+      {<PositionPrompt promptShown={() => { setPromptShown(true) }} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
