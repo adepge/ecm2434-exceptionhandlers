@@ -60,6 +60,9 @@ function MapPage() {
   // State for active post in the view
   const [activePost, setActive] = useState({});
 
+  // State if the prompt has been shown
+  const [promptShown, setPromptShown] = useState(false);
+
   // State for location prompt
   const [showPrompt, setShowPrompt] = useState(false);
 
@@ -97,7 +100,7 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation) {
+      if (navigator.geolocation && promptShown) {
         navigator.geolocation.watchPosition((position) => {
           setPosition(position.coords.latitude, position.coords.longitude);
           setHeading(position.coords.heading);
@@ -117,7 +120,7 @@ function MapPage() {
           setProgress(oldProgress => oldProgress + 20);
         });
       });
-  }, []);
+  }, [promptShown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -245,7 +248,7 @@ function MapPage() {
 
   return (
     <>
-      <PositionPrompt />
+      <PositionPrompt promptShown={() => setPromptShown(true)} />
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
