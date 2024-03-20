@@ -5,6 +5,9 @@
   transition: filter 0.3s ease-in-out;
 }
 
+.blur {
+  filter: blur(5px);
+}
 #top {
   margin-bottom: 25px;
 
