@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
 
-  navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({});
   async function setUserName() {
