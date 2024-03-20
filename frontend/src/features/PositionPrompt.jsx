@@ -11,7 +11,7 @@ export default function PositionPrompt() {
             // promt the user to allow for location access
             navigator.geolocation.getCurrentPosition((position) => {
                 // reload the page to get the new location
-                window.location.reload();
+                // window.location.reload();
             });
         }
     };
