@@ -25,14 +25,17 @@ export default function PositionPrompt({ promptShown }) {
                 promptShown();
             } else {
                 setShowPrompt(true);
+                promptShown();
             }
         }
         check();
     }, [navigator.permissions.query({ name: "geolocation" })])
 
     return (
-        <div className="position-prompt" style={{ display: show ? "" : "none" }}>
-            <div className="position-prompt-content">
+        <>
+            <div className="position-prompt" style={{ display: show ? "" : "none" }}>
+            </div>
+            <div className="position-prompt-content" style={{ display: show ? "" : "none" }}>
                 <div className='prompt'>
                     <div className='icon'>
                         <img src={Navation} alt="navigation" />
@@ -46,8 +49,8 @@ export default function PositionPrompt({ promptShown }) {
                     <div className='guide'>Not working? <a href='https://support.google.com/chrome/answer/142065?hl=en-GB&co=GENIE.Platform%3DDesktop'>Troubleshooting guide</a></div>
                     <button onClick={onclick}>Allow Access</button>
                 </div>
-            </div>
-        </div>
+            </div >
+        </>
     )
 }
 
