@@ -1,6 +1,6 @@
 
 function Geolocation(latitude, longitude, setLocation) {
-  const apiKey = process.env.REACT_APP_MAPBOX_API_KEY;
+  const apiKey = import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY;
   fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`)
   .then(response => response.json())
   .then(data => {
