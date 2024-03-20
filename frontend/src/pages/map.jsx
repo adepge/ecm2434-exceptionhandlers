@@ -53,6 +53,7 @@ function MapPage() {
 
   // check if the user is logged in
   useEffect(() => {
+    console.log(process.env.REACT_APP_MAPBOX_API_KEY)
     CheckLogin();
   }, []);
 
