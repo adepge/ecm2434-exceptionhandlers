@@ -120,6 +120,14 @@
 #dashboard-user-list tr:nth-child(even) {
   background-color: #faf5f0;
 }
+#dashboard-user-list tbody{
+  font-weight: 400;
+  font-size: 14px;
+  word-break: break-all;
+  white-space: normal;
+  min-width: 85px;
+}
+
 #dashboard-user-list tbody tr{
   color: black;
   height: auto;
