@@ -1,21 +1,8 @@
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Marker,
-  Pin,
-  useMap,
-} from "@vis.gl/react-google-maps";
 import { useState, useEffect, useMemo } from "react";
-import { differenceInDays, format, set } from "date-fns";
-import { PathLayer } from "@deck.gl/layers";
-import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
-import MoodPrompt from "../features/MoodPrompt";
 import DrawerDown from "../features/DrawerDown";
-import Location from "../assets/location.svg";
 import axios from "axios";
 import InitMap from "../features/InitMap";
 import Geolocation from "../features/Geolocation";
@@ -23,23 +10,13 @@ import Cookies from "universal-cookie";
 import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
 import question from "../assets/map/question.svg";
+import pinimg from "../assets/map/pin.svg";
+import Map, {Marker} from 'react-map-gl';
 
 const cookies = new Cookies();
 
 // Debugging options
 const seeAllPins = true;
-const spoofLocation = false;
-
-// Overlay constructor component (from deck.gl documentation)
-export const DeckGlOverlay = ({ layers }) => {
-  const deck = useMemo(() => new GoogleMapsOverlay({ interleaved: true }), []);
-
-  const map = useMap();
-  useEffect(() => deck.setMap(map), [map]);
-  useEffect(() => deck.setProps({ layers }), [layers]);
-
-  return null;
-};
 
 // get all the post from database 
 const getPosts = async () => {
@@ -47,6 +24,7 @@ const getPosts = async () => {
     const response = await axios.get(
       "http://127.0.0.1:8000/api/getRecentPosts/"
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -74,7 +52,6 @@ const getCollectedPosts = async (token) => {
 
 function MapPage() {
 
-  // check if the user is logged in
   useEffect(() => {
     CheckLogin();
   }, []);
@@ -85,19 +62,10 @@ function MapPage() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
 
-  // State for mood prompt
-  const [showMoodPrompt, setShowMoodPrompt] = useState(false);
-  const [mood, setMood] = useState("unselected");
-
   // State for drawer
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerPost, setDrawerPost] = useState(null);
 
-  // State for walking and tracking path coordinates and map position
-  const [path, setPath] = useState([]);
-  const [walking, setWalking] = useState(false);
-  const [watchId, setWatchId] = useState(null);
-  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
 
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
@@ -105,54 +73,14 @@ function MapPage() {
   // Global state for current position, location tag and pins
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
-  const locationTag = useGeoTagStore(state => state.geoTag);
-  const setLocationTag = useGeoTagStore(state => state.setGeoTag);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
+  const [heading, setHeading] = useState(null);
 
   // Global state for collected pins
-  const collectedPins = useCollectedPinStore(state => state.pinIds);
-  const setCollectedPins = useCollectedPinStore(state => state.setPinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
-
-  // Sample data for path layer (to be replaced as well)
-  const path2 = [
-    {
-      path: [
-        [-3.532736, 50.733763],
-        [-3.532653, 50.733856],
-        [-3.532582, 50.734025],
-        [-3.532538, 50.734098],
-        [-3.532489, 50.734238],
-        [-3.532412, 50.734407],
-        [-3.532396, 50.734417],
-        [-3.532224, 50.734756],
-        [-3.532171, 50.734879],
-        [-3.531977, 50.735076],
-        [-3.531859, 50.735137],
-        [-3.531945, 50.735259],
-        [-3.532063, 50.735374],
-        [-3.532138, 50.735442],
-        [-3.532407, 50.735619],
-        [-3.532825, 50.735802],
-        [-3.532825, 50.735802],
-        [-3.533136, 50.735856],
-        [-3.533415, 50.73585],
-      ],
-    },
-  ];
-
-  // Layer constructor for path layer (from deck.gl documentation)
-  const layer = new PathLayer({
-    id: "path-layer",
-    data: path,
-    getPath: (d) => d.path,
-    getColor: [73, 146, 255],
-    getWidth: 7,
-    widthMinPixels: 2,
-  });
 
   useEffect(() => {
     if (progress >= 100) {
@@ -168,18 +96,13 @@ function MapPage() {
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition((position) => {
           setPosition(position.coords.latitude, position.coords.longitude);
+          setHeading(position.coords.heading);
         });
       }
       setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
       .then(() => {
-        // Checks if mood has been set before, if not call mood prompt;
-        if (sessionStorage.mood === undefined) {
-          setShowMoodPrompt(true);
-        } else {
-          setMood(sessionStorage.mood);
-        }
         setProgress(oldProgress => oldProgress + 30);
       })
       .then(() => {
@@ -191,25 +114,6 @@ function MapPage() {
         });
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (navigator.geolocation && walking) {
-  //     const watchId = navigator.geolocation.watchPosition((position) => {
-  //       setPosition(position.coords.latitude, position.coords.longitude);
-  //       setPath((currentPath) => [...currentPath, [position.coords.longitude, position.coords.latitude]]);
-  //       setWatchId(watchId);
-  //     });
-  //   } else if (!walking) {
-  //     navigator.geolocation.clearWatch(watchId);
-  //   }
-  // }, [walking]);
-
-  useEffect(() => {
-    if (!(lastPosition.lat && lastPosition.lng) || Math.abs(lastPosition.lat - position.lat) > 0.001 || Math.abs(lastPosition.lng - position.lng) > 0.001) {
-      Geolocation(position.lat, position.lng, setLocationTag);
-      setLastPosition({ lat: position.lat, lng: position.lng });
-    }
-  }, [position]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -283,9 +187,7 @@ function MapPage() {
     return deg * (Math.PI / 180)
   }
 
-  const handleOpen = (e, id) => {
-    // prevent the user from clicking into the outsite area and the map icon
-    e.domEvent.preventDefault();
+  const handleOpen = (id) => {
 
     setPins(
       pins.map((pin) => {
@@ -301,11 +203,41 @@ function MapPage() {
     );
   };
 
-  const handleMoodPrompt = (mood) => {
-    setMood(mood);
-    sessionStorage.mood = mood;
-    setShowMoodPrompt(false);
-  };
+  const closeRenderPins = useMemo(() => {
+    return filterPins(position.lat, position.lng).map((pin) => {
+      return (
+        <Marker
+          key={pin.id}
+          longitude={pin.position.lng}
+          latitude={pin.position.lat}
+          color="red"
+          anchor="bottom"
+          onClick={e => {
+            e.originalEvent.stopPropagation();
+            handleOpen(pin.id);
+          }}
+        >
+          <img src={pinimg} />
+        </Marker>
+      );
+    });
+  }, [position.lat, position.lng, filterPins]);
+
+
+  const questionRenderPins = useMemo(() => {
+    return discoverPins(position.lat, position.lng).map((pin) => {
+      return (
+        <Marker
+          key={pin.id}
+          longitude={pin.position.lng}
+          latitude={pin.position.lat}
+          anchor="bottom"
+        >
+          <img src={question} />
+        </Marker>
+      );
+    });
+  }, [position.lat, position.lng, discoverPins]);
 
   return (
     <>
@@ -331,26 +263,23 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) && <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-          <div
-            className={
-              showMoodPrompt ? "mapContainer background-blur" : "mapContainer"
-            }
-          >
+        {(position.lat && position.lng) && 
+          <div className= "mapContainer">
             <Map
-              id="map"
-              defaultCenter={position}
-              defaultZoom={17}
-              gestureHandling={"greedy"}
-              disableDefaultUI={true}
-              mapId={import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}
+              id = "map"
+              mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
+              initialViewState={{
+                longitude: position.lng,
+                latitude: position.lat,
+                zoom: 17
+              }}
+              mapStyle="mapbox://styles/mapbox/streets-v12"
             >
-              <DeckGlOverlay layers={layer} />
-              <AdvancedMarker key="current-position" position={position}>
+              <Marker longitude={position.lng} latitude={position.lat} anchor="center">
                 <div
                   style={{
-                    width: 16,
-                    height: 16,
+                    width: 14,
+                    height: 14,
                     position: "absolute",
                     top: 0,
                     left: 0,
@@ -360,46 +289,28 @@ function MapPage() {
                     transform: "translate(-50%, -50%)",
                   }}
                 ></div>
-              </AdvancedMarker>
-              {filterPins(position.lat, position.lng).map((pin) => {
-                const color = `var(--${mood})`;
-                return (
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                    onClick={(e) => handleOpen(e, pin.id)}
-                  >
-                    <Pin
-                      background={color}
-                      borderColor={color}
-                      glyphColor="white"
-                      scale={0.8}
-                    ></Pin>
-                  </AdvancedMarker>
-                );
-              })}
-              {discoverPins(position.lat, position.lng).map((pin) => {
-                const color = `var(--${mood})`;
-                return (
-                  <AdvancedMarker
-                    key={pin.id}
-                    position={pin.position}
-                  >
-                    <img src={question} />
-                  </AdvancedMarker>
-                );
-              })}
+                {heading !== null && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      width: 0,
+                      height: 0,
+                      borderTop: "10px solid transparent",
+                      borderBottom: "10px solid #4185f5",
+                      borderLeft: "10px solid transparent",
+                      borderRight: "10px solid transparent",
+                      transform: `rotate(${heading}deg)`,
+                    }}
+                  ></div>
+                )}
+              </Marker>
+              {closeRenderPins}
+              {questionRenderPins}
             </Map>
-          </div>
-        </APIProvider>}
-        {showMoodPrompt && <MoodPrompt onClickFunction={handleMoodPrompt} />}
-        <div className="bottom-prompt">
-          <div className="bottom-prompt-wrapper">
-            <img src={Location} />{locationTag}
-          </div>
-        </div>
+          </div>}
       </div>
-
     </>
   );
 }
