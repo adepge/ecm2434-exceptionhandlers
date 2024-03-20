@@ -21,7 +21,7 @@ async function CheckLogin(redirect = true) {
 
     try {
         const response = await axios.get(
-            "https://api.post-i-tivity.me/api/getUser/"
+            "http://127.0.0.1:8000/api/getUser/"
             ,
             {
                 headers: {

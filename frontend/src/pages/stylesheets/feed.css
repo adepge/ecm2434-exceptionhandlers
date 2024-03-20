@@ -5,6 +5,10 @@
   transition: filter 0.3s ease-in-out;
 }
 
+#feed.blur {
+  filter: blur(5px);
+}
+
 #top {
   margin-bottom: 25px;
 
@@ -63,8 +67,7 @@
 }
 
 #feed {
-  background-color: rgb(229, 201, 169);
-  /* background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg"); */
+  background-image: url("../../assets/feed/oak-wood-texture-design-background.jpg");
   background-size: 100% auto;
   background-repeat: repeat;
   min-height: 100vh;

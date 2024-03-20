@@ -15,9 +15,6 @@ from django.db import IntegrityError
 from .checkWinner import checkWinner
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-import boto3
-from django.http import HttpResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 # Custom permission class to check if the user is a superuser
 class IsSuperUser(IsAdminUser):
@@ -98,10 +95,6 @@ class ChallengesDetail(generics.RetrieveAPIView):
     serializer_class = ChallengesSerializer
     permission_classes = [AllowAny]
 
-@ensure_csrf_cookie
-def set_csrf_cookie(request):
-    return HttpResponse(status=200)
-
 @api_view(['POST','Get']) 
 @permission_classes([AllowAny])
 #CREATES ALL OBJECTS NEEDED , MUST BE CALLED FIRST
@@ -117,28 +110,15 @@ def createObjects(request):
         a,_ = Challenges.objects.get_or_create(postsNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Create 35 posts",type="milestone")
         b,_ = Challenges.objects.get_or_create(savesNeeded = 35, inUse = True, coinsRewarded = 250, challengeDesc = "Save 35 posts",type="milestone")
         
+        base = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}media/avatar/"
+        avatar_files = os.listdir(os.path.join(settings.MEDIA_ROOT, 'media/avatar'))
 
-        client = boto3.client(
-            's3',
-            region_name='ams3',
-            endpoint_url='https://ams3.digitaloceanspaces.com',
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
-        )
-
-        # Get bucket
-        bucket = 'post-i-tivity'
-
-        # Get objects in the /post-i-tivity/avatars/ folder
-        avatars = client.list_objects(Bucket=bucket, Prefix='post-i-tivity/avatars/')
-
-        # Iterate over each object
-        for obj in avatars['Contents']:
-            file_name = obj['Key']
-            index = file_name.index(".")
+        #Loops through all the avatar files and appending it to base
+        for files in avatar_files:
+            index = files.index(".")
             # Creating all the needed sticker objects
-            x, y = Stickers.objects.get_or_create(stickersName=file_name[:index], fileName=file_name, stickerPrice=25)
-            if not y:  # sticker does not exist
+            x,y = Stickers.objects.get_or_create(stickersName = files[:index], fileName = base+files, stickerPrice = 25)
+            if y == False: # sticker does not exist
                 x.save()
 
     except Exception as e:
@@ -184,18 +164,11 @@ def createPost(request):
     filename = request.FILES['image'].name
     filename_length = len(filename)
     
-    
-     #If its larger than 100 than get upload the last 30 chars to avoid errors
-     # Appends geolocID in between filenames to prevent any images from overriding each other
+    # If its larger than 100 than get upload the last 30 chars to avoid errors
     if filename_length > 100:
         request.FILES['image'].name = filename[-30:] 
-        request.FILES['image'].name = request.FILES['image'].name[:5] + request.data['geolocID'] + request.FILES['image'].name[5:]
-    else:
-        newfilename = request.FILES['image'].name
-        request.FILES['image'].name =  newfilename[:5] + request.data['geolocID'] + newfilename[5:] 
-
-
     request.data['userid'] = userid  # Add 'userid' key
+
     try:
         userData = PostsUser.objects.get(userID = userid)
         milestone_1 = Challenges.objects.get(postsNeeded=35)
@@ -206,6 +179,7 @@ def createPost(request):
             if i.postsNeeded < 10 and i.savesNeeded < 10:
                 todays_challenge = i 
         
+        # Conditionals for make sure checkWinner is not called when a user has already met the challenge's requirement
         if userData.postsMadeToday != todays_challenge.postsNeeded:
             userData.postsMadeToday += 1
             userData.save()

@@ -89,7 +89,7 @@ function RegisterPage() {
     // submit the form data to the server
     try {
       const response = await axios.post(
-        "https://api.post-i-tivity.me/api/register/",
+        "http://127.0.0.1:8000/api/register/",
         userData
       );
       cookies.set("token", response.data.token, { path: "/" });
