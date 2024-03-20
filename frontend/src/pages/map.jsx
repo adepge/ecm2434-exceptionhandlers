@@ -320,7 +320,7 @@ function MapPage() {
         // perform a null check or ensure that activePost["position"]["location"] exists before accessing its location property.
         location={activePost["position"] && activePost["position"]["location"]}
       />
-      <div className={Object.keys(activePost).length !== 0 ? "blur" : ""} id="map-content">
+      <div id="map-content">
         {loading && <InitMap progress={progress} />}
         <DrawerDown
           id={form.postid}
@@ -385,7 +385,7 @@ function MapPage() {
                     key={pin.id}
                     position={pin.position}
                   >
-                    <img src={question}/>
+                    <img src={question} />
                   </AdvancedMarker>
                 );
               })}

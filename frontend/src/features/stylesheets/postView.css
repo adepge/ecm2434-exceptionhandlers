@@ -17,6 +17,7 @@
   /* prevent the display from being clipped */
   overflow-y: auto;
   z-index: 11;
+  backdrop-filter: blur(5px);
 
   /* center the wrapper */
   display: flex;
@@ -80,6 +81,7 @@
   font-weight: 700;
 }
 
-.post-wrapper .spacer {
+/* .post-wrapper .spacer {
   padding: 70px 0;
-}
+  padding-top: 50px;
+} */
