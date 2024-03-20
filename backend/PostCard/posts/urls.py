@@ -11,6 +11,7 @@ urlpatterns = [
     path('register/', UserRegisterAuthentication, name="register"),
     path('login/',UserLoginAuthentication, name='login'),
     path('logout/',UserLogout, name="logout"),
+    path('set-csrf-cookie/', set_csrf_cookie, name='set-csrf-cookie'),
     #-----
     #POSTS API ENDPOINT
     path('posts/', PostsList.as_view(), name='posts-list'),
