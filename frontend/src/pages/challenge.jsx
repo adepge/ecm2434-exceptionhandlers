@@ -7,11 +7,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import ErrorBox from '../features/ErrorBox';
-import usericon from '../assets/header/user-icon.jpg'
+import usericon from '../assets/header/user-icon.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
 function Challenge() {
+
+    const navigate = useNavigate();
 
     // Local state management for UI interactions and data handling.
     const [avatars, setAvatars] = useState([]);
@@ -22,7 +25,7 @@ function Challenge() {
     useEffect(() => {
 
         // check if the user has logged in and get the token
-        CheckLogin();
+        CheckLogin(true, navigate);
 
         // get all the avatars
         const getAvatars = async () => {
