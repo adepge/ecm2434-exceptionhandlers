@@ -25,6 +25,7 @@ function FeedPage() {
   const [noPost, setNoPost] = useState(false);
   const [columns, setColumns] = useState([]);
 
+  const [loadingImage, setLoadingImage] = useState(true);
   const [progress, setProgress] = useState(0);
 
   // get all the post from database
@@ -114,6 +115,9 @@ function FeedPage() {
 
 
       }
+
+      setLoadingImage(false);
+
     };
 
     processImages();

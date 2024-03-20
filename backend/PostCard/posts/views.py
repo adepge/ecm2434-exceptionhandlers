@@ -128,7 +128,6 @@ def createObjects(request):
 
 @api_view(['POST','Get']) 
 @permission_classes([AllowAny])
-# view to change a user's Bio
 def changeBio(request):
     try:
         user = request.user.id
@@ -151,20 +150,20 @@ def changeBio(request):
 
 @api_view(['POST']) # Secuirty purposes we do not want to append user details to header
 @permission_classes([AllowAny])
-# view for creating a post
 def createPost(request):
     try:
         userid = request.user.id
         
     except:
-        # If user is not logged in, then raise an error
+        # if user is not logged in, then raise an error
         return Response({"message":"User not logged in"},status=status.HTTP_400_BAD_REQUEST)
     
-    # Getting the length of image name
+    #Getting the length of image name
     filename = request.FILES['image'].name
     filename_length = len(filename)
     
-    # If its larger than 100 than get upload the last 30 chars to avoid errors
+     #If its larger than 100 than get upload the last 30 chars to avoid errors
+     # Appends geolocID in between filenames to prevent any images from overriding each other
     if filename_length > 100:
         request.FILES['image'].name = filename[-30:] 
     request.data['userid'] = userid  # Add 'userid' key
@@ -174,7 +173,6 @@ def createPost(request):
         milestone_1 = Challenges.objects.get(postsNeeded=35)
         Inuse_challenges = Challenges.objects.filter(inUse=True)
 
-        # Finding the daily challenge
         for i in Inuse_challenges:
             if i.postsNeeded < 10 and i.savesNeeded < 10:
                 todays_challenge = i 
@@ -221,7 +219,6 @@ def checkSuperuserById(request, user_id):
 
 @api_view(['POST' ,'Get'])
 @permission_classes([AllowAny])
-# view for returning all user related Info
 def getUser(request):
     try:
         dailyReset()
@@ -273,7 +270,6 @@ def getAllUsers(request):
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
-# view for changing a user's avatar in their profile
 def changeAvatar(request):
     user = request.user.id
     user_info,_ = PostsUser.objects.get_or_create(userID = user)
@@ -338,7 +334,6 @@ def getAllAvatars(request):
 
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
-# view that returns all challenges active
 def getChallenges(request):
     try:
         user = request.user.id
@@ -378,7 +373,6 @@ def getChallenges(request):
     
 @api_view(['POST' ,'Get']) 
 @permission_classes([AllowAny])
-# view to allow users to buy avatars
 def purchase(request):
     user = request.user
     user_data,_ = PostsUser.objects.get_or_create(userID=user)
@@ -407,7 +401,6 @@ from datetime import timedelta
 
 @api_view(['POST','GET'])
 @permission_classes([AllowAny])
-# view for displaying only posts made in the last 24hrs
 def getPostsLast24Hours(request):
     try:
         current_time = timezone.now()
@@ -444,7 +437,6 @@ def getPostsLast24Hours(request):
     
 @api_view(['POST','GET'])
 @permission_classes([IsSuperUser])
-# gets all posts
 def getPosts(request):
     try:
         data = []
@@ -476,7 +468,6 @@ def getPosts(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-# view for adding a post to the collection page
 def addCollection(request):
     try:
         user = request.user
@@ -527,7 +518,7 @@ def addCollection(request):
 
 
 
-@api_view(['POST','GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 #returns the collection of posts saved by a user
 def getCollections(request):
