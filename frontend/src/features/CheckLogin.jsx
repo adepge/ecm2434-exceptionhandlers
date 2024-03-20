@@ -2,21 +2,18 @@
 
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
 function CheckLogin(redirect = true) {
-    const navigate = useNavigate();
-
     useEffect(() => {
         const checkLogin = async () => {
             if (cookies.get('token') === undefined) {
-            console.log("redirecting")
-            console.log(redirect);
-            if (redirect) {
-                navigate("/login");
-            }
+                console.log("redirecting")
+                console.log(redirect);
+                if (redirect) {
+                    window.location.href = "/login";
+                }
             }
 
             try {
@@ -38,7 +35,7 @@ function CheckLogin(redirect = true) {
                         console.log("not logged in");
                         if (redirect) {
                             console.log("redirecting")
-                            navigate("/login");
+                            window.location.href = "/login";
                             return false
                         }
                     } else {
@@ -56,7 +53,7 @@ function CheckLogin(redirect = true) {
         };
 
         checkLogin();
-    }, [navigate, redirect]);
+    }, [redirect]);
 }
 
 export default CheckLogin;
