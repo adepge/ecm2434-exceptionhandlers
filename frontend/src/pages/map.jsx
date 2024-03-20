@@ -262,7 +262,7 @@ function MapPage() {
           <div className= "mapContainer">
             <Map
               id = "map"
-              mapboxAccessToken={process.env.REACT_APP_MAPBOX_API_KEY}
+              mapboxAccessToken={import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY}
               initialViewState={{
                 longitude: position.lng,
                 latitude: position.lat,
