@@ -174,7 +174,7 @@ function FeedPage() {
 
       {/* the feed */}
       {/* if there is no post or the post view is active, blur the feed */}
-      <div id="feed" className={Object.keys(activePost).length !== 0}>
+      <div id="feed" className={noPost ? "blur" : ""}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
