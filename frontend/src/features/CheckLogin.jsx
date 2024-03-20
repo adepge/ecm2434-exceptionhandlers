@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -10,11 +10,13 @@ async function CheckLogin(redirect = true) {
 
     // cookies.remove('token');
 
+    const navigate = useNavigate();
+
     if (cookies.get('token') === undefined) {
         console.log("redirecting")
         console.log(redirect);
         if (redirect) {
-            window.location.href = "/login";
+            navigate("/login");
             return false;
         }
     }
@@ -38,7 +40,7 @@ async function CheckLogin(redirect = true) {
                 console.log("not logged in");
                 if (redirect) {
                     console.log("redirecting")
-                    window.location.href = "/login";
+                    navigate("/login");
                     return false
                 }
             } else {
@@ -49,7 +51,7 @@ async function CheckLogin(redirect = true) {
             }
         } else {
             console.log(error)
-            alert("Cannot connect to the server", error);
+            alert("Cannot connect to the server(CheckLogin)", error);
         }
         return false
     }
