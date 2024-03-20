@@ -246,7 +246,7 @@ function MapPage() {
 
   return (
     <>
-      {<PositionPrompt promptShown={() => { setPromptShown(true) }} />}
+      <PositionPrompt promptShown={() => { setPromptShown(true) }} />
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
