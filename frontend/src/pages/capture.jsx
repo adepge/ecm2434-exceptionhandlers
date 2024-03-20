@@ -20,17 +20,17 @@ axios.defaults.withCredentials = true;
 // the page
 function Capture() {
 
+  // Hook to redirect user programmatically.
+  const navigate = useNavigate();
+
   // check if the user have logged in if so capture
   useEffect(() => {
     async function check() {
-      await CheckLogin();
+      await CheckLogin(true, navigate);
       capture();
     }
     check();
   }, []);
-
-  // Hook to redirect user programmatically.
-  const navigate = useNavigate();
 
   // State management for geolocation and location tags using zustand stores.
   const position = usePositionStore(state => state.position);

@@ -7,7 +7,8 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
 import InitMap from "../features/InitMap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 
 
@@ -17,8 +18,10 @@ const cookies = new Cookies();
 function FeedPage() {
 
   // check if the user is logged in
+  const navigate = useNavigate();
+
   useEffect(() => {
-    CheckLogin();
+    CheckLogin(true, navigate);
   }, []);
 
   const [activePost, setActive] = useState({});

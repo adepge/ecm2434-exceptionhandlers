@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import CheckLogin from '../features/CheckLogin';
 import usericon from '../assets/header/user-icon.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
@@ -15,10 +16,12 @@ function ChangeIcon() {
     const [user, setUser] = useState()
     const [profilePicture, setProfilePicture] = useState("")
 
+    const navigate = useNavigate();
+
     // set the user icon and the user data
     useEffect(() => {
         const getIcon = async () => {
-            let response = await CheckLogin();
+            let response = await CheckLogin(true, navigate);
             return response.data
         }
         getIcon().then((user) => {

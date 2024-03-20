@@ -6,12 +6,15 @@ import instaIcon from "../assets/profilepage/Instagram.svg";
 import twitterIcon from "../assets/profilepage/twitter.svg";
 import CheckLogin from "../features/CheckLogin";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
 
+  navigate = useNavigate();
+
   const [user, setUser] = useState({});
   async function setUserName() {
-    let response = await CheckLogin()
+    let response = await CheckLogin(true, navigate)
     setUser(response.data)
   }
   useEffect(() => {
