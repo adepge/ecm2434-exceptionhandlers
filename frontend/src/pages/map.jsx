@@ -13,6 +13,7 @@ import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
 import Map, { Marker } from 'react-map-gl';
 import PositionPrompt from "../features/PositionPrompt";
+import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -53,9 +54,10 @@ const getCollectedPosts = async (token) => {
 function MapPage() {
 
   // check if the user is logged in
+  const navigate = useNavigate();
+
   useEffect(() => {
-    console.log(process.env)
-    CheckLogin();
+    CheckLogin(true, navigate);
   }, []);
 
   // State for active post in the view

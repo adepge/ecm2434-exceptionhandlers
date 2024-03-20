@@ -1,15 +1,18 @@
 import './stylesheets/editProfile.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import CheckLogin from '../features/CheckLogin';
 import usericon from "../assets/header/user-icon.jpg";
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 
+
 const cookies = new Cookies()
 
 function editProfile() {
+
+    const navigate = useNavigate();
 
     // the local variables
     const [user, setUser] = useState({})
@@ -24,7 +27,7 @@ function editProfile() {
     // get the user's icon and get their profile
     useEffect(() => {
         const getIcon = async () => {
-            let response = await CheckLogin();
+            let response = await CheckLogin(true, navigate);
             return response.data
         }
         getIcon().then((user) => {
