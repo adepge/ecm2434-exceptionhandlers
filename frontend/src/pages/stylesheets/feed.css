@@ -5,7 +5,7 @@
   transition: filter 0.3s ease-in-out;
 }
 
-#feed .blur {
+#feed.blur {
   filter: blur(5px);
 }
 #top {
