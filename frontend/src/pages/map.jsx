@@ -105,7 +105,6 @@ function MapPage() {
           (position) => {
             setPosition(position.coords.latitude, position.coords.longitude);
             setHeading(position.coords.heading);
-            setLocationGranted(true);
           }
         );
       }

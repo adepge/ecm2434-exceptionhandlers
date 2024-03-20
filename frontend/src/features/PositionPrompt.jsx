@@ -13,6 +13,7 @@ export default function PositionPrompt({ promptShown }) {
                 // reload the page to get the new location
                 // window.location.reload();
                 promptShown();
+                setShowPrompt(false);
             });
         }
     };
@@ -20,11 +21,18 @@ export default function PositionPrompt({ promptShown }) {
     useEffect(() => {
         async function check() {
             const permission = await navigator.permissions.query({ name: "geolocation" });
+            // if the permission is granted, hide the prompt
             if (permission.state === "granted") {
                 setShowPrompt(false);
                 promptShown();
             } else {
-                setShowPrompt(true);
+                // use the geolocation API to check if the user has allowed location access
+                navigator.geolocation.getCurrentPosition((position) => {
+                    // if the user has allowed location access, hide the prompt
+                    promptShown();
+                    setShowPrompt(false);
+                    // if the user has not allowed location access, show the prompt
+                }, setShowPrompt(true));
             }
         }
         check();
