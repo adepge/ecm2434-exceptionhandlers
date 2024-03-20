@@ -148,7 +148,7 @@ function FeedPage() {
 
       {/* prompt the user to collect some posts if there is no post */}
       {(noPost) && (
-        <div id="no-post" style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
+        <div id="no-post" className={noPost ? "blur" : ""} style={{ position: "fixed", zIndex: "9", width: "100%", height: "100vh" }}>
           <div style={{ position: "absolute", transform: "translate(-50%,-50%)", top: "50%", left: "50%", minWidth: "250px" }}>
             <div style={{ padding: "70px 0 ", color: "black", textAlign: "center", fontWeight: "700" }}>
               <div style={{ marginBottom: "10px" }}>You have no collected post yet
@@ -174,7 +174,7 @@ function FeedPage() {
 
       {/* the feed */}
       {/* if there is no post or the post view is active, blur the feed */}
-      <div id="feed" className={Object.keys(activePost).length !== 0}>
+      <div id="feed" >
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
