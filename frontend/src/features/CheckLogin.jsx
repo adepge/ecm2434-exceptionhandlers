@@ -49,7 +49,7 @@ async function CheckLogin(redirect = true) {
             }
         } else {
             console.log(error)
-            alert("Cannot connect to the server");
+            alert("Cannot connect to the server", error);
         }
         return false
     }
