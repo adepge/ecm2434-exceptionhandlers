@@ -11,9 +11,12 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
 
   const collectedPins = useCollectedPinStore((state) => state.pinIds);
 
+
   useEffect(() => {
     if (collectedPins.includes(id)) {
       setCollected(true);
+    } else {
+      setCollected(false);
     }
   }, [collectedPins, id]);
 

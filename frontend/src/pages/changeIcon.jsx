@@ -39,7 +39,7 @@ function ChangeIcon() {
             // get all the locked avatar and set them
             try {
                 const response = await axios.get(
-                    "http://127.0.0.1:8000/api/getAllAvatars/"
+                    "https://api.post-i-tivity.me/api/getAllAvatars/"
                     ,
                     {
                         headers: {
@@ -67,7 +67,7 @@ function ChangeIcon() {
         const token = cookies.get('token');
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/changeAvatar/",
+                "https://api.post-i-tivity.me/api/changeAvatar/",
                 {
                     avatar: avatar
                 },

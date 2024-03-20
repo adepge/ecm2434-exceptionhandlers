@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { usePositionStore, useGeoTagStore, useLastPositionStore } from "../stores/geolocationStore";
 import Send from "../assets/send.svg";
 import Location from "../assets/location.svg";
 import Reset from "../assets/reset.svg";
@@ -14,7 +14,6 @@ import Polaroid from "../features/polaroid";
 
 // function for set cookies
 const cookies = new Cookies();
-axios.defaults.withCredentials = true;
 
 // the page
 function Capture() {
@@ -36,10 +35,10 @@ function Capture() {
   const setPosition = usePositionStore(state => state.setPosition);
   const locationTag = useGeoTagStore(state => state.geoTag);
   const setLocationTag = useGeoTagStore(state => state.setGeoTag);
+  const [lastPosition, setLastPosition] = useState({ lat: undefined, lng: undefined });
 
 
   // Local state management for UI interactions and data handling.
-  const [lastPosition, setLastPosition] = useState({ lat: 0, lng: 0 });
   const inputRef = useRef(null);
   const [previewImg, setPreviewImg] = useState("");
   const [file, setFile] = useState(null);
@@ -90,7 +89,7 @@ function Capture() {
     // post the geolocation data
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/geolocations/",
+        "https://api.post-i-tivity.me/api/geolocations/",
         {
           latitude: position.lat,
           longitude: position.lng,
@@ -114,7 +113,7 @@ function Capture() {
       // post the post data
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/createPost/",
+          "https://api.post-i-tivity.me/api/createPost/",
           formData,
           {
             headers: {

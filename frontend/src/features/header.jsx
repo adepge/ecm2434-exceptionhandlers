@@ -61,7 +61,7 @@ function Header() {
     let token = cookies.get('token')
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/logout/",
+        "https://api.post-i-tivity.me/api/logout/",
         {
           headers: {
             "Content-Type": "application/json",
