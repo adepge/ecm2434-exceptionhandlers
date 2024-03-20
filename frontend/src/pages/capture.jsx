@@ -11,6 +11,7 @@ import LoadingScreen from "../features/loadingScreen";
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
 import Polaroid from "../features/polaroid";
+import PositionPrompt from "../features/PositionPrompt";
 
 // function for set cookies
 const cookies = new Cookies();
@@ -168,7 +169,8 @@ function Capture() {
 
   return (
     <>
-    {/* the loading screen for posting */}
+      {/* the loading screen for posting */}
+      <PositionPrompt />
       <LoadingScreen active={isLoading} />
       <div id="capturePage" className="page active">
         <input

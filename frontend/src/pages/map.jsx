@@ -11,7 +11,8 @@ import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
 import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
-import Map, {Marker} from 'react-map-gl';
+import Map, { Marker } from 'react-map-gl';
+import PositionPrompt from "../features/PositionPrompt";
 
 const cookies = new Cookies();
 
@@ -58,6 +59,9 @@ function MapPage() {
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
+
+  // State for location prompt
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
@@ -241,6 +245,7 @@ function MapPage() {
 
   return (
     <>
+      <PositionPrompt />
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -263,10 +268,10 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) && 
-          <div className= "mapContainer">
+        {(position.lat && position.lng) &&
+          <div className="mapContainer">
             <Map
-              id = "map"
+              id="map"
               mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
               initialViewState={{
                 longitude: position.lng,
