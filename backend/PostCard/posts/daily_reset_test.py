@@ -1,5 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import *
+
+@api_view(['POST']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
+@permission_classes([AllowAny])
 def daily_reset_test(request):
     import random
     from database.models import PostsUser, Challenges
