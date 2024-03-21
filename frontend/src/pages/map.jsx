@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
+import { useNavigate } from "react-router-dom";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
 import axios from "axios";
@@ -13,12 +14,11 @@ import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
 import Map, { Marker } from 'react-map-gl';
 import PositionPrompt from "../features/PositionPrompt";
-import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
 // Debugging options
-const seeAllPins = true;
+const seeAllPins = false;
 
 // get all the post from database 
 const getPosts = async () => {
@@ -26,7 +26,6 @@ const getPosts = async () => {
     const response = await axios.get(
       "http://127.0.0.1:8000/api/getRecentPosts/"
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -56,19 +55,13 @@ function MapPage() {
 
   const navigate = useNavigate();
 
-  // Check if the user is logged in
+  // check if the user is logged in
   useEffect(() => {
-    CheckLogin(true, navigate);
+    CheckLogin(true, navigate)
   }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
-
-  // State if the prompt has been shown
-  const [promptShown, setPromptShown] = useState(false);
-
-  // State for location prompt
-  const [showPrompt, setShowPrompt] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
@@ -77,11 +70,12 @@ function MapPage() {
   const [drawerTopVisible, setDrawerTopVisible] = useState(false);
   const [drawerPost, setDrawerPost] = useState(null);
 
-
   // State for form data ( adding posts to collection )
   const [form, setForm] = useState({ "postid": 0 })
 
   // Global state for current position, location tag and pins
+  const [locationGranted, setLocationGranted] = useState(true);
+  const [heading, setHeading] = useState(null);
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
   const pins = usePinStore(state => state.pins);
@@ -102,6 +96,11 @@ function MapPage() {
   }
 
   const token = cookies.get('token');
+
+  // User agent functions to check for location
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
 
   // Set loading timeout (to match fade animation duration)
   useEffect(() => {
@@ -221,7 +220,7 @@ function MapPage() {
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
-    const radius = 0.0005; // Minimum radius of discovery (about 50m from the position)
+    const radius = 0.05; // Minimum radius of discovery (about 50m from the position)
 
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
@@ -240,10 +239,11 @@ function MapPage() {
   }
 
   const discoverPins = (lat, lng) => {
-    const minRadius = 0.0005; // Minimum radius of discovery (about 35m from the position)
-    const maxRadius = 0.0025; // Maximum radius of discovery (about 175m from the position)
+    const minRadius = 0.05; // Minimum radius of discovery (about 50m from the position)
+    const maxRadius = 0.25; // Decided to not use max radius for now
 
     const discoverPins = pins.filter((pin) => {
+
       const dLat = deg2rad(pin.position.lat - lat);
       const dLng = deg2rad(pin.position.lng - lng);
       const a =
@@ -281,7 +281,7 @@ function MapPage() {
     );
   };
 
-  // Render pins within close proximity to the user
+  // Render the pins within close proximity of the user
   const closeRenderPins = useMemo(() => {
     return filterPins(position.lat, position.lng).map((pin) => {
       return (
@@ -289,7 +289,6 @@ function MapPage() {
           key={pin.id}
           longitude={pin.position.lng}
           latitude={pin.position.lat}
-          color="red"
           anchor="bottom"
           onClick={e => {
             e.originalEvent.stopPropagation();
@@ -302,7 +301,7 @@ function MapPage() {
     });
   }, [position.lat, position.lng, filterPins]);
 
-  // Render pins outside of the close proximity radius as undiscovered pins
+  // Renders undiscovered pins outside the close proximity of the user
   const questionRenderPins = useMemo(() => {
     return discoverPins(position.lat, position.lng).map((pin) => {
       return (
@@ -370,7 +369,7 @@ function MapPage() {
 
   return (
     <>
-      {awaitUserPrompt == "prompted" && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
+      {awaitUserPrompt == "prompted" && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt} />}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
