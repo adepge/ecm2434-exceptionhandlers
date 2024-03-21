@@ -117,7 +117,7 @@ function MapPage() {
     new Promise((resolve, reject) => {
       if (isIOS()) {
         // Handles iOS devices (permissions query not supported)
-        const locationGranted = getCookie('locationGranted');
+        const locationGranted = cookies.get('locationGranted');
         if (locationGranted === "true") {
           setLocationGranted(true);
           setAwaitUserPrompt("resolved");
