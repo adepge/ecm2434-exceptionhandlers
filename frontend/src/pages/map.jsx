@@ -87,7 +87,7 @@ function MapPage() {
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   // User agent flag
-  const [awaitUserPrompt, setAwaitUserPrompt] = useState(false);
+  const [awaitUserPrompt, setAwaitUserPrompt] = useState("loading");
 
   const token = cookies.get('token');
 
@@ -108,7 +108,7 @@ function MapPage() {
     new Promise((resolve, reject) => {
       if (isIOS()) {
         setLocationGranted(false);
-        setAwaitUserPrompt(true);
+        setAwaitUserPrompt("prompted");
         setProgress(oldProgress => oldProgress + 20);
       } else {
         if (navigator.permissions) {
@@ -116,11 +116,11 @@ function MapPage() {
           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
             if (result.state === 'granted') {
               setLocationGranted(true);
-              setAwaitUserPrompt(false);
+              setAwaitUserPrompt("resolved");
               setProgress(oldProgress => oldProgress + 20);
-            } else if (result.state === 'denied') {
+            } else {
               setLocationGranted(false);
-              setAwaitUserPrompt(true);
+              setAwaitUserPrompt("prompted");
               setProgress(oldProgress => oldProgress + 20);
             }
           });
@@ -131,7 +131,7 @@ function MapPage() {
     .then(() => {
       return new Promise((resolve) => {
         const intervalId = setInterval(() => {
-          if (!awaitUserPrompt) {
+          if (awaitUserPrompt === "resolved") {
             if (navigator.geolocation) {
               navigator.geolocation.watchPosition(
                 (position) => {
@@ -139,11 +139,12 @@ function MapPage() {
                   setPosition(position.coords.latitude, position.coords.longitude);
                   setHeading(position.coords.heading);
                   resolve();
+                  clearInterval(intervalId);
                 },
                 (error) => {
                   if (error.code === error.PERMISSION_DENIED) {
                     setLocationGranted(false);
-                    setAwaitUserPrompt(true);
+                    setAwaitUserPrompt("prompted");
                   } else {
                     console.error(error);
                     resolve();
@@ -156,7 +157,6 @@ function MapPage() {
               resolve();
               clearInterval(intervalId);
             }
-            clearInterval(intervalId);
           }
         }, 1000); // Check every second for awaitUserPrompt to become false
       });
@@ -298,7 +298,7 @@ function MapPage() {
 
   return (
     <>
-      {!locationGranted && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
+      {awaitUserPrompt == "prompted" && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
