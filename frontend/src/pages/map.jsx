@@ -116,7 +116,15 @@ function MapPage() {
           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
             if (result.state === 'granted') {
               setLocationGranted(true);
-              setAwaitUserPrompt("resolved");
+              setAwaitUserPrompt("skipped");
+              if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                  (position) => {
+                    setLocationGranted(true);
+                    setPosition(position.coords.latitude, position.coords.longitude);
+                    setHeading(position.coords.heading);
+                  });
+              }
               setProgress(oldProgress => oldProgress + 20);
             } else {
               setLocationGranted(false);
@@ -131,10 +139,12 @@ function MapPage() {
     .then(() => {
       return new Promise((resolve) => {
         const intervalId = setInterval(() => {
+          console.log('awaitUserPrompt:', awaitUserPrompt);
           if (awaitUserPrompt === "resolved") {
             if (navigator.geolocation) {
               navigator.geolocation.watchPosition(
                 (position) => {
+                  console.log('Position obtained:', position);
                   setLocationGranted(true);
                   setPosition(position.coords.latitude, position.coords.longitude);
                   setHeading(position.coords.heading);
@@ -142,6 +152,7 @@ function MapPage() {
                   clearInterval(intervalId);
                 },
                 (error) => {
+                  console.log('Error occurred:', error);
                   if (error.code === error.PERMISSION_DENIED) {
                     setLocationGranted(false);
                     setAwaitUserPrompt("prompted");
@@ -157,6 +168,9 @@ function MapPage() {
               resolve();
               clearInterval(intervalId);
             }
+          } else if (awaitUserPrompt === "skipped") {
+            resolve();
+            clearInterval(intervalId);
           }
         }, 1000); // Check every second for awaitUserPrompt to become false
       });
@@ -321,7 +335,7 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) &&
+        {!loading && (position.lat && position.lng) &&
           <div className="mapContainer">
             <Map
               id="map"
