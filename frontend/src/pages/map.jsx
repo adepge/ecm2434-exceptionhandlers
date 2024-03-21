@@ -11,7 +11,9 @@ import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
 import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
-import Map, {Marker} from 'react-map-gl';
+import Map, { Marker } from 'react-map-gl';
+import PositionPrompt from "../features/PositionPrompt";
+import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -52,12 +54,20 @@ const getCollectedPosts = async (token) => {
 
 function MapPage() {
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    CheckLogin();
+    CheckLogin(true, navigate);
   }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
+
+  // State if the prompt has been shown
+  const [promptShown, setPromptShown] = useState(false);
+
+  // State for location prompt
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
@@ -93,7 +103,7 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation) {
+      if (navigator.geolocation && promptShown) {
         navigator.geolocation.watchPosition((position) => {
           setPosition(position.coords.latitude, position.coords.longitude);
           setHeading(position.coords.heading);
@@ -113,7 +123,7 @@ function MapPage() {
           setProgress(oldProgress => oldProgress + 20);
         });
       });
-  }, []);
+  }, [promptShown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -241,6 +251,7 @@ function MapPage() {
 
   return (
     <>
+      <PositionPrompt promptShown={() => setPromptShown(true)} />
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -263,10 +274,10 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) && 
-          <div className= "mapContainer">
+        {(position.lat && position.lng) &&
+          <div className="mapContainer">
             <Map
-              id = "map"
+              id="map"
               mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
               initialViewState={{
                 longitude: position.lng,

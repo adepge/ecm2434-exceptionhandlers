@@ -6,6 +6,7 @@ import CheckLogin from '../features/CheckLogin';
 import usericon from "../assets/header/user-icon.jpg";
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies()
 
@@ -21,10 +22,12 @@ function editProfile() {
         twitter: ''
     })
 
+    const navigate = useNavigate();
+
     // get the user's icon and get their profile
     useEffect(() => {
         const getIcon = async () => {
-            let response = await CheckLogin();
+            let response = await CheckLogin(true, navigate);
             return response.data
         }
         getIcon().then((user) => {

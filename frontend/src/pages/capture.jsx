@@ -11,6 +11,7 @@ import LoadingScreen from "../features/loadingScreen";
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
 import Polaroid from "../features/polaroid";
+import PositionPrompt from "../features/PositionPrompt";
 
 // function for set cookies
 const cookies = new Cookies();
@@ -19,17 +20,17 @@ axios.defaults.withCredentials = true;
 // the page
 function Capture() {
 
+  // Hook to redirect user programmatically.
+  const navigate = useNavigate();
+
   // check if the user have logged in if so capture
   useEffect(() => {
     async function check() {
-      await CheckLogin();
+      await CheckLogin(true, navigate);
       capture();
     }
     check();
   }, []);
-
-  // Hook to redirect user programmatically.
-  const navigate = useNavigate();
 
   // State management for geolocation and location tags using zustand stores.
   const position = usePositionStore(state => state.position);
@@ -168,7 +169,8 @@ function Capture() {
 
   return (
     <>
-    {/* the loading screen for posting */}
+      {/* the loading screen for posting */}
+      <PositionPrompt />
       <LoadingScreen active={isLoading} />
       <div id="capturePage" className="page active">
         <input

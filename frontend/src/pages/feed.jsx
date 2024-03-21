@@ -7,7 +7,8 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
 import InitMap from "../features/InitMap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 
 
@@ -17,9 +18,7 @@ const cookies = new Cookies();
 function FeedPage() {
 
   // check if the user is logged in
-  useEffect(() => {
-    CheckLogin();
-  }, []);
+  const navigate = useNavigate();
 
   const [activePost, setActive] = useState({});
   const [noPost, setNoPost] = useState(false);
@@ -57,6 +56,7 @@ function FeedPage() {
   };
 
   useEffect(() => {
+
     // Function to load an image and update its height in the state
     function getImageRatio(url) {
       // wait for the image to load
@@ -115,8 +115,13 @@ function FeedPage() {
 
       }
     };
-
-    processImages();
+    CheckLogin(true, navigate).then((response) => {
+      if (response === false) {
+        navigate("/login");
+      } else {
+        processImages();
+      } 
+    });
 
   }, []);
 
@@ -164,7 +169,7 @@ function FeedPage() {
 
       {/* the feed */}
       {/* if there is no post or the post view is active, blur the feed */}
-      <div id="feed" className={noPost ? "blur" : none}>
+      <div id="feed" className={noPost ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
