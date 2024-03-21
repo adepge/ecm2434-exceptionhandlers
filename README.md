@@ -29,8 +29,11 @@ The group members are:
 5. Ben Ellison
 6. Adam George
 
-
 This is a submission for Sprint 1. There are three types of document that you will find the following places.
+
+## Branch Description
+- Main (localhost instance)
+- Deployment (hosted instance)
 
 ## PROCESS DOCUMENTS
 Our process documents are managed in the trello platform. The link to our project page is below. We (specific username that added) have added mattcollison2 to the board so it is visible.
@@ -66,7 +69,7 @@ Our product documents are primarily in the form of a product UI. Below is a link
 [Other product documents](./docs/product-documents/)
 
 ***
-### Instructions for running front/backend environments
+### Instructions for running front/backend environments (localhost)
 [Frontend instructions](./frontend/README.md)  
 [Backend instructions](./backend/README.md)
 
