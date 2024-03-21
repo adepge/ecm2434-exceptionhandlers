@@ -1,7 +1,11 @@
-## Post-i-tivity 
+## [Post-i-tivity](https://post-i-tivity.me)
 <img src= "https://cdn.discordapp.com/attachments/1203725883135885402/1210042110984851516/SmartSelect_20240222_015424_Samsung_Notes.jpg?ex=65e91e88&is=65d6a988&hm=e95f279565d36de4297d783e4605c32a0b85121320567b327850b7fc81e7dd94&" width="250px"></img>
 
 A progressive web app to upload images and posts that users can make as they explore Exeter University's campus and promote sustainability through improving mental health, exercise, community engagement, social welfare and awareness of the environment. 
+
+### Website
+- [Website](https://post-i-tivity.me)
+- [Backend API](https://api.post-i-tivity.me)
 
 ### Quicklinks
 
@@ -25,8 +29,11 @@ The group members are:
 5. Ben Ellison
 6. Adam George
 
-
 This is a submission for Sprint 1. There are three types of document that you will find the following places.
+
+## Branch Description
+- Main (localhost instance)
+- Deployment (hosted instance)
 
 ## PROCESS DOCUMENTS
 Our process documents are managed in the trello platform. The link to our project page is below. We (specific username that added) have added mattcollison2 to the board so it is visible.
@@ -62,7 +69,7 @@ Our product documents are primarily in the form of a product UI. Below is a link
 [Other product documents](./docs/product-documents/)
 
 ***
-### Instructions for running front/backend environments
+### Instructions for running front/backend environments (localhost)
 [Frontend instructions](./frontend/README.md)  
 [Backend instructions](./backend/README.md)
 

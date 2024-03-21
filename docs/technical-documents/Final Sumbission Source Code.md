@@ -8,7 +8,6 @@
 > backend/PostCard/database/test_models.py
 Written by Benjamin Ellision
 
-
 ```python 
 from django.test import TestCase
 from database import models
@@ -137,7 +136,10 @@ class DatabaseConfig(AppConfig):
 ```
 
 ### admin.py
+> backend/PostCard/database/admin.py
+Written by Jayant Chawla
 ```python
+
 from django.contrib import admin
 from .models import Geolocation, Posts, Stickers, StickersUser, PostsUser, Challenges, CurrentDay
 # Register models to admint page based on the models.py file, adding the list_display and search_fields to make it easier to search and view the data
@@ -253,6 +255,7 @@ class CurrentDay(models.Model):
 ### PostCard
 #### asgi.py
 > backend/PostCard/PostCard/asgi.py
+Written by Ziyad Alnawfal
 ```python
 """
 ASGI config for PostCard project.
@@ -513,7 +516,7 @@ application = get_wsgi_application()
 ```
 
 #### urls.py
-> backend/PostCard/PostCard/wsgi.py
+> backend/PostCard/PostCard/urls.py
 Written by Ziyad Alnawfal, Jayant Chawla
 ```python
 from django.contrib import admin
@@ -602,7 +605,7 @@ def dailyReset():
                 y.inUse=False
                 number_daily_challenges+=1
                 y.save()
-            z=Challenges.objects.filter(type="daily")[random.randint(0,number_daily_challenges)]
+            z=Challenges.objects.filter(type="daily")[random.randint(0,number_daily_challenges-1)]
             z.inUse=True
             z.save()
             
@@ -612,6 +615,40 @@ def dailyReset():
         print("DAILY RESET NOT NEEDED")
     except Exception as err:
         print(err)
+```
+#### daily_reset_test.py
+> backend/PostCard/posts/daily_reset_test.py
+Written by Eugene Au, Ziyad Alnawfal
+```python
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import *
+
+@api_view(['POST','GET']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
+@permission_classes([AllowAny])
+def daily_reset_test(request):
+    import random
+    from database.models import PostsUser, Challenges
+    random.seed()
+    for x in PostsUser.objects.all():
+        x.stepsTakenToday=0
+        x.postsMadeToday=0
+        x.postsSavedToday=0
+        x.save()
+
+    num_challenges= 0
+    for y in Challenges.objects.filter(type="daily"):
+        y.inUse=False
+        num_challenges+=1
+        y.save()
+
+    z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges-1)]
+    z.inUse=True
+    z.save()
+
+    #return HttpResponse("Daily Reset Complete")
+    return Response({"daily reset compete"},status=status.HTTP_200_OK)
 ```
 #### test_views.py
 > backend/PostCard/posts/test_views.py
@@ -857,7 +894,7 @@ class PostCardTests(TestCase):
             User.objects.get(pk=self.user_to_delete.pk)
         print(response, response.data)
 ```
-#### urls
+#### urls.py
 > backend/PostCard/posts/urls.py
 Written by Ziyad Alnawfal, Jayant Chawla
 ```python
@@ -2055,7 +2092,7 @@ const Admin = () => {
     const cookies = new Cookies();
     const token = cookies.get('token');
     
-
+    // Check if the user is a super user
     const checkSuperUser = async () => {
         try {
             const response = await axios.get('http://localhost:8000/api/isSuperUser/', {
@@ -2069,6 +2106,7 @@ const Admin = () => {
         }
     };
 
+    // Retrieve all posts from the backend API
     const getPosts = async () => {
         try {
           const response = await axios.get(
@@ -2085,6 +2123,7 @@ const Admin = () => {
         }
     };
 
+    // Retrieve all users from the backend API
     const getUsers = async () => {
         try {
           const response = await axios.get(
@@ -2101,6 +2140,7 @@ const Admin = () => {
         }
     };
 
+    // Delete a post using the backend API
     const deletePost = async (id) => {
         try {
             const response = await axios.get(
@@ -2115,6 +2155,7 @@ const Admin = () => {
           }
     };
 
+    // Ban a user using the backend API
     const banAuthor = async (id) => {
         try {
             const response = await axios.get(
@@ -2129,6 +2170,7 @@ const Admin = () => {
           }
     };
 
+    // Retrieve all posts and users from the backend API and set the state
     useEffect(() => {
         checkSuperUser();
         getPosts().then((data) => {
@@ -2144,6 +2186,7 @@ const Admin = () => {
         console.log(activePost);
     }, [activePost]);
     
+    // Format the date to a readable format
     function formatDate(dateString) {
         const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' };
         const date = new Date(dateString);
@@ -2152,6 +2195,7 @@ const Admin = () => {
         return formattedDate;
     }
 
+    // Sets the active post on click and displays the post
     const handleDashboardPost = (id) => {
         setActivePost(posts.find(post => post.id === id));
         setPostView(true);
@@ -2171,6 +2215,7 @@ const Admin = () => {
                         <button type='button' onClick={() => handlePageChange('posts')} className={page == 'posts' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={postimg}></img>Posts</button>
                         <button type='button' onClick={() => handlePageChange('users')} className={page == 'users' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={usersimg}></img>Users</button>
                     </div>
+                    {/* Display the posts or users based on the selected page */}
                     {page == 'posts'  && <div id="dashboard-post-list">
                         {postView &&
                         <DashboardCard 
@@ -3203,6 +3248,7 @@ function FeedPage() {
 export default FeedPage;
 
 ```
+
 #### login.jsx
 > frontend/src/pages/login.jsx
 Written by Eugene Au, Adam George
@@ -3324,8 +3370,8 @@ export default LoginPage;
 > frontend/src/pages/map.jsx
 Written by Adam George
 ```jsx
-import { useState, useEffect, useMemo } from "react";
-import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
@@ -3382,6 +3428,7 @@ function MapPage() {
 
   const navigate = useNavigate();
 
+  // Check if the user is logged in
   useEffect(() => {
     CheckLogin(true, navigate);
   }, []);
@@ -3414,10 +3461,12 @@ function MapPage() {
   const [heading, setHeading] = useState(null);
 
   // Global state for collected pins
+  const collectedPins = useCollectedPinStore(state => state.pinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
 
+  // Set loading timeout (to match fade animation duration)
   useEffect(() => {
     if (progress >= 100) {
       setTimeout(() => {
@@ -3426,30 +3475,89 @@ function MapPage() {
     }
   }, [progress]);
 
+  // Reference to awaitUserPrompt state to be used in the promise chain (to avoid stale closure)
+  const awaitUserPromptRef = useRef(awaitUserPrompt);
+
   useEffect(() => {
+    awaitUserPromptRef.current = awaitUserPrompt;
+  }, [awaitUserPrompt]);
+
+  useEffect(() => {
+    // Check if the user has location services enabled
     new Promise((resolve, reject) => {
-      // Get the user's current position
-      if (navigator.geolocation && promptShown) {
-        navigator.geolocation.watchPosition((position) => {
-          setPosition(position.coords.latitude, position.coords.longitude);
-          setHeading(position.coords.heading);
-        });
+      if (isIOS()) {
+        // Handles iOS devices (permissions query not supported)
+        setLocationGranted(false);
+        setAwaitUserPrompt("prompted");
+        setProgress(oldProgress => oldProgress + 20);
+      } else {
+        if (navigator.permissions) {
+          // Check the location permission status
+          navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+            if (result.state === 'granted') {
+              setLocationGranted(true);
+              setAwaitUserPrompt("resolved");
+              setProgress(oldProgress => oldProgress + 20);
+            } else {
+              setLocationGranted(false);
+              setAwaitUserPrompt("prompted");
+              setProgress(oldProgress => oldProgress + 20);
+            }
+          });
+        }
       }
-      setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
+    .then(() => {
+      return new Promise((resolve) => {
+        // Check if the user has location services enabled (awaitUserPrompt is only set to "resolved" if the user has granted permission)
+        const intervalId = setInterval(() => {
+          console.log('awaitUserPrompt:', awaitUserPromptRef.current);
+          if (awaitUserPromptRef.current === "resolved") {
+            if (navigator.geolocation) {
+              navigator.geolocation.watchPosition(
+                (position) => {
+                  console.log('Position obtained:', position);
+                  setLocationGranted(true);
+                  setPosition(position.coords.latitude, position.coords.longitude);
+                  setHeading(position.coords.heading);
+                  resolve();
+                  clearInterval(intervalId);
+                },
+                (error) => {
+                  console.log('Error occurred:', error);
+                  if (error.code === error.PERMISSION_DENIED) {
+                    setLocationGranted(false);
+                    setAwaitUserPrompt("prompted"); // Prompt the user again
+                  } else {
+                    console.error(error);
+                    resolve();
+                    clearInterval(intervalId);
+                  }
+                }
+              );
+            } else {
+              console.log("Geolocation is not supported by this browser.")
+              resolve();
+              clearInterval(intervalId);
+            }
+          }
+        }, 1000); // Check every second for awaitUserPrompt to become resolved
+      });
+    })
+    .then(() => {
+      setProgress(oldProgress => oldProgress + 30);
+    })
       .then(() => {
-        setProgress(oldProgress => oldProgress + 30);
-      })
-      .then(() => {
-        cookies.get('token');
+        // Get the posts from the database
+        const token = cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
           setPins(data);
-          setProgress(oldProgress => oldProgress + 20);
+          setProgress(oldProgress => oldProgress + 30);
         });
       });
-  }, [promptShown]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -3479,7 +3587,7 @@ function MapPage() {
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
-    const radius = 0.0005; // Radius of tolerance (about 35m from the position)
+    const radius = 0.0005; // Minimum radius of discovery (about 50m from the position)
 
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
@@ -3492,7 +3600,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance < radius;
+      return distance < radius || collectedPins.includes(pin.id);
     });
     return seeAllPins ? pins : closePins;
   }
@@ -3512,7 +3620,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance > minRadius && distance < maxRadius;
+      return distance > minRadius && !collectedPins.includes(pin.id);
     });
     return discoverPins;
   }
@@ -3523,8 +3631,8 @@ function MapPage() {
     return deg * (Math.PI / 180)
   }
 
+  // Handle the opening of the drawer and sets active post
   const handleOpen = (id) => {
-
     setPins(
       pins.map((pin) => {
         if (pin.id === id) {
@@ -3539,6 +3647,7 @@ function MapPage() {
     );
   };
 
+  // Render pins within close proximity to the user
   const closeRenderPins = useMemo(() => {
     return filterPins(position.lat, position.lng).map((pin) => {
       return (
@@ -3559,7 +3668,7 @@ function MapPage() {
     });
   }, [position.lat, position.lng, filterPins]);
 
-
+  // Render pins outside of the close proximity radius as undiscovered pins
   const questionRenderPins = useMemo(() => {
     return discoverPins(position.lat, position.lng).map((pin) => {
       return (
@@ -3575,13 +3684,63 @@ function MapPage() {
     });
   }, [position.lat, position.lng, discoverPins]);
 
+  // Memoized map component (caches the map component to prevent re-rendering on state changes)
+  const memoizedMap = useMemo(() => {
+    return (
+      <Map
+        id="map"
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY}
+        initialViewState={{
+          longitude: position.lng,
+          latitude: position.lat,
+          zoom: 17
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+      >
+        <Marker longitude={position.lng} latitude={position.lat} anchor="center">
+          <div
+            style={{
+              width: 14,
+              height: 14,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              background: "#4185f5",
+              border: "2px solid #ffffff",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></div>
+          {heading !== null && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: 0,
+                height: 0,
+                borderTop: "10px solid transparent",
+                borderBottom: "10px solid #4185f5",
+                borderLeft: "10px solid transparent",
+                borderRight: "10px solid transparent",
+                transform: `rotate(${heading}deg)`,
+              }}
+            ></div>
+          )}
+        </Marker>
+        {closeRenderPins}
+        {questionRenderPins}
+      </Map>
+    )
+  });
+
   return (
     <>
-      <PositionPrompt promptShown={() => setPromptShown(true)} />
+      {awaitUserPrompt == "prompted" && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={"http://127.0.0.1:8000/" + activePost['image']}
+        image={activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -3593,59 +3752,16 @@ function MapPage() {
         {loading && <InitMap progress={progress} />}
         <DrawerDown
           id={form.postid}
-          image={"http://127.0.0.1:8000/" + drawerPost?.image}
+          image={drawerPost?.image}
           caption={drawerPost?.caption}
           drawerVisible={drawerTopVisible}
           setDrawerVisible={setDrawerTopVisible}
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) &&
+        {!loading && (position.lat && position.lng) &&
           <div className="mapContainer">
-            <Map
-              id="map"
-              mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
-              initialViewState={{
-                longitude: position.lng,
-                latitude: position.lat,
-                zoom: 17
-              }}
-              mapStyle="mapbox://styles/mapbox/streets-v12"
-            >
-              <Marker longitude={position.lng} latitude={position.lat} anchor="center">
-                <div
-                  style={{
-                    width: 14,
-                    height: 14,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    background: "#4185f5",
-                    border: "2px solid #ffffff",
-                    borderRadius: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                ></div>
-                {heading !== null && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      width: 0,
-                      height: 0,
-                      borderTop: "10px solid transparent",
-                      borderBottom: "10px solid #4185f5",
-                      borderLeft: "10px solid transparent",
-                      borderRight: "10px solid transparent",
-                      transform: `rotate(${heading}deg)`,
-                    }}
-                  ></div>
-                )}
-              </Marker>
-              {closeRenderPins}
-              {questionRenderPins}
-            </Map>
+            {memoizedMap}
           </div>}
       </div>
     </>
@@ -5806,36 +5922,27 @@ import './stylesheets/positionPrompt.css'
 import Navation from '../assets/navigation.svg'
 import { useState, useEffect } from 'react';
 
-export default function PositionPrompt({ promptShown }) {
-
-    const [show, setShowPrompt] = useState(false);
+export default function PositionPrompt({ setLocationGranted, setProgress, setAwaitUserPrompt }) {
 
     onclick = () => {
         if (navigator.geolocation) {
             // promt the user to allow for location access
             navigator.geolocation.getCurrentPosition((position) => {
-                // reload the page to get the new location
-                // window.location.reload();
-                promptShown();
+                setLocationGranted(true);
+                setAwaitUserPrompt("resolved");
+                setProgress(oldProgress => oldProgress + 30);
+            },              
+            (error) => {
+                if (error.code === error.PERMISSION_DENIED) {
+                  setLocationGranted(false);
+                  setAwaitUserPrompt("prompted");
+                }
             });
         }
     };
 
-    useEffect(() => {
-        async function check() {
-            const permission = await navigator.permissions.query({ name: "geolocation" });
-            if (permission.state === "granted") {
-                setShowPrompt(false);
-                promptShown();
-            } else {
-                setShowPrompt(true);
-            }
-        }
-        check();
-    }, [navigator.permissions.query({ name: "geolocation" })])
-
     return (
-        <div className="position-prompt" style={{ display: show ? "" : "none" }}>
+        <div className="position-prompt">
             <div className="position-prompt-content">
                 <div className='prompt'>
                     <div className='icon'>
@@ -5937,8 +6044,10 @@ Written by Adam George
 import exitimg from '../assets/map/close.svg';
 import './stylesheets/dashboardCard.css';
 
+// Component for displaying a post in the admin dashboard
 const DashboardCard = ({id, username, isSuperUser, image, caption, datetime, location, userid, setPostView, deletePost, deleteUser}) => {
 
+    // Format the date into a readable format
     function formatDate(dateString) {
         const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' };
         const date = new Date(dateString);
@@ -5978,6 +6087,7 @@ import Polaroid from "./polaroid";
 import handle from "../assets/map/handle.svg";
 import "../styles/drawer-down.css";
 
+// DrawerDown component - this component is used to display the drawer that appears when a pin is clicked on the map
 function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handleSubmit, handleClickPolaroid }) {
   const elementRef = useRef(null);
   const [closing, setClosing] = useState(drawerVisible);
@@ -5985,12 +6095,14 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
 
   const collectedPins = useCollectedPinStore((state) => state.pinIds);
 
+  // Check if the pin is already collected
   useEffect(() => {
     if (collectedPins.includes(id)) {
       setCollected(true);
     }
   }, [collectedPins, id]);
 
+  // Add event listener after 650 ms delay to prevent the drawer from closing immediately
   useEffect(() => {
     if (drawerVisible) {
       setTimeout(() => {
@@ -5999,9 +6111,10 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
     }
   }, [drawerVisible]);
 
+  // Handle click outside the drawer
   const handleClick = (event) => {
     // Check if the clicked element is outside the element
-
+    
     event.preventDefault();
 
     if (elementRef.current && !elementRef.current.contains(event.target)) {
@@ -6038,7 +6151,6 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
 }
 
 export default DrawerDown;
-
 ```
 
 #### ErrorBox.jsx
@@ -6441,6 +6553,7 @@ Written by Adam George
 ```jsx
 import close from '../assets/map/close.svg';
 
+// Deprecated feature (mood prompt)
 function MoodPrompt({onClickFunction}) {
     return (
       <div className="mood-prompt">
@@ -6459,7 +6572,7 @@ function MoodPrompt({onClickFunction}) {
   }
   
 export default MoodPrompt;
-  
+    
 ```
 #### InitMap.jsx
 >frontend/src/features/InitMap.jsx
@@ -6469,6 +6582,7 @@ import logo from '../assets/logo-text.png'
 import './stylesheets/InitMap.css'
 import loadingtips from '../assets/loading/loadingtips.json'
 
+// Component for the loading screen (for the map)
 const InitMap = ({ progress }) => {
     const randomTip = loadingtips.loadTips[Math.floor(Math.random() * loadingtips.loadTips.length)]
     return ( 
@@ -6484,11 +6598,12 @@ const InitMap = ({ progress }) => {
  
 export default InitMap;
 ```
+
 #### Geolocation.js
 >frontend/src/features/Geolocation.js
 Written by Adam George
 ```jsx
-
+// Use the MapBox Reverse Geocoding API to get the location name from the latitude and longitude.
 function Geolocation(latitude, longitude, setLocation) {
   const apiKey = "pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ";
   fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`)
@@ -7003,5 +7118,5 @@ function PostView({ caption, image, isActive, leaveFunction, location, userIcon,
 
 export default PostView;
 ```
----
+
 End
