@@ -1,8 +1,10 @@
 import exitimg from '../assets/map/close.svg';
 import './stylesheets/dashboardCard.css';
 
+// Component for displaying a post in the admin dashboard
 const DashboardCard = ({id, username, isSuperUser, image, caption, datetime, location, userid, setPostView, deletePost, deleteUser}) => {
 
+    // Format the date into a readable format
     function formatDate(dateString) {
         const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' };
         const date = new Date(dateString);

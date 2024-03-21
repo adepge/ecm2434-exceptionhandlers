@@ -19,7 +19,7 @@ const Admin = () => {
     const cookies = new Cookies();
     const token = cookies.get('token');
     
-
+    // Check if the user is a super user
     const checkSuperUser = async () => {
         try {
             const response = await axios.get('http://localhost:8000/api/isSuperUser/', {
@@ -33,6 +33,7 @@ const Admin = () => {
         }
     };
 
+    // Retrieve all posts from the backend API
     const getPosts = async () => {
         try {
           const response = await axios.get(
@@ -49,6 +50,7 @@ const Admin = () => {
         }
     };
 
+    // Retrieve all users from the backend API
     const getUsers = async () => {
         try {
           const response = await axios.get(
@@ -65,6 +67,7 @@ const Admin = () => {
         }
     };
 
+    // Delete a post using the backend API
     const deletePost = async (id) => {
         try {
             const response = await axios.get(
@@ -79,6 +82,7 @@ const Admin = () => {
           }
     };
 
+    // Ban a user using the backend API
     const banAuthor = async (id) => {
         try {
             const response = await axios.get(
@@ -93,6 +97,7 @@ const Admin = () => {
           }
     };
 
+    // Retrieve all posts and users from the backend API and set the state
     useEffect(() => {
         checkSuperUser();
         getPosts().then((data) => {
@@ -108,6 +113,7 @@ const Admin = () => {
         console.log(activePost);
     }, [activePost]);
     
+    // Format the date to a readable format
     function formatDate(dateString) {
         const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' };
         const date = new Date(dateString);
@@ -116,6 +122,7 @@ const Admin = () => {
         return formattedDate;
     }
 
+    // Sets the active post on click and displays the post
     const handleDashboardPost = (id) => {
         setActivePost(posts.find(post => post.id === id));
         setPostView(true);
@@ -135,6 +142,7 @@ const Admin = () => {
                         <button type='button' onClick={() => handlePageChange('posts')} className={page == 'posts' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={postimg}></img>Posts</button>
                         <button type='button' onClick={() => handlePageChange('users')} className={page == 'users' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={usersimg}></img>Users</button>
                     </div>
+                    {/* Display the posts or users based on the selected page */}
                     {page == 'posts'  && <div id="dashboard-post-list">
                         {postView &&
                         <DashboardCard 

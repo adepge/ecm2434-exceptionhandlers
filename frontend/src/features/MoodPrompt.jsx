@@ -1,5 +1,6 @@
 import close from '../assets/map/close.svg';
 
+// Deprecated feature (mood prompt)
 function MoodPrompt({onClickFunction}) {
     return (
       <div className="mood-prompt">

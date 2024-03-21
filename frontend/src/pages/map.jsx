@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { usePositionStore, useGeoTagStore } from "../stores/geolocationStore";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import "./stylesheets/map.css";
 import DrawerDown from "../features/DrawerDown";
@@ -56,6 +56,7 @@ function MapPage() {
 
   const navigate = useNavigate();
 
+  // Check if the user is logged in
   useEffect(() => {
     CheckLogin(true, navigate);
   }, []);
@@ -88,10 +89,12 @@ function MapPage() {
   const [heading, setHeading] = useState(null);
 
   // Global state for collected pins
+  const collectedPins = useCollectedPinStore(state => state.pinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
   const token = cookies.get('token');
 
+  // Set loading timeout (to match fade animation duration)
   useEffect(() => {
     if (progress >= 100) {
       setTimeout(() => {
@@ -100,30 +103,89 @@ function MapPage() {
     }
   }, [progress]);
 
+  // Reference to awaitUserPrompt state to be used in the promise chain (to avoid stale closure)
+  const awaitUserPromptRef = useRef(awaitUserPrompt);
+
   useEffect(() => {
+    awaitUserPromptRef.current = awaitUserPrompt;
+  }, [awaitUserPrompt]);
+
+  useEffect(() => {
+    // Check if the user has location services enabled
     new Promise((resolve, reject) => {
-      // Get the user's current position
-      if (navigator.geolocation && promptShown) {
-        navigator.geolocation.watchPosition((position) => {
-          setPosition(position.coords.latitude, position.coords.longitude);
-          setHeading(position.coords.heading);
-        });
+      if (isIOS()) {
+        // Handles iOS devices (permissions query not supported)
+        setLocationGranted(false);
+        setAwaitUserPrompt("prompted");
+        setProgress(oldProgress => oldProgress + 20);
+      } else {
+        if (navigator.permissions) {
+          // Check the location permission status
+          navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+            if (result.state === 'granted') {
+              setLocationGranted(true);
+              setAwaitUserPrompt("resolved");
+              setProgress(oldProgress => oldProgress + 20);
+            } else {
+              setLocationGranted(false);
+              setAwaitUserPrompt("prompted");
+              setProgress(oldProgress => oldProgress + 20);
+            }
+          });
+        }
       }
-      setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
+    .then(() => {
+      return new Promise((resolve) => {
+        // Check if the user has location services enabled (awaitUserPrompt is only set to "resolved" if the user has granted permission)
+        const intervalId = setInterval(() => {
+          console.log('awaitUserPrompt:', awaitUserPromptRef.current);
+          if (awaitUserPromptRef.current === "resolved") {
+            if (navigator.geolocation) {
+              navigator.geolocation.watchPosition(
+                (position) => {
+                  console.log('Position obtained:', position);
+                  setLocationGranted(true);
+                  setPosition(position.coords.latitude, position.coords.longitude);
+                  setHeading(position.coords.heading);
+                  resolve();
+                  clearInterval(intervalId);
+                },
+                (error) => {
+                  console.log('Error occurred:', error);
+                  if (error.code === error.PERMISSION_DENIED) {
+                    setLocationGranted(false);
+                    setAwaitUserPrompt("prompted"); // Prompt the user again
+                  } else {
+                    console.error(error);
+                    resolve();
+                    clearInterval(intervalId);
+                  }
+                }
+              );
+            } else {
+              console.log("Geolocation is not supported by this browser.")
+              resolve();
+              clearInterval(intervalId);
+            }
+          }
+        }, 1000); // Check every second for awaitUserPrompt to become resolved
+      });
+    })
+    .then(() => {
+      setProgress(oldProgress => oldProgress + 30);
+    })
       .then(() => {
-        setProgress(oldProgress => oldProgress + 30);
-      })
-      .then(() => {
-        cookies.get('token');
+        // Get the posts from the database
+        const token = cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
           setPins(data);
-          setProgress(oldProgress => oldProgress + 20);
+          setProgress(oldProgress => oldProgress + 30);
         });
       });
-  }, [promptShown]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,7 +215,7 @@ function MapPage() {
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
-    const radius = 0.0005; // Radius of tolerance (about 35m from the position)
+    const radius = 0.0005; // Minimum radius of discovery (about 50m from the position)
 
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
@@ -166,7 +228,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance < radius;
+      return distance < radius || collectedPins.includes(pin.id);
     });
     return seeAllPins ? pins : closePins;
   }
@@ -186,7 +248,7 @@ function MapPage() {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const distance = c * 6371.1; // Distance of the Earth's radius (km)
 
-      return distance > minRadius && distance < maxRadius;
+      return distance > minRadius && !collectedPins.includes(pin.id);
     });
     return discoverPins;
   }
@@ -197,8 +259,8 @@ function MapPage() {
     return deg * (Math.PI / 180)
   }
 
+  // Handle the opening of the drawer and sets active post
   const handleOpen = (id) => {
-
     setPins(
       pins.map((pin) => {
         if (pin.id === id) {
@@ -213,6 +275,7 @@ function MapPage() {
     );
   };
 
+  // Render pins within close proximity to the user
   const closeRenderPins = useMemo(() => {
     return filterPins(position.lat, position.lng).map((pin) => {
       return (
@@ -233,7 +296,7 @@ function MapPage() {
     });
   }, [position.lat, position.lng, filterPins]);
 
-
+  // Render pins outside of the close proximity radius as undiscovered pins
   const questionRenderPins = useMemo(() => {
     return discoverPins(position.lat, position.lng).map((pin) => {
       return (
@@ -249,13 +312,63 @@ function MapPage() {
     });
   }, [position.lat, position.lng, discoverPins]);
 
+  // Memoized map component (caches the map component to prevent re-rendering on state changes)
+  const memoizedMap = useMemo(() => {
+    return (
+      <Map
+        id="map"
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY}
+        initialViewState={{
+          longitude: position.lng,
+          latitude: position.lat,
+          zoom: 17
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+      >
+        <Marker longitude={position.lng} latitude={position.lat} anchor="center">
+          <div
+            style={{
+              width: 14,
+              height: 14,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              background: "#4185f5",
+              border: "2px solid #ffffff",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></div>
+          {heading !== null && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: 0,
+                height: 0,
+                borderTop: "10px solid transparent",
+                borderBottom: "10px solid #4185f5",
+                borderLeft: "10px solid transparent",
+                borderRight: "10px solid transparent",
+                transform: `rotate(${heading}deg)`,
+              }}
+            ></div>
+          )}
+        </Marker>
+        {closeRenderPins}
+        {questionRenderPins}
+      </Map>
+    )
+  });
+
   return (
     <>
-      <PositionPrompt promptShown={() => setPromptShown(true)} />
+      {awaitUserPrompt == "prompted" && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
-        image={"http://127.0.0.1:8000/" + activePost['image']}
+        image={activePost['image']}
         leaveFunction={() => {
           setActive({});
         }}
@@ -267,59 +380,16 @@ function MapPage() {
         {loading && <InitMap progress={progress} />}
         <DrawerDown
           id={form.postid}
-          image={"http://127.0.0.1:8000/" + drawerPost?.image}
+          image={drawerPost?.image}
           caption={drawerPost?.caption}
           drawerVisible={drawerTopVisible}
           setDrawerVisible={setDrawerTopVisible}
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) &&
+        {!loading && (position.lat && position.lng) &&
           <div className="mapContainer">
-            <Map
-              id="map"
-              mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
-              initialViewState={{
-                longitude: position.lng,
-                latitude: position.lat,
-                zoom: 17
-              }}
-              mapStyle="mapbox://styles/mapbox/streets-v12"
-            >
-              <Marker longitude={position.lng} latitude={position.lat} anchor="center">
-                <div
-                  style={{
-                    width: 14,
-                    height: 14,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    background: "#4185f5",
-                    border: "2px solid #ffffff",
-                    borderRadius: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                ></div>
-                {heading !== null && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      width: 0,
-                      height: 0,
-                      borderTop: "10px solid transparent",
-                      borderBottom: "10px solid #4185f5",
-                      borderLeft: "10px solid transparent",
-                      borderRight: "10px solid transparent",
-                      transform: `rotate(${heading}deg)`,
-                    }}
-                  ></div>
-                )}
-              </Marker>
-              {closeRenderPins}
-              {questionRenderPins}
-            </Map>
+            {memoizedMap}
           </div>}
       </div>
     </>
