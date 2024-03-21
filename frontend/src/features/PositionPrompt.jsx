@@ -9,13 +9,13 @@ export default function PositionPrompt({ setLocationGranted, setProgress, setAwa
             // promt the user to allow for location access
             navigator.geolocation.getCurrentPosition((position) => {
                 setLocationGranted(true);
-                setAwaitUserPrompt(false);
+                setAwaitUserPrompt("resolved");
                 setProgress(oldProgress => oldProgress + 30);
             },              
             (error) => {
                 if (error.code === error.PERMISSION_DENIED) {
                   setLocationGranted(false);
-                  setAwaitUserPrompt(true);
+                  setAwaitUserPrompt("prompted");
                 }
             });
         }
