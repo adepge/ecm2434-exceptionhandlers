@@ -10,6 +10,9 @@ export default function PositionPrompt({ setLocationGranted, setProgress, setAwa
             navigator.geolocation.getCurrentPosition((position) => {
                 setLocationGranted(true);
                 setAwaitUserPrompt("resolved");
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + 7); // Sets cookie to expire in a week
+                document.cookie = `locationGranted=true; expires=${expiryDate.toUTCString()}; path=/`;
                 setProgress(oldProgress => oldProgress + 30);
             },              
             (error) => {
