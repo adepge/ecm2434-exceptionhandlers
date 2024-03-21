@@ -125,7 +125,7 @@ function MapPage() {
                     setHeading(position.coords.heading);
                   });
               }
-              setProgress(oldProgress => oldProgress + 50);
+              setProgress(oldProgress => oldProgress + 20);
             } else {
               setLocationGranted(false);
               setAwaitUserPrompt("prompted");
@@ -168,6 +168,9 @@ function MapPage() {
               resolve();
               clearInterval(intervalId);
             }
+          } else if (awaitUserPrompt === "skipped") {
+            resolve();
+            clearInterval(intervalId);
           }
         }, 1000); // Check every second for awaitUserPrompt to become false
       });
