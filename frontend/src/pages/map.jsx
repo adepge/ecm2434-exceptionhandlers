@@ -96,6 +96,7 @@ function MapPage() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   }
 
+  // Set loading timeout (to match fade animation duration)
   useEffect(() => {
     if (progress >= 100) {
       setTimeout(() => {
@@ -261,6 +262,7 @@ function MapPage() {
     return deg * (Math.PI / 180)
   }
 
+  // Handle the opening of the drawer and sets active post
   const handleOpen = (id) => {
     setPins(
       pins.map((pin) => {
@@ -312,6 +314,7 @@ function MapPage() {
     });
   }, [position.lat, position.lng, discoverPins]);
 
+  // Memoized map component (caches the map component to prevent re-rendering on state changes)
   const memoizedMap = useMemo(() => {
     return (
       <Map
