@@ -87,6 +87,7 @@ function MapPage() {
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
   const [heading, setHeading] = useState(null);
+  const [locationGranted, setLocationGranted] = useState(true);
 
   // Global state for collected pins
   const collectedPins = useCollectedPinStore(state => state.pinIds);
@@ -94,6 +95,11 @@ function MapPage() {
 
   // User agent flag
   const [awaitUserPrompt, setAwaitUserPrompt] = useState("loading");
+
+  // User agent functions to check for location
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
 
   const token = cookies.get('token');
 
@@ -143,12 +149,10 @@ function MapPage() {
       return new Promise((resolve) => {
         // Check if the user has location services enabled (awaitUserPrompt is only set to "resolved" if the user has granted permission)
         const intervalId = setInterval(() => {
-          console.log('awaitUserPrompt:', awaitUserPromptRef.current);
           if (awaitUserPromptRef.current === "resolved") {
             if (navigator.geolocation) {
               navigator.geolocation.watchPosition(
                 (position) => {
-                  console.log('Position obtained:', position);
                   setLocationGranted(true);
                   setPosition(position.coords.latitude, position.coords.longitude);
                   setHeading(position.coords.heading);
@@ -156,7 +160,6 @@ function MapPage() {
                   clearInterval(intervalId);
                 },
                 (error) => {
-                  console.log('Error occurred:', error);
                   if (error.code === error.PERMISSION_DENIED) {
                     setLocationGranted(false);
                     setAwaitUserPrompt("prompted"); // Prompt the user again
