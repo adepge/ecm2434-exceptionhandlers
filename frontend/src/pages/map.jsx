@@ -95,11 +95,6 @@ function MapPage() {
 
   const token = cookies.get('token');
 
-  // User agent functions to check for location
-  function isIOS() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  }
-
   // Set loading timeout (to match fade animation duration)
   useEffect(() => {
     if (progress >= 100) {
