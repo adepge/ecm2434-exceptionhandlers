@@ -1,4 +1,4 @@
-def daily_reset_test():
+def daily_reset_test(request):
     import random
     from database.models import PostsUser, Challenges
     random.seed()
