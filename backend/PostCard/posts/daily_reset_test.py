@@ -15,13 +15,13 @@ def daily_reset_test(request):
         x.postsSavedToday=0
         x.save()
 
-    num_challenges=0
+    num_challenges= 0
     for y in Challenges.objects.filter(type="daily"):
         y.inUse=False
         num_challenges+=1
         y.save()
-        
-    z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges)]
+
+    z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges-1)]
     z.inUse=True
     z.save()
 

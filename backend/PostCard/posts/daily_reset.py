@@ -25,7 +25,7 @@ def dailyReset():
                 y.inUse=False
                 y.save()
            
-            z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges)]
+            z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges-1)]
             z.inUse=True
             z.save()
             date.dateOfLastInteraction = currentDate
