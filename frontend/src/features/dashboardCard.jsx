@@ -1,8 +1,10 @@
 import exitimg from '../assets/map/close.svg';
 import './stylesheets/dashboardCard.css';
 
+// Component for the dashboard card
 const DashboardCard = ({id, username, isSuperUser, image, caption, datetime, location, userid, setPostView, deletePost, deleteUser}) => {
 
+    // Format the date into a readable format
     function formatDate(dateString) {
         const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' };
         const date = new Date(dateString);
@@ -14,7 +16,7 @@ const DashboardCard = ({id, username, isSuperUser, image, caption, datetime, loc
     const date = formatDate(datetime);
 
     return ( 
-        <div className="dashboard-card">
+        <div className="dashboard-card"> {/* Display the active post details */}
             <button className="exit-button" onClick={() => setPostView(false)}><img src={exitimg}></img></button>
             <img src={image}></img>
             <p>Caption: {caption}</p>

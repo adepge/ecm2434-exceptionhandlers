@@ -104,6 +104,7 @@ function MapPage() {
     }
   }, [progress]);
 
+  // Reference to awaitUserPrompt state to be used in the promise chain (to avoid stale closure)
   const awaitUserPromptRef = useRef(awaitUserPrompt);
 
   useEffect(() => {
@@ -111,14 +112,16 @@ function MapPage() {
   }, [awaitUserPrompt]);
 
   useEffect(() => {
+    // Check if the user has location services enabled
     new Promise((resolve, reject) => {
       if (isIOS()) {
+        // Handles iOS devices (permissions query not supported)
         setLocationGranted(false);
         setAwaitUserPrompt("prompted");
         setProgress(oldProgress => oldProgress + 20);
       } else {
         if (navigator.permissions) {
-          // Check the permission status
+          // Check the location permission status
           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
             if (result.state === 'granted') {
               setLocationGranted(true);
@@ -136,6 +139,7 @@ function MapPage() {
     })
     .then(() => {
       return new Promise((resolve) => {
+        // Check if the user has location services enabled (awaitUserPrompt is only set to "resolved" if the user has granted permission)
         const intervalId = setInterval(() => {
           console.log('awaitUserPrompt:', awaitUserPromptRef.current);
           if (awaitUserPromptRef.current === "resolved") {
@@ -153,7 +157,7 @@ function MapPage() {
                   console.log('Error occurred:', error);
                   if (error.code === error.PERMISSION_DENIED) {
                     setLocationGranted(false);
-                    setAwaitUserPrompt("prompted");
+                    setAwaitUserPrompt("prompted"); // Prompt the user again
                   } else {
                     console.error(error);
                     resolve();
@@ -174,6 +178,7 @@ function MapPage() {
       setProgress(oldProgress => oldProgress + 30);
     })
       .then(() => {
+        // Get the posts from the database
         const token = cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
@@ -211,7 +216,7 @@ function MapPage() {
 
   // Filter pins based on radial distance calculated using the Haversine formula
   const filterPins = (lat, lng) => {
-    const radius = 0.05; // Radius of tolerance (about 35m from the position)
+    const radius = 0.05; // Minimum radius of discovery (about 50m from the position)
 
     const closePins = pins.filter((pin) => {
       const dLat = deg2rad(pin.position.lat - lat);
@@ -271,6 +276,7 @@ function MapPage() {
     );
   };
 
+  // Render the pins within close proximity of the user
   const closeRenderPins = useMemo(() => {
     return filterPins(position.lat, position.lng).map((pin) => {
       return (
@@ -290,6 +296,7 @@ function MapPage() {
     });
   }, [position.lat, position.lng, filterPins]);
 
+  // Renders undiscovered pins outside the close proximity of the user
   const questionRenderPins = useMemo(() => {
     return discoverPins(position.lat, position.lng).map((pin) => {
       return (
@@ -304,6 +311,55 @@ function MapPage() {
       );
     });
   }, [position.lat, position.lng, discoverPins]);
+
+  const memoizedMap = useMemo(() => {
+    return (
+      <Map
+        id="map"
+        mapboxAccessToken={import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY}
+        initialViewState={{
+          longitude: position.lng,
+          latitude: position.lat,
+          zoom: 17
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+      >
+        <Marker longitude={position.lng} latitude={position.lat} anchor="center">
+          <div
+            style={{
+              width: 14,
+              height: 14,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              background: "#4185f5",
+              border: "2px solid #ffffff",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></div>
+          {heading !== null && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: 0,
+                height: 0,
+                borderTop: "10px solid transparent",
+                borderBottom: "10px solid #4185f5",
+                borderLeft: "10px solid transparent",
+                borderRight: "10px solid transparent",
+                transform: `rotate(${heading}deg)`,
+              }}
+            ></div>
+          )}
+        </Marker>
+        {closeRenderPins}
+        {questionRenderPins}
+      </Map>
+    )
+  });
 
   return (
     <>
@@ -332,50 +388,7 @@ function MapPage() {
         />
         {!loading && (position.lat && position.lng) &&
           <div className="mapContainer">
-            <Map
-              id="map"
-              mapboxAccessToken={import.meta.env.VITE_MAPBOX_PUBLIC_API_KEY}
-              initialViewState={{
-                longitude: position.lng,
-                latitude: position.lat,
-                zoom: 17
-              }}
-              mapStyle="mapbox://styles/mapbox/streets-v12"
-            >
-              <Marker longitude={position.lng} latitude={position.lat} anchor="center">
-                <div
-                  style={{
-                    width: 14,
-                    height: 14,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    background: "#4185f5",
-                    border: "2px solid #ffffff",
-                    borderRadius: "50%",
-                    transform: "translate(-50%, -50%)",
-                  }}
-                ></div>
-                {heading !== null && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      width: 0,
-                      height: 0,
-                      borderTop: "10px solid transparent",
-                      borderBottom: "10px solid #4185f5",
-                      borderLeft: "10px solid transparent",
-                      borderRight: "10px solid transparent",
-                      transform: `rotate(${heading}deg)`,
-                    }}
-                  ></div>
-                )}
-              </Marker>
-              {closeRenderPins}
-              {questionRenderPins}
-            </Map>
+            {memoizedMap}
           </div>}
       </div>
     </>

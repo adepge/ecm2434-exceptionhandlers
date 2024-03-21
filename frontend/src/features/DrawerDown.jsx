@@ -4,6 +4,7 @@ import Polaroid from "./polaroid";
 import handle from "../assets/map/handle.svg";
 import "../styles/drawer-down.css";
 
+// DrawerDown component - this component is used to display the drawer that appears when a pin is clicked on the map
 function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handleSubmit, handleClickPolaroid }) {
   const elementRef = useRef(null);
   const [closing, setClosing] = useState(drawerVisible);
@@ -11,7 +12,7 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
 
   const collectedPins = useCollectedPinStore((state) => state.pinIds);
 
-
+  // Check if the pin is already collected
   useEffect(() => {
     if (collectedPins.includes(id)) {
       setCollected(true);
@@ -20,6 +21,7 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
     }
   }, [collectedPins, id]);
 
+  // Add event listener after 650 ms delay to prevent the drawer from closing immediately
   useEffect(() => {
     if (drawerVisible) {
       setTimeout(() => {
@@ -28,6 +30,7 @@ function DrawerDown({ id, image, caption, drawerVisible, setDrawerVisible, handl
     }
   }, [drawerVisible]);
 
+  // Handle click outside the drawer
   const handleClick = (event) => {
     // Check if the clicked element is outside the element
 
