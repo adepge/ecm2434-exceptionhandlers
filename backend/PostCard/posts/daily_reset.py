@@ -27,7 +27,7 @@ def dailyReset():
                 y.inUse=False
                 number_daily_challenges+=1
                 y.save()
-            z=Challenges.objects.filter(type="daily")[random.randint(0,number_daily_challenges)]
+            z=Challenges.objects.filter(type="daily")[random.randint(0,number_daily_challenges-1)]
             z.inUse=True
             z.save()
             
