@@ -2258,6 +2258,7 @@ import LoadingScreen from "../features/loadingScreen";
 import CheckLogin from "../features/CheckLogin";
 import "./stylesheets/capture.css";
 import Polaroid from "../features/polaroid";
+import PositionPrompt from "../features/PositionPrompt";
 
 // function for set cookies
 const cookies = new Cookies();
@@ -2266,17 +2267,17 @@ axios.defaults.withCredentials = true;
 // the page
 function Capture() {
 
+  // Hook to redirect user programmatically.
+  const navigate = useNavigate();
+
   // check if the user have logged in if so capture
   useEffect(() => {
     async function check() {
-      await CheckLogin();
+      await CheckLogin(true, navigate);
       capture();
     }
     check();
   }, []);
-
-  // Hook to redirect user programmatically.
-  const navigate = useNavigate();
 
   // State management for geolocation and location tags using zustand stores.
   const position = usePositionStore(state => state.position);
@@ -2415,7 +2416,8 @@ function Capture() {
 
   return (
     <>
-    {/* the loading screen for posting */}
+      {/* the loading screen for posting */}
+      <PositionPrompt />
       <LoadingScreen active={isLoading} />
       <div id="capturePage" className="page active">
         <input
@@ -2498,6 +2500,7 @@ function Capture() {
 }
 
 export default Capture;
+
 ```
 
 
@@ -2515,11 +2518,14 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import ErrorBox from '../features/ErrorBox';
 import usericon from '../assets/header/user-icon.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
 function Challenge() {
 
+    const navigate = useNavigate();
+    
     // Local state management for UI interactions and data handling.
     const [avatars, setAvatars] = useState([]);
     const [challenges, setChallenges] = useState([]);
@@ -2528,9 +2534,8 @@ function Challenge() {
     // check if the user have logged in and setup everyting
     useEffect(() => {
 
-        // check if the user has logged in and get the token
-        CheckLogin();
-
+        CheckLogin(true, navigate);
+      
         // get all the avatars
         const getAvatars = async () => {
             const response = await axios.get(
@@ -2712,6 +2717,7 @@ import CheckLogin from '../features/CheckLogin';
 import usericon from "../assets/header/user-icon.jpg";
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies()
 
@@ -2727,10 +2733,12 @@ function editProfile() {
         twitter: ''
     })
 
+    const navigate = useNavigate();
+
     // get the user's icon and get their profile
     useEffect(() => {
         const getIcon = async () => {
-            let response = await CheckLogin();
+            let response = await CheckLogin(true, navigate);
             return response.data
         }
         getIcon().then((user) => {
@@ -2833,6 +2841,7 @@ import { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import CheckLogin from '../features/CheckLogin';
 import usericon from '../assets/header/user-icon.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const cookies = new Cookies();
 
@@ -2843,10 +2852,12 @@ function ChangeIcon() {
     const [user, setUser] = useState()
     const [profilePicture, setProfilePicture] = useState("")
 
+    const navigate = useNavigate();
+
     // set the user icon and the user data
     useEffect(() => {
         const getIcon = async () => {
-            let response = await CheckLogin();
+            let response = await CheckLogin(true, navigate);
             return response.data
         }
         getIcon().then((user) => {
@@ -2966,7 +2977,8 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import CheckLogin from "../features/CheckLogin";
 import InitMap from "../features/InitMap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 
 
@@ -2976,9 +2988,7 @@ const cookies = new Cookies();
 function FeedPage() {
 
   // check if the user is logged in
-  useEffect(() => {
-    CheckLogin();
-  }, []);
+  const navigate = useNavigate();
 
   const [activePost, setActive] = useState({});
   const [noPost, setNoPost] = useState(false);
@@ -3016,6 +3026,7 @@ function FeedPage() {
   };
 
   useEffect(() => {
+
     // Function to load an image and update its height in the state
     function getImageRatio(url) {
       // wait for the image to load
@@ -3074,8 +3085,13 @@ function FeedPage() {
 
       }
     };
-
-    processImages();
+    CheckLogin(true, navigate).then((response) => {
+      if (response === false) {
+        navigate("/login");
+      } else {
+        processImages();
+      } 
+    });
 
   }, []);
 
@@ -3123,7 +3139,7 @@ function FeedPage() {
 
       {/* the feed */}
       {/* if there is no post or the post view is active, blur the feed */}
-      <div id="feed" className={noPost ? "blur" : none}>
+      <div id="feed" className={noPost ? "blur" : "none"}>
         <div id="padding">
           <div id="daily-feed">
             <div id="grid-wrapper">
@@ -3185,6 +3201,7 @@ function FeedPage() {
 }
 
 export default FeedPage;
+
 ```
 #### login.jsx
 > frontend/src/pages/login.jsx
@@ -3320,7 +3337,9 @@ import PostView from "../features/PostView";
 import CheckLogin from "../features/CheckLogin";
 import question from "../assets/map/question.svg";
 import pinimg from "../assets/map/pin.svg";
-import Map, {Marker} from 'react-map-gl';
+import Map, { Marker } from 'react-map-gl';
+import PositionPrompt from "../features/PositionPrompt";
+import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -3361,12 +3380,20 @@ const getCollectedPosts = async (token) => {
 
 function MapPage() {
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    CheckLogin();
+    CheckLogin(true, navigate);
   }, []);
 
   // State for active post in the view
   const [activePost, setActive] = useState({});
+
+  // State if the prompt has been shown
+  const [promptShown, setPromptShown] = useState(false);
+
+  // State for location prompt
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
@@ -3402,7 +3429,7 @@ function MapPage() {
   useEffect(() => {
     new Promise((resolve, reject) => {
       // Get the user's current position
-      if (navigator.geolocation) {
+      if (navigator.geolocation && promptShown) {
         navigator.geolocation.watchPosition((position) => {
           setPosition(position.coords.latitude, position.coords.longitude);
           setHeading(position.coords.heading);
@@ -3422,7 +3449,7 @@ function MapPage() {
           setProgress(oldProgress => oldProgress + 20);
         });
       });
-  }, []);
+  }, [promptShown]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -3550,6 +3577,7 @@ function MapPage() {
 
   return (
     <>
+      <PositionPrompt promptShown={() => setPromptShown(true)} />
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
@@ -3572,10 +3600,10 @@ function MapPage() {
           handleSubmit={handleSubmit}
           handleClickPolaroid={() => setActive(pins.find((pin) => pin.id === form.postid))}
         />
-        {(position.lat && position.lng) && 
-          <div className= "mapContainer">
+        {(position.lat && position.lng) &&
+          <div className="mapContainer">
             <Map
-              id = "map"
+              id="map"
               mapboxAccessToken="pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ"
               initialViewState={{
                 longitude: position.lng,
@@ -3658,12 +3686,15 @@ import instaIcon from "../assets/profilepage/Instagram.svg";
 import twitterIcon from "../assets/profilepage/twitter.svg";
 import CheckLogin from "../features/CheckLogin";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
 
+  const navigate = useNavigate();
+
   const [user, setUser] = useState({});
   async function setUserName() {
-    let response = await CheckLogin()
+    let response = await CheckLogin(true, navigate)
     setUser(response.data)
   }
   useEffect(() => {
@@ -5710,19 +5741,19 @@ Written by Eugene Au
 
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
 
 const cookies = new Cookies();
 
-async function CheckLogin(redirect = true) {
+const CheckLogin = async (redirect = true, navigate) => {
 
     // cookies.remove('token');
 
     if (cookies.get('token') === undefined) {
+        console.log("not logged in");
         console.log("redirecting")
         console.log(redirect);
         if (redirect) {
-            window.location.href = "/login";
+            navigate("/login");
             return false;
         }
     }
@@ -5746,7 +5777,7 @@ async function CheckLogin(redirect = true) {
                 console.log("not logged in");
                 if (redirect) {
                     console.log("redirecting")
-                    window.location.href = "/login";
+                    navigate("/login");
                     return false
                 }
             } else {
@@ -5765,6 +5796,138 @@ async function CheckLogin(redirect = true) {
 }
 
 export default CheckLogin;
+```
+
+#### PositionPrompt.jsx
+>frontend/src/features/PositionPrompt.jsx
+Written by Eugene Au
+```jsx
+import './stylesheets/positionPrompt.css'
+import Navation from '../assets/navigation.svg'
+import { useState, useEffect } from 'react';
+
+export default function PositionPrompt({ promptShown }) {
+
+    const [show, setShowPrompt] = useState(false);
+
+    onclick = () => {
+        if (navigator.geolocation) {
+            // promt the user to allow for location access
+            navigator.geolocation.getCurrentPosition((position) => {
+                // reload the page to get the new location
+                // window.location.reload();
+                promptShown();
+            });
+        }
+    };
+
+    useEffect(() => {
+        async function check() {
+            const permission = await navigator.permissions.query({ name: "geolocation" });
+            if (permission.state === "granted") {
+                setShowPrompt(false);
+                promptShown();
+            } else {
+                setShowPrompt(true);
+            }
+        }
+        check();
+    }, [navigator.permissions.query({ name: "geolocation" })])
+
+    return (
+        <div className="position-prompt" style={{ display: show ? "" : "none" }}>
+            <div className="position-prompt-content">
+                <div className='prompt'>
+                    <div className='icon'>
+                        <img src={Navation} alt="navigation" />
+                    </div>
+                    <div className='title'>
+                        Allow location access
+                    </div>
+                    <div>Location access is an integral part of the app. Please allow access to your location to continue.
+                    </div>
+
+                    <div className='guide'>Not working? <a href='https://support.google.com/chrome/answer/142065?hl=en-GB&co=GENIE.Platform%3DDesktop'>Troubleshooting guide</a></div>
+                    <button onClick={onclick}>Allow Access</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+#### positionPrompt.css
+>frontend/src/features/stylesheets/positionPrompt.css
+Written by Eugene Au
+```css
+.position-prompt {
+  position: fixed;
+  width: 100%;
+  min-height: 100vh;
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 11;
+}
+
+.position-prompt-content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  color: black;
+  border: none;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.position-prompt-content .prompt {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.prompt .title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 20px 0;
+}
+
+.prompt button {
+  margin: 20px 0;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  border-radius: 100%;
+  width: 100%;
+  border: none;
+  border-radius: 100px;
+  background-color: #00dca5;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+}
+.prompt .guide {
+  width: 100%;
+  text-align: right;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.prompt .icon {
+  width: 100px;
+  height: 100px;
+  border: none;
+  border-radius: 100%;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 ```
 
 #### dasherboardCard.jsx
@@ -6327,13 +6490,14 @@ Written by Adam George
 ```jsx
 
 function Geolocation(latitude, longitude, setLocation) {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`)
+  const apiKey = "pk.eyJ1IjoiYWRlcGdlIiwiYSI6ImNsdHo2dW1ycDBsODUyaXFtenlzbmlyZHYifQ.BOt1O2WxbF8jnEgZcIj1aQ";
+  fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${apiKey}`)
   .then(response => response.json())
   .then(data => {
-    if (data.results && data.results.length > 0) {
-      const placeName = data.results[0].formatted_address;
-      setLocation(placeName.split(',')[0]);
+    console.log(data);
+    if (data.features && data.features.length > 0) {
+      const placeName = data.features[0].text;
+      setLocation(placeName);
     } else {
       setLocation('Unknown Location');
     }
@@ -6733,8 +6897,8 @@ Written by Eugene Au
 
 ```
 
-#### polroid.css
->frontend/src/features/stylesheets/polroid.css
+#### polaroid.css
+>frontend/src/features/stylesheets/polaroid.css
 Written by Eugene Au
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
@@ -6800,7 +6964,7 @@ Written by Eugene Au
 
 ```
 #### postView.css
->frontend/src/features/stylesheets/polroid.css
+>frontend/src/features/stylesheets/postView.css
 Written by Eugene Au
 ```css
 /* a absolute view for the post */
