@@ -74,7 +74,7 @@ function MapPage() {
   const [form, setForm] = useState({ "postid": 0 })
 
   // Global state for current position, location tag and pins
-  const [locationGranted, setLocationGranted] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(true);
   const [heading, setHeading] = useState(null);
   const position = usePositionStore(state => state.position);
   const setPosition = usePositionStore(state => state.setPosition);
@@ -86,7 +86,15 @@ function MapPage() {
   const collectedPins = useCollectedPinStore(state => state.pinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
+  // User agent flag
+  const [awaitUserPrompt, setAwaitUserPrompt] = useState(false);
+
   const token = cookies.get('token');
+
+  // User agent functions to check for location
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
 
   useEffect(() => {
     if (progress >= 100) {
@@ -98,30 +106,70 @@ function MapPage() {
 
   useEffect(() => {
     new Promise((resolve, reject) => {
-      // Get the user's current position
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(
-          (position) => {
-            setPosition(position.coords.latitude, position.coords.longitude);
-            setHeading(position.coords.heading);
-            setLocationGranted(true);
-          },
-          (error) => {
-            if (error.code === error.PERMISSION_DENIED) {
+      if (isIOS()) {
+        setLocationGranted(false);
+        setAwaitUserPrompt(true);
+        setProgress(oldProgress => oldProgress + 20);
+      } else {
+        if (navigator.permissions) {
+          // Check the permission status
+          navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+            if (result.state === 'granted') {
+              setLocationGranted(true);
+              setAwaitUserPrompt(false);
+              setProgress(oldProgress => oldProgress + 20);
+            } else if (result.state === 'denied') {
               setLocationGranted(false);
+              setAwaitUserPrompt(true);
+              setProgress(oldProgress => oldProgress + 20);
             }
-          }
-        );
+          });
+        }
       }
-      setProgress(oldProgress => oldProgress + 30);
       resolve();
     })
+    .then(() => {
+      return new Promise((resolve) => {
+        const intervalId = setInterval(() => {
+          if (!awaitUserPrompt) {
+            if (navigator.geolocation) {
+              navigator.geolocation.watchPosition(
+                (position) => {
+                  setLocationGranted(true);
+                  setPosition(position.coords.latitude, position.coords.longitude);
+                  setHeading(position.coords.heading);
+                  resolve();
+                },
+                (error) => {
+                  if (error.code === error.PERMISSION_DENIED) {
+                    setLocationGranted(false);
+                    setAwaitUserPrompt(true);
+                  } else {
+                    console.error(error);
+                    resolve();
+                    clearInterval(intervalId);
+                  }
+                }
+              );
+            } else {
+              console.log("Geolocation is not supported by this browser.")
+              resolve();
+              clearInterval(intervalId);
+            }
+            clearInterval(intervalId);
+          }
+        }, 1000); // Check every second for awaitUserPrompt to become false
+      });
+    })
+    .then(() => {
+      setProgress(oldProgress => oldProgress + 30);
+    })
       .then(() => {
-        cookies.get('token');
+        const token = cookies.get('token');
         getCollectedPosts(token).then((data) => data.map((post) => addCollectedPin(post.id)));
         getPosts().then((data) => {
           setPins(data);
-          setProgress(oldProgress => oldProgress + 50);
+          setProgress(oldProgress => oldProgress + 30);
         });
       });
   }, []);
@@ -250,7 +298,7 @@ function MapPage() {
 
   return (
     <>
-      {!locationGranted && <PositionPrompt setLocationGranted={setLocationGranted} />}
+      {!locationGranted && <PositionPrompt setLocationGranted={setLocationGranted} setProgress={setProgress} setAwaitUserPrompt={setAwaitUserPrompt}/>}
       {/* the absolute position post view */}
       <PostView
         isActive={Object.keys(activePost).length !== 0}
