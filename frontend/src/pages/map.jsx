@@ -92,6 +92,9 @@ function MapPage() {
   const collectedPins = useCollectedPinStore(state => state.pinIds);
   const addCollectedPin = useCollectedPinStore(state => state.addPinId);
 
+  // User agent flag
+  const [awaitUserPrompt, setAwaitUserPrompt] = useState("loading");
+
   const token = cookies.get('token');
 
   // Set loading timeout (to match fade animation duration)
