@@ -139,6 +139,7 @@ function MapPage() {
                   setPosition(position.coords.latitude, position.coords.longitude);
                   setHeading(position.coords.heading);
                   resolve();
+                  clearInterval(intervalId);
                 },
                 (error) => {
                   if (error.code === error.PERMISSION_DENIED) {
@@ -156,7 +157,6 @@ function MapPage() {
               resolve();
               clearInterval(intervalId);
             }
-            clearInterval(intervalId);
           }
         }, 1000); // Check every second for awaitUserPrompt to become false
       });
