@@ -1,3 +1,5 @@
+from rest_framework.response import Response
+from rest_framework import status
 def daily_reset_test(request):
     import random
     from database.models import PostsUser, Challenges
@@ -14,3 +16,6 @@ def daily_reset_test(request):
     z=Challenges.objects.all()[random.randint(0,1)]
     z.inUse=True
     z.save()
+
+    #return HttpResponse("Daily Reset Complete")
+    return Response({"daily reset compete"},status=status.HTTP_200_OK)
