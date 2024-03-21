@@ -80,8 +80,6 @@ function MapPage() {
   const setPosition = usePositionStore(state => state.setPosition);
   const pins = usePinStore(state => state.pins);
   const setPins = usePinStore(state => state.setPins);
-  const [heading, setHeading] = useState(null);
-  const [locationGranted, setLocationGranted] = useState(true);
 
   // Global state for collected pins
   const collectedPins = useCollectedPinStore(state => state.pinIds);
