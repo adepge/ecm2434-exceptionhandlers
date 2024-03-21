@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import *
 
-@api_view(['POST']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
+@api_view(['POST','GET']) # We only want to recieve POST requests here, GET REQUESTS ARE INVALID!
 @permission_classes([AllowAny])
 def daily_reset_test(request):
     import random
@@ -14,11 +14,14 @@ def daily_reset_test(request):
         x.postsMadeToday=0
         x.postsSavedToday=0
         x.save()
-    
-    for y in Challenges.objects.all()[0:1]:
+
+    num_challenges=0
+    for y in Challenges.objects.filter(type="daily"):
         y.inUse=False
+        num_challenges+=1
         y.save()
-    z=Challenges.objects.all()[random.randint(0,1)]
+        
+    z=Challenges.objects.filter(type="daily")[random.randint(0,num_challenges)]
     z.inUse=True
     z.save()
 
