@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { usePositionStore } from "../stores/geolocationStore";
 import { usePinStore, useCollectedPinStore } from "../stores/pinStore";
 import { useNavigate } from "react-router-dom";
@@ -104,6 +104,12 @@ function MapPage() {
     }
   }, [progress]);
 
+  const awaitUserPromptRef = useRef(awaitUserPrompt);
+
+  useEffect(() => {
+    awaitUserPromptRef.current = awaitUserPrompt;
+  }, [awaitUserPrompt]);
+
   useEffect(() => {
     new Promise((resolve, reject) => {
       if (isIOS()) {
@@ -116,15 +122,7 @@ function MapPage() {
           navigator.permissions.query({ name: 'geolocation' }).then((result) => {
             if (result.state === 'granted') {
               setLocationGranted(true);
-              setAwaitUserPrompt("skipped");
-              if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(
-                  (position) => {
-                    setLocationGranted(true);
-                    setPosition(position.coords.latitude, position.coords.longitude);
-                    setHeading(position.coords.heading);
-                  });
-              }
+              setAwaitUserPrompt("resolved");
               setProgress(oldProgress => oldProgress + 20);
             } else {
               setLocationGranted(false);
@@ -139,8 +137,8 @@ function MapPage() {
     .then(() => {
       return new Promise((resolve) => {
         const intervalId = setInterval(() => {
-          console.log('awaitUserPrompt:', awaitUserPrompt);
-          if (awaitUserPrompt === "resolved") {
+          console.log('awaitUserPrompt:', awaitUserPromptRef.current);
+          if (awaitUserPromptRef.current === "resolved") {
             if (navigator.geolocation) {
               navigator.geolocation.watchPosition(
                 (position) => {
@@ -168,11 +166,8 @@ function MapPage() {
               resolve();
               clearInterval(intervalId);
             }
-          } else if (awaitUserPrompt === "skipped") {
-            resolve();
-            clearInterval(intervalId);
           }
-        }, 1000); // Check every second for awaitUserPrompt to become false
+        }, 1000); // Check every second for awaitUserPrompt to become resolved
       });
     })
     .then(() => {
