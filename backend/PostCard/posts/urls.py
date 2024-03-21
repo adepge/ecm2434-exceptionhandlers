@@ -3,6 +3,7 @@ from .views import *
 from user_authentication.views import * 
 from django.conf.urls.static import static
 from django.conf import settings
+from .daily_reset_test import daily_reset_test
 
 
 
@@ -56,6 +57,7 @@ urlpatterns = [
     path('deletePost/<int:pk>/', deletePost, name='deletePost'),
     path('deleteUser/<int:pk>/', deleteUser, name='deleteUser'),
     path('checkSuperUserId/<int:user_id>/', checkSuperuserById, name='check-superuser-id'),
+    path('dailyReset/', daily_reset_test, name='daily-reset'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
