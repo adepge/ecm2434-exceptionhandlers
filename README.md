@@ -36,7 +36,7 @@ This is a submission for Sprint 1. There are three types of document that you wi
 - Deployment (hosted instance)
 
 ## PROCESS DOCUMENTS
-Our process documents are managed in the trello platform. The link to our project page is below. We (specific username that added) have added mattcollison2 to the board so it is visible.
+Our process documents are managed in the trello platform. The link to our project page is below. We have added the module leader to the Trello board.
 
 [Link to Kanban Board (Trello)](https://trello.com/invite/b/BJR31baF/ATTIeea341c4fc089f0892bf71cbaa7608a1A837EBFF/exceptionhandler)
 
