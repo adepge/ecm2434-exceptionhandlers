@@ -136,82 +136,78 @@ const Admin = () => {
         setPage(page);
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    } else {
-        return (
-            <div id="admin-dashboard">
-                <h1 className='dashboard-title'>Admin Dashboard</h1>
-                    <div id="dashboard-navbar">
-                        <button type='button' onClick={() => handlePageChange('posts')} className={page == 'posts' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={postimg}></img>Posts</button>
-                        <button type='button' onClick={() => handlePageChange('users')} className={page == 'users' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={usersimg}></img>Users</button>
-                    </div>
-                    {/* Display the posts or users based on the selected page */}
-                    {page == 'posts'  && <div id="dashboard-post-list">
-                        {postView &&
-                        <DashboardCard 
-                            id = {activePost?.id}
-                            username={activePost?.username} 
-                            isSuperUser={activePost?.is_superuser}
-                            image={activePost?.image} 
-                            caption={activePost?.caption} 
-                            datetime={activePost?.datetime} 
-                            location={activePost?.position.location} 
-                            userid={activePost?.userid} 
-                            setPostView={setPostView} 
-                            deletePost={deletePost}
-                            deleteUser={banAuthor} />
-                        }
-                        <div id="dashboard-post-inner">
-                            {!loading && posts.map((post) => {
-                                return (
-                                    <div className="dashboard-post" key={post.id} onClick={() => handleDashboardPost(post.id)}>
-                                        <img className="dashboard-post-image" src={post.image} alt={post.caption} />
-                                        <div className="dashboard-post-date">
-                                            {formatDate(post.datetime)}
-                                        </div>
+    return (
+        <div id="admin-dashboard">
+            <h1 className='dashboard-title'>Admin Dashboard</h1>
+                <div id="dashboard-navbar">
+                    <button type='button' onClick={() => handlePageChange('posts')} className={page == 'posts' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={postimg}></img>Posts</button>
+                    <button type='button' onClick={() => handlePageChange('users')} className={page == 'users' ? "active-button dashboard-navbar-buttons" : "dashboard-navbar-buttons"}><img src={usersimg}></img>Users</button>
+                </div>
+                {/* Display the posts or users based on the selected page */}
+                {page == 'posts'  && <div id="dashboard-post-list">
+                    {postView &&
+                    <DashboardCard 
+                        id = {activePost?.id}
+                        username={activePost?.username} 
+                        isSuperUser={activePost?.is_superuser}
+                        image={activePost?.image} 
+                        caption={activePost?.caption} 
+                        datetime={activePost?.datetime} 
+                        location={activePost?.position.location} 
+                        userid={activePost?.userid} 
+                        setPostView={setPostView} 
+                        deletePost={deletePost}
+                        deleteUser={banAuthor} />
+                    }
+                    <div id="dashboard-post-inner">
+                        {!loading && posts.map((post) => {
+                            return (
+                                <div className="dashboard-post" key={post.id} onClick={() => handleDashboardPost(post.id)}>
+                                    <img className="dashboard-post-image" src={post.image} alt={post.caption} />
+                                    <div className="dashboard-post-date">
+                                        {formatDate(post.datetime)}
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </div>}
-                    {page == 'users'  && <div id="dashboard-user-list">
-                        <table>
-                            <thead>
-                                <tr>
-                                <th>Id</th>
-                                <th>Picture</th>
-                                <th>Username</th>
-                                <th>Bio</th>
-                                <th>Twitter</th>
-                                <th>Instagram</th>
-                                <th>Youtube</th>
-                                <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (<tr><td> Loading ... </td></tr>) :
-                                    users.map((user) => (
-                                        <tr key={user.id}>
-                                            <td>{user.id}</td>
-                                            <td>{user.profilePicture == 'NULL' ? "None set" : <img src={user.profilePicture} style={{height: "40px", borderRadius: "50px"}}></img>}</td>
-                                            <td>{user.username}</td>
-                                            <td>{user.bio}</td>
-                                            <td>{user.twitter}</td>
-                                            <td>{user.instagram}</td>
-                                            <td>{user.youtube}</td>
-                                            <td>
-                                                <button type='button' disabled={user.is_superuser} onClick={() => banAuthor(user.id)} className="delete-button">Ban User</button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-                    </div>}
-            </div>
-        );
-    }
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>}
+                {page == 'users'  && <div id="dashboard-user-list">
+                    <table>
+                        <thead>
+                            <tr>
+                            <th>Id</th>
+                            <th>Picture</th>
+                            <th>Username</th>
+                            <th>Bio</th>
+                            <th>Twitter</th>
+                            <th>Instagram</th>
+                            <th>Youtube</th>
+                            <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (<tr><td> Loading ... </td></tr>) :
+                                users.map((user) => (
+                                    <tr key={user.id}>
+                                        <td>{user.id}</td>
+                                        <td>{user.profilePicture == 'NULL' ? "None set" : <img src={user.profilePicture} style={{height: "40px", borderRadius: "50px"}}></img>}</td>
+                                        <td>{user.username}</td>
+                                        <td>{user.bio}</td>
+                                        <td>{user.twitter}</td>
+                                        <td>{user.instagram}</td>
+                                        <td>{user.youtube}</td>
+                                        <td>
+                                            <button type='button' disabled={user.is_superuser} onClick={() => banAuthor(user.id)} className="delete-button">Ban User</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>}
+        </div>
+    );
 };
 
 export default Admin;
