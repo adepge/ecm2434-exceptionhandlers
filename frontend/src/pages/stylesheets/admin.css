@@ -85,6 +85,7 @@
 #dashboard-post-inner{
     display: flex;
     margin-left: 1em;
+    flex-wrap: wrap;
 }
 
 #dashboard-user-list{
