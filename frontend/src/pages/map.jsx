@@ -192,6 +192,15 @@ function MapPage() {
       });
   }, []);
 
+  // Update the collected pins from the database every two minutes
+  useEffect(() => {
+    const intervalId = setInterval(
+      getPosts().then((data) => {
+      setPins(data);
+      }), 120000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -299,7 +308,7 @@ function MapPage() {
         </Marker>
       );
     });
-  }, [position.lat, position.lng, filterPins]);
+  }, [position.lat, position.lng, filterPins, pins]);
 
   // Renders undiscovered pins outside the close proximity of the user
   const questionRenderPins = useMemo(() => {
@@ -315,7 +324,7 @@ function MapPage() {
         </Marker>
       );
     });
-  }, [position.lat, position.lng, discoverPins]);
+  }, [position.lat, position.lng, discoverPins, pins]);
 
   // Memoized map component (caches the map component to prevent re-rendering on state changes)
   const memoizedMap = useMemo(() => {

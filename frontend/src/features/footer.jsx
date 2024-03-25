@@ -59,7 +59,7 @@ export default function Footer() {
           >
             <img src={feedicon} id="feed-icon" alt="feed-icon" />
           </div>
-          <div className="footer-text">Collection</div>
+          <div className="footer-text">collection</div>
         </Link>
       </div>
 

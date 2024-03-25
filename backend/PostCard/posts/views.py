@@ -428,14 +428,17 @@ from datetime import timedelta
 @permission_classes([AllowAny])
 def getPostsLast24Hours(request):
     try:
-        current_time = timezone.now()
+        # current_time = timezone.now()
         
-        #stores the last 24 hrs
-        time_24_hours_ago = current_time - timedelta(days=1)
+        # #stores the last 24 hrs
+        # time_24_hours_ago = current_time - timedelta(days=1)
 
-        #Stores posts made in the last 24hrs
-        recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time]).select_related('geolocID')
+        # #Stores posts made in the last 24hrs
+        # recent_posts = Posts.objects.filter(datetime__range=[time_24_hours_ago, current_time]).select_related('geolocID')
         
+        # Stores the last 100 posts
+        recent_posts = Posts.objects.order_by('-datetime').select_related('geolocID')[:100]
+
         data = []
         # Prepare the data to return
         for post in recent_posts:

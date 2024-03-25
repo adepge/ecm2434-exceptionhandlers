@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import "./stylesheets/admin.css";
@@ -18,6 +18,8 @@ const Admin = () => {
     const [activePost, setActivePost] = useState(undefined);
     const cookies = new Cookies();
     const token = cookies.get('token');
+
+    const navigate = useNavigate();
     
     // Check if the user is a super user
     const checkSuperUser = async () => {
@@ -75,11 +77,11 @@ const Admin = () => {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
-              });
-            alert(response.data);
-            window.location.reload();
+              }).then(() => alert("Post has been deleted"));
           } catch (error) {
             console.error(error);
+          } finally {
+            navigate(0);
           }
     };
 
@@ -91,11 +93,11 @@ const Admin = () => {
                   headers: {
                       'Authorization': `Token ${token}`
                   }
-              });
-            alert(response.data);
-            window.location.reload();
+              }).then(() => alert("User has been banned"));
           } catch (error) {
             console.error(error);
+          } finally {
+            navigate(0);
           }
     };
 
